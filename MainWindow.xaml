@@ -1,0 +1,224 @@
+﻿<!--
+    Micasa — Your Photo Home — A lightweight photo organiser & editor.
+    Author: Christopher Rath <christopher@rath.ca>
+    Archived at: http://rath.ca/
+    Copyright 2021 © Christopher Rath
+    Distributed under the GNU Lesser General Public License v2.1
+        (see the About–→Terms menu item for the license text).
+    Warranty: None, see the license.
+-->
+<Window x:Class="Micasa.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Micasa"
+        mc:Ignorable="d"
+    Title="Micasa" SizeToContent="WidthAndHeight" MinHeight="100" Closing="Window_Closing">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:MainWindow.NewAlbumCmd}" CanExecute="NewAlbumCmdCanExecute" Executed="NewAlbumCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AddFolderCmd}" CanExecute="AddFolderCmdCanExecute" Executed="AddFolderCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AddFileCmd}" CanExecute="AddFileCmdCanExecute" Executed="AddFileCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ImportFromCmd}" CanExecute="ImportFromCmdCanExecute" Executed="ImportFromCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.OpenFileInEditorCmd}" CanExecute="OpenFileInEditorCmdCanExecute" Executed="OpenFileInEditorCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.MoveCmd}" CanExecute="MoveCmdCanExecute" Executed="MoveCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.RenameCmd}" CanExecute="RenameCmdCanExecute" Executed="RenameCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.RevertCmd}" CanExecute="RevertCmdCanExecute" Executed="RevertCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SaveACopyCmd}" CanExecute="SaveACopyCmdCanExecute" Executed="SaveACopyCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ExportCmd}" CanExecute="ExportCmdCanExecute" Executed="ExportCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.LocateOnDiskCmd}" CanExecute="LocateOnDiskCmdCanExecute" Executed="LocateOnDiskCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.EmailCmd}" CanExecute="EmailCmdCanExecute" Executed="EmailCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ExitCmd}" CanExecute="ExitCmdCanExecute" Executed="ExitCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.LibraryViewCmd}" CanExecute="LibraryViewCmdCanExecute" Executed="LibraryViewCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SmlThumbCmd}" CanExecute="SmlThumbCmdCanExecute" Executed="SmlThumbCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.NrmlThumbCmd}" CanExecute="NrmlThumbCmdCanExecute" Executed="NrmlThumbCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.EditViewCmd}" CanExecute="EditViewCmdCanExecute" Executed="EditViewCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PropertiesCmd}" CanExecute="PropertiesCmdCanExecute" Executed="PropertiesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.TagsCmd}" CanExecute="TagsCmdCanExecute" Executed="TagsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PeopleCmd}" CanExecute="PeopleCmdCanExecute" Executed="PeopleCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PlacesCmd}" CanExecute="PlacesCmdCanExecute" Executed="PlacesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ShowEditCtrlsCmd}" CanExecute="ShowEditCtrlsCmdCanExecute" Executed="ShowEditCtrlsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SlideshowCmd}" CanExecute="SlideshowCmdCanExecute" Executed="SlideshowCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.TimelineCmd}" CanExecute="TimelineCmdCanExecute" Executed="TimelineCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SearchOptCmd}" CanExecute="SearchOptCmdCanExecute" Executed="SearchOptCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SmallPictCmd}" CanExecute="SmallPictCmdCanExecute" Executed="SmallPictCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.HiddenPictCmd}" CanExecute="HiddenPictCmdCanExecute" Executed="HiddenPictCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UseClrMgmtCmd}" CanExecute="UseClrMgmtCmdCanExecute" Executed="UseClrMgmtCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AutomaticCmd}" CanExecute="AutomaticCmdCanExecute" Executed="AutomaticCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.EditDescCmd}" CanExecute="EditDescCmdCanExecute" Executed="EditDescCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ViewSlidesCmd}" CanExecute="ViewSlidesCmdCanExecute" Executed="ViewSlidesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.RefreshThumbsCmd}" CanExecute="RefreshThumbsCmdCanExecute" Executed="RefreshThumbsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.HideCmd}" CanExecute="HideCmdCanExecute" Executed="HideCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UnhideCmd}" CanExecute="UnhideCmdCanExecute" Executed="UnhideCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PrintContactCmd}" CanExecute="PrintContactCmdCanExecute" Executed="PrintContactCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ExportHTMLCmd}" CanExecute="ExportHTMLCmdCanExecute" Executed="ExportHTMLCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.LocateFolderOnDiskCmd}" CanExecute="LocateFolderOnDiskCmdCanExecute" Executed="LocateFolderOnDiskCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.RemoveFromCmd}" CanExecute="RemoveFromCmdCanExecute" Executed="RemoveFromCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.MoveFolderCmd}" CanExecute="MoveFolderCmdCanExecute" Executed="MoveFolderCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.DeleteCmd}" CanExecute="DeleteCmdCanExecute" Executed="DeleteCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.FolderMgrCmd}" CanExecute="FolderMgrCmdCanExecute" Executed="FolderMgrCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UploadMgrCmd}" CanExecute="UploadMgrCmdCanExecute" Executed="UploadMgrCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PeopleMgrCmd}" CanExecute="PeopleMgrCmdCanExecute" Executed="PeopleMgrCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ConfigViewCmd}" CanExecute="ConfigViewCmdCanExecute" Executed="ConfigViewCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ConfigScrnSavCmd}" CanExecute="ConfigScrnSavCmdCanExecute" Executed="ConfigScrnSavCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.BackupCmd}" CanExecute="BackupCmdCanExecute" Executed="BackupCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.BatchUploadCmd}" CanExecute="BatchUploadCmdCanExecute" Executed="BatchUploadCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AdjustDateCmd}" CanExecute="AdjustDateCmdCanExecute" Executed="AdjustDateCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ConfigButtonsCmd}" CanExecute="ConfigButtonsCmdCanExecute" Executed="ConfigButtonsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.OptionsCmd}" CanExecute="OptionsCmdCanExecute" Executed="OptionsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.HelpContentsCmd}" CanExecute="HelpContentsCmdCanExecute" Executed="HelpContentsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ShortcutsCmd}" CanExecute="ShortcutsCmdCanExecute" Executed="ShortcutsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ForumsCmd}" CanExecute="ForumsCmdCanExecute" Executed="ForumsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ReadmeCmd}" CanExecute="ReadmeCmdCanExecute" Executed="ReadmeCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ReleaseNotesCmd}" CanExecute="ReleaseNotesCmdCanExecute" Executed="ReleaseNotesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PrivacyCmd}" CanExecute="PrivacyCmdCanExecute" Executed="PrivacyCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.TermsCmd}" CanExecute="TermsCmdCanExecute" Executed="TermsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UninstallingCmd}" CanExecute="UninstallingCmdCanExecute" Executed="UninstallingCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UpdatesCmd}" CanExecute="UpdatesCmdCanExecute" Executed="UpdatesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AboutCmd}" CanExecute="AboutCmdCanExecute" Executed="AboutCmdExecuted" />
+    </Window.CommandBindings>
+
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+            <MenuItem Header="_File">
+                <MenuItem Command="{x:Static local:MainWindow.NewAlbumCmd}" Header="New Album..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.AddFolderCmd}" Header="Add Folder to Micasa..." />
+                <MenuItem Command="{x:Static local:MainWindow.AddFileCmd}" Header="Add File to Micasa..." />
+                <MenuItem Command="{x:Static local:MainWindow.ImportFromCmd}" Header="Import From..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.OpenFileInEditorCmd}" Header="Open File(s) in an Editor" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.MoveCmd}" Header="Move to New Folder..." />
+                <MenuItem Command="{x:Static local:MainWindow.RenameCmd}" Header="Rename..." />
+                <Separator />
+                <MenuItem Command="Save" Header="Save" />
+                <MenuItem Command="{x:Static local:MainWindow.RevertCmd}" Header="Revert" />
+                <Separator />
+                <MenuItem Command="SaveAs" Header="Save As..." />
+                <MenuItem Command="{x:Static local:MainWindow.SaveACopyCmd}" Header="Save a Copy" />
+                <MenuItem Command="{x:Static local:MainWindow.ExportCmd}" Header="Export Picture to a Folder..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.LocateOnDiskCmd}" Header="Locate on Disk" />
+                <MenuItem Command="Delete" Header="Delete from Disk" />
+                <Separator />
+                <MenuItem Command="Print" Header="Print..." />
+                <MenuItem Command="{x:Static local:MainWindow.EmailCmd}" Header="Email..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.ExitCmd}" Header="_Exit" />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Command="Cut" />
+                <MenuItem Command="Copy" />
+                <MenuItem Command="Paste" />
+                <MenuItem Command="Redo" />
+                <MenuItem Command="Undo" />
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Command="{x:Static local:MainWindow.LibraryViewCmd}" Header="_Library View" />
+                <MenuItem Command="{x:Static local:MainWindow.SmlThumbCmd}" Header="S_mall Thumbnails" />
+                <MenuItem Command="{x:Static local:MainWindow.NrmlThumbCmd}" Header="_Normal Thumbnails" />
+                <MenuItem Command="{x:Static local:MainWindow.EditViewCmd}" Header="_Edit View" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.PropertiesCmd}" Header="Properties" />
+                <MenuItem Command="{x:Static local:MainWindow.TagsCmd}" Header="_Tags" />
+                <MenuItem Command="{x:Static local:MainWindow.PeopleCmd}" Header="_People" />
+                <MenuItem Command="{x:Static local:MainWindow.PlacesCmd}" Header="Places" />
+                <MenuItem Command="{x:Static local:MainWindow.ShowEditCtrlsCmd}" Header="Show Edit Controls" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.SlideshowCmd}" Header="Slideshow" />
+                <MenuItem Command="{x:Static local:MainWindow.TimelineCmd}" Header="Timeline" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.SearchOptCmd}" Header="Search Options" />
+                <MenuItem Command="{x:Static local:MainWindow.SmallPictCmd}" Header="Small Pictures" />
+                <MenuItem Command="{x:Static local:MainWindow.HiddenPictCmd}" Header="Hidden Pictures" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.UseClrMgmtCmd}" Header="Use Color Management" />
+                <MenuItem Header="_Display Mode">
+                    <MenuItem Command="{x:Static local:MainWindow.AutomaticCmd}" Header="Automatic" />
+                    <Separator />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Thumbnail Caption">
+                </MenuItem>
+                <MenuItem Header="Folder View">
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="F_older">
+                <MenuItem Command="{x:Static local:MainWindow.EditDescCmd}" Header="_Edit Description..." />
+                <MenuItem Command="{x:Static local:MainWindow.ViewSlidesCmd}" Header="_View Slideshow" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.RefreshThumbsCmd}" Header="Refresh Thumbnails" />
+                <MenuItem Header="Sort By">
+                </MenuItem>
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.HideCmd}" Header="Hide" />
+                <MenuItem Command="{x:Static local:MainWindow.UnhideCmd}" Header="Unhide" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.PrintContactCmd}" Header="Print Contact Sheet..." />
+                <MenuItem Command="{x:Static local:MainWindow.ExportHTMLCmd}" Header="Export as HTML Page..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.LocateFolderOnDiskCmd}" Header="Locate on Disk" />
+                <MenuItem Command="{x:Static local:MainWindow.RemoveFromCmd}" Header="Review from Micasa..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.MoveCmd}" Header="Move..." />
+                <MenuItem Command="{x:Static local:MainWindow.DeleteCmd}" Header="Delete..." />
+            </MenuItem>
+            <MenuItem Header="_Picture">
+            </MenuItem>
+            <MenuItem Header="_Create">
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Command="{x:Static local:MainWindow.FolderMgrCmd}" Header="Folder Manager..." />
+                <MenuItem Command="{x:Static local:MainWindow.UploadMgrCmd}" Header="Upload Manager..." />
+                <MenuItem Command="{x:Static local:MainWindow.PeopleMgrCmd}" Header="People Manager..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.ConfigViewCmd}" Header="Configure Photo Viewer..." />
+                <MenuItem Command="{x:Static local:MainWindow.ConfigScrnSavCmd}" Header="Configure Screen Saver..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.BackupCmd}" Header="Backup Pictures..." />
+                <MenuItem Command="{x:Static local:MainWindow.BatchUploadCmd}" Header="Batch Upload..." />
+                <MenuItem Command="{x:Static local:MainWindow.AdjustDateCmd}" Header="Adjust Date and Time..." />
+                <Separator />
+                <MenuItem Header="U_pload">
+                </MenuItem>
+                <MenuItem Header="_Geotag">
+                </MenuItem>
+                <MenuItem Header="Experimental">
+                </MenuItem>
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.ConfigButtonsCmd}" Header="Configure Buttons..." />
+                <MenuItem Command="{x:Static local:MainWindow.OptionsCmd}" Header="Options..." />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Command="{x:Static local:MainWindow.HelpContentsCmd}" Header="Help Contents and Index" />
+                <MenuItem Command="{x:Static local:MainWindow.ShortcutsCmd}" Header="Keyboard Shortcuts" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.ForumsCmd}" Header="Micasa Formus" />
+                <MenuItem Command="{x:Static local:MainWindow.ReadmeCmd}" Header="Online Readme" />
+                <MenuItem Command="{x:Static local:MainWindow.ReleaseNotesCmd}" Header="Release Notes" />
+                <MenuItem Command="{x:Static local:MainWindow.PrivacyCmd}" Header="Privacy Policy" />
+                <MenuItem Command="{x:Static local:MainWindow.TermsCmd}" Header="Terms" />
+                <MenuItem Command="{x:Static local:MainWindow.UninstallingCmd}" Header="Uninstalling Micasa" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.UpdatesCmd}" Header="Check for Updates" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.AboutCmd}" Header="About Micasa" />
+            </MenuItem>
+        </Menu>
+
+    </Grid>
+</Window>

@@ -1,0 +1,154 @@
+﻿<!--
+    Micasa — Your Photo Home — A lightweight photo organiser & editor.
+    Author: Christopher Rath <christopher@rath.ca>
+    Archived at: http://rath.ca/
+    Copyright 2021 © Christopher Rath
+    Distributed under the GNU Lesser General Public License v2.1
+        (see the About–→Terms menu item for the license text).
+    Warranty: None, see the license.
+-->
+<Window x:Class="Micasa.FolderManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Micasa"
+        mc:Ignorable="d"
+        Title="Folder_Manager" Height="450" Width="800" Loaded="Window_Loaded">
+
+    <!-- This Grid creates 2 columns, each of which contains a Grid -->
+    <!-- of its own.                                                -->
+    <!-- Reminder: Margin="left,top,right,bottom"                   -->
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- This Grid holds the Folder List and its title block. -->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Margin="10,0,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="Folder List" />
+            <TreeView x:Name="foldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="foldersItem_SelectedItemChanged" Width="Auto" >
+                <TreeView.Resources>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Name="watchStatus" MaxWidth="16" MaxHeight="16" Stretch="Uniform" 
+                                            Source="{Binding 
+                                                     RelativeSource={RelativeSource 
+                                                                     Mode=FindAncestor, 
+                                                                     AncestorType={x:Type TreeViewItem}}, 
+                                                     Path=Tag, 
+                                                     Converter={x:Static local:WatchListToIconConverter.Instance}}"       
+                                        />
+                                        <Image Name="folderImg"  MaxWidth="20" MaxHeight="20" Stretch="Uniform"
+                                            Source="{Binding 
+                                                     RelativeSource={RelativeSource 
+                                                                     Mode=FindAncestor, 
+                                                                     AncestorType={x:Type TreeViewItem}}, 
+                                                     Path=Tag, 
+                                                     Converter={x:Static local:PathToIconConverter.Instance}}"       
+                                        />
+                                        <TextBlock Text="{Binding}" Margin="5,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TreeView.Resources>
+            </TreeView>
+        </Grid>
+
+        <!-- This Grid holds the scan type selector, the scan list field, -->
+        <!-- their title blocks, and the buttons.                         -->
+        <Grid Grid.Row="0" Grid.Column="1" Margin="0,0,0,5" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Reminder: Margin="left,top,right,bottom" -->
+
+            <Label Grid.Row="0" Grid.Column="0" Content="For a selected folder, choose the scan frequency." Margin="0,0,0,0"/>
+            
+            <!-- This Grid holds the monitor type radio buttons and the [Reset] button. -->
+            <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0" Margin="10,0,0,0" HorizontalAlignment="Stretch">
+                    <RadioButton Name="rbMonitor" GroupName="FolderMgr" Margin="10,0,0,0" IsEnabled="False" Checked="rbMonitor_Checked">
+                        <WrapPanel>
+                            <Image Source="Resources/Watched.png" Width="16" Height="16" Margin="0,0,5,0" />
+                            <TextBlock Text="Scan Always" Foreground="#FF00539C" />
+                        </WrapPanel>
+                    </RadioButton>
+                    <RadioButton Name="rbOneTime" GroupName="FolderMgr" Margin="10,0,0,0" IsEnabled="False" Checked="rbOneTime_Checked">
+                        <WrapPanel>
+                            <Image Source="Resources/OneTime.png" Width="16" Height="16" Margin="0,0,5,0" />
+                            <TextBlock Text="Scan Once" Foreground="Green" />
+                        </WrapPanel>
+                    </RadioButton>
+                    <RadioButton Name="rbExclude" GroupName="FolderMgr" Margin="10,0,0,0" IsEnabled="False" Checked="rbExclude_Checked">
+                        <WrapPanel>
+                            <Image Source="Resources/Exclude.png" Width="16" Height="16" Margin="0,0,5,0" />
+                            <TextBlock Text="Remove from Micasa" />
+                        </WrapPanel>
+                    </RadioButton>
+                </StackPanel>
+                <Button x:Name="Reset" Content="Reset" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,52.5,3" VerticalAlignment="Top" Width="75" Height="19.96" Click="Reset_Click" IsDefault="False" 
+                        ToolTip="Reset this folder's behaviour to Micasa's default."/>
+            </Grid>
+
+            <WrapPanel Grid.Row="2" Grid.Column="0">
+                <Label Margin="0,5,0,0">Watched Folders:</Label>
+                <Image Source="Resources/Watched.png" Width="12" Height="12" Margin="0,0,0,-5" />
+            </WrapPanel>
+            <TextBox Grid.Row="3" Grid.Column="0" x:Name="tbWatchedFolders" Margin="5,0,10,0" IsReadOnly="True" Height="Auto" HorizontalAlignment="Stretch"
+                         VerticalScrollBarVisibility="Auto" />
+            <WrapPanel Grid.Row="4" Grid.Column="0">
+                <Label Margin="0,5,0,0">Scan Once Folders:</Label>
+                <Image Source="Resources/OneTime.png" Width="12" Height="12" Margin="0,0,0,-5" />
+            </WrapPanel>
+            <TextBox Grid.Row="5" Grid.Column="0" x:Name="tbOneTimeFolders" Margin="5,0,10,0" IsReadOnly="True" Height="Auto" HorizontalAlignment="Stretch"
+                         VerticalScrollBarVisibility="Auto" />
+            <WrapPanel Grid.Row="6" Grid.Column="0">
+                <Label Margin="0,5,0,0">Explicitly Excluded Folders:</Label>
+                <Image Source="Resources/Exclude.png" Width="12" Height="12" Margin="0,0,0,-5" />
+            </WrapPanel>
+            <TextBox Grid.Row="7" Grid.Column="0" x:Name="tbExcludeFolders" Margin="5,0,10,0" IsReadOnly="True" Height="Auto" HorizontalAlignment="Stretch"
+                         VerticalScrollBarVisibility="Auto" />
+            <Button x:Name="OK" Content="OK" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" Margin="0,10,95,3" VerticalAlignment="Bottom" Width="75" Height="19.96" Click="OK_Click" IsDefault="True" />
+            <Button x:Name="Cancel" Content="Cancel" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" Margin="0,10,10,3" VerticalAlignment="Bottom" Width="75" Height="19.96" Click="Cancel_Click" IsCancel="True" />
+        </Grid>
+
+    </Grid>
+</Window>

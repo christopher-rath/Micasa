@@ -1,0 +1,92 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Authors>Christopher Rath</Authors>
+    <PackageIcon>Micasa_Icon.png</PackageIcon>
+    <ApplicationIcon>Micasa_Icon.ico</ApplicationIcon>
+    <PackageLicenseFile>GNU_LGPL.txt</PackageLicenseFile>
+    <NeutralLanguage>en-CA</NeutralLanguage>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Product>Micasa — Your Photo Home</Product>
+    <Description>Micasa is a photo library application loosely based on Google Picasa.</Description>
+    <Copyright>(c)2021 Christopher Rath</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Micasa_Icon.ico" />
+    <None Remove="Resources\Blank.png" />
+    <None Remove="Resources\Computer.png" />
+    <None Remove="Resources\Desktop.png" />
+    <None Remove="Resources\DocumentsFolder.png" />
+    <None Remove="Resources\Exclude.png" />
+    <None Remove="Resources\FolderClosed.png" />
+    <None Remove="Resources\HardDrive.png" />
+    <None Remove="Resources\ImageGroup.png" />
+    <None Remove="Resources\OneTime.png" />
+    <None Remove="Resources\Watched.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiteDB" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\GNU_LGPL.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Resource Include="Resources\Micasa_Icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\About_Micasa.rtf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\GNU_LGPL.rtf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="Resources\Blank.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Computer.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Desktop.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\DocumentsFolder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Exclude.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\FolderClosed.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\HardDrive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ImageGroup.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\OneTime.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Watched.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="Micasa_Icon.ico" />
+  </ItemGroup>
+
+</Project>

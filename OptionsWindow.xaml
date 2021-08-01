@@ -1,0 +1,148 @@
+﻿<!--
+    Micasa — Your Photo Home — A lightweight photo organiser & editor.
+    Author: Christopher Rath <christopher@rath.ca>
+    Archived at: http://rath.ca/
+    Copyright 2021 © Christopher Rath
+    Distributed under the GNU Lesser General Public License v2.1
+        (see the About–→Terms menu item for the license text).
+    Warranty: None, see the license.
+-->
+<Window x:Class="Micasa.OptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Options" ResizeMode="NoResize" SizeToContent="WidthAndHeight"
+        Loaded="OptionsWindow_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="400" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TabControl x:Name="OptionsTabs" HorizontalAlignment="Left" Width="800" 
+		    Height="400" Margin="5,5,5,5" VerticalAlignment="Top">
+            <TabItem Header="General">
+                <Grid Background="#FFE5E5E5" Margin="0,-2,0.4,2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Reminder: Margin="left,top,right,bottom" -->
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="5,0,10,5">
+                        <TextBlock x:Name="tbApOptions" HorizontalAlignment="Left" Margin="10,10,0,5" Text="Application Mode" 
+                                   FontWeight="Bold" />
+                        <RadioButton GroupName="AppMode" Name="rbAppModeLegacy" Content="Legacy: only use .picasa sidecar files." 
+                                     Margin="25,0,0,5" Checked="rbAppModeLegacy_Checked" />
+                        <RadioButton GroupName="AppMode" Name="rbAppModeMigrate" Content="Migrate: migrate .picasa entries to .Micasa file." 
+                                     Margin="25,0,0,5" Checked="rbAppModeMigrate_Checked" />
+                        <RadioButton GroupName="AppMode" Name="rbAppModeNative" Content="Native: only use .Micasa sidecar files." 
+                                     Margin="25,0,0,5" Checked="rbAppModeNative_Checked" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,10,5">
+                        <TextBlock x:Name="tbUpdOptions" HorizontalAlignment="Left" Margin="10,10,0,5" Text="Update Options" 
+                                   FontWeight="Bold" />
+                        <CheckBox x:Name="cbUpdPhotoFiles" Content="Write metadata to photo files (in addition to .Micasa file)." HorizontalAlignment="Left" Margin="25,0,0,5" VerticalAlignment="Top" Foreground="Gray" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="File Types">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="tbTFTitle" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="10,10,0,5" 
+		               Text="File Types to Include in Micasa" VerticalAlignment="Top" FontWeight="Bold" />
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="15,5,10,10">
+                        <TextBlock x:Name="tbPictureTypes" Text="Picture Files:" />
+                        <CheckBox x:Name="cbOpFileTypeAvi" Content=".avi" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypeBmp" Content=".bmp" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypeGif" Content=".gif" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypeJpg" Content=".jpg, .jpeg" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypePng" Content=".png" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypePsd" Content=".psd" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypeTga" Content=".tga" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypeTif" Content=".tif, .tiff" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypeWebp" Content=".webp" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                    </StackPanel>
+
+                    <StackPanel  Grid.Row="1" Grid.Column="1" Margin="15,5,10,10">
+                        <TextBlock x:Name="tbRawTypes" Text="Raw Format Files:" />
+                        <CheckBox x:Name="cbOpFileTypeNef" Content=".nef" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                    </StackPanel>
+
+                    <StackPanel  Grid.Row="1" Grid.Column="2" Margin="15,5,10,10">
+                        <TextBlock x:Name="tbMovieTypes" Text="Movie Files:" />
+                        <CheckBox x:Name="cbOpFileTypeMov" Content=".asv, .avi, .mp4, .mpg, .mov, .wmv, etc." HorizontalAlignment="Left"
+			                      Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Info">
+                <Grid Background="#FFE5E5E5" Margin="0,-2,0.4,2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+		    
+                    <TextBlock x:Name="tbFiles" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="15,10,0,0" Text="Micasa File Locations" FontWeight="Bold" />
+
+                    <Label x:Name="lblIniLoc" Grid.Row="1" Grid.Column="0" Content="Options File Location: " HorizontalAlignment="Right"
+                           Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <TextBox x:Name="tbOpHomeFolderPath" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                             TextWrapping="Wrap" VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+
+                    <Label x:Name="lblWatchLoc" Grid.Row="2" Grid.Column="0" Content="Watched Folders List Location: " HorizontalAlignment="Right"
+                           Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <TextBox x:Name="tbWatchedFoldersPath" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                             VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+
+                    <Label x:Name="lblOnetimeLoc" Grid.Row="3" Grid.Column="0" Content="One Time Folders List Location: " HorizontalAlignment="Right"
+                           Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <TextBox x:Name="tbOneTimeFoldersPath" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                             VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+
+                    <Label x:Name="lblExcludeLoc" Grid.Row="4" Grid.Column="0" Content="Excluded Folders List Location: " HorizontalAlignment="Right"
+                           Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <TextBox x:Name="tbExcludeFoldersPath" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                             VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+
+                    <Label x:Name="lblDataseLoc" Grid.Row="5" Grid.Column="0" Content="Database Location: " HorizontalAlignment="Right"
+                           Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <TextBox x:Name="tbDatabasePath" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                             VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Button x:Name="OK" Content="OK" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,95,8" VerticalAlignment="Bottom" Width="75" Click="OK_Click" IsDefault="True" />
+        <Button x:Name="Cancel" Content="Cancel" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,10.6,8" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" IsCancel="True" />
+    </Grid>
+</Window>
