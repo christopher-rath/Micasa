@@ -33,7 +33,7 @@
                 VerticalAlignment="Bottom" Width="75" RenderTransformOrigin="0.533,1.427" Click="OK_Click" IsCancel="True" IsDefault="True" />
         <RichTextBox x:Name="rtbAboutText" Grid.Column="1" HorizontalAlignment="Left" Height="266.6" Margin="5,0,10.6,0" 
                      VerticalAlignment="Top" Width="530" BorderThickness="0" IsReadOnly="True"
-                     VerticalScrollBarVisibility="Auto" IsDocumentEnabled="True" IsEnabled="True" >
+                     VerticalScrollBarVisibility="Auto" >
             <FlowDocument>
                 <Paragraph>
                     <Run Text="Micasa About text."/>
