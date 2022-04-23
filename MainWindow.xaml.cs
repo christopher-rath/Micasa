@@ -861,7 +861,7 @@ namespace Micasa
         public const string sMcMainSection = @"Main";
         public const string sMcVersion = @"0.03";
         public const string sMcPlatform = @"Windows 10";
-        public const string sMcCopyright = @"2021";
+        public const string sMcCopyright = @"2022";
         public const string sVersionToRepl = @"[@Version String@]";
         public const string sPlatformToRepl = @"[@Platform String@]";
         public const string sCopyrightToRepl = @"[@Copyright Date@]";
