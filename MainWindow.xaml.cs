@@ -733,11 +733,13 @@ namespace Micasa
         // ReleaseNotesCmd
         private void ReleaseNotesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = false;
+            e.CanExecute = true;
         }
 
         private void ReleaseNotesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            ReleaseNotes ReleaseNotesWindow = new ReleaseNotes();
+            ReleaseNotesWindow.Show();
         }
 
         // PrivacyCmd

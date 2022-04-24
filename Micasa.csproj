@@ -12,11 +12,22 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Product>Micasa — Your Photo Home</Product>
     <Description>Micasa is a photo library application loosely based on Google Picasa.</Description>
-    <Copyright>(c)2021 Christopher Rath</Copyright>
+    <Copyright>(c)2022 Christopher Rath</Copyright>
+    <StartupObject>Micasa.App</StartupObject>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Micasa_Icon.ico" />
+    <None Remove="Properties\Release_Notes.rtf" />
     <None Remove="Resources\Blank.png" />
     <None Remove="Resources\Computer.png" />
     <None Remove="Resources\Desktop.png" />
@@ -37,6 +48,9 @@
     <EmbeddedResource Include="Properties\GNU_LGPL.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Release_Notes.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <Resource Include="Resources\Micasa_Icon.png">

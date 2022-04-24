@@ -93,7 +93,7 @@ namespace Micasa
                     PhotoCol.EnsureIndex(x => x.FQFilename);
                     FolderCol.EnsureIndex(x => x.Pathname);
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     throw;                    
                 }
