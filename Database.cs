@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using LiteDB;
 
 namespace Micasa
@@ -87,8 +88,15 @@ namespace Micasa
                 var PhotoCol = db.GetCollection<Photos>("Photos");
                 var FolderCol = db.GetCollection<Folders>("Folders");
 
-                PhotoCol.EnsureIndex(x => x.FQFilename);
-                FolderCol.EnsureIndex(x => x.Pathname);
+                try
+                {
+                    PhotoCol.EnsureIndex(x => x.FQFilename);
+                    FolderCol.EnsureIndex(x => x.Pathname);
+                }
+                catch (IOException e)
+                {
+                    throw;                    
+                }
             }
         }
     }

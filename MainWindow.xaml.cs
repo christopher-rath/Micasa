@@ -120,6 +120,13 @@ namespace Micasa
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
+            catch (IOException e)
+            {
+                string msg = @"Unexpected IOException error opening the Micasa database (" + e.Message + @").";
+                MessageBox.Show(msg, "Database Open Error", MessageBoxButton.OK, MessageBoxImage.Error,
+                                MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                this.Close();
+            }
         }
 
         public static string AppData
