@@ -130,8 +130,8 @@ namespace Micasa
                                 {
                                     if (Options.Instance.IsFileTypeToScan(f))
                                     {
-                                        AddPhotoToDB(PhotoCol, FolderCol, f, PicasaIniExists, DotPicasa, DotMicasa);
-                                        AddFolderToDB(wPath, FolderCol, f);
+                                        AddPhotoToDB(PhotoCol, f, PicasaIniExists, DotPicasa, DotMicasa);
+                                        AddFolderToDB(wPath, FolderCol, Path.GetDirectoryName(f));
                                     }
                                 }
                             }
@@ -182,8 +182,8 @@ namespace Micasa
                             {
                                 if (Options.Instance.IsFileTypeToScan(f))
                                 {
-                                    AddPhotoToDB(pCol, fCol, f, PicasaIniExists, DotPicasa, DotMicasa);
-                                    AddFolderToDB(wDir, fCol, f);
+                                    AddPhotoToDB(pCol, f, PicasaIniExists, DotPicasa, DotMicasa);
+                                    AddFolderToDB(wDir, fCol, Path.GetDirectoryName(f));
                                 }
                             }
                         }
@@ -203,7 +203,7 @@ namespace Micasa
         /// <param name="col">The database coldection we're updating.</param>
         /// <param name="f">The filename of the photo to add to the database.</param>
         /// <param name="dir">The folder in which the filename is located.</param>
-        private static void AddPhotoToDB(ILiteCollection<Photos> pCol, ILiteCollection<Folders> fCol, 
+        private static void AddPhotoToDB(ILiteCollection<Photos> pCol, 
                                          string f, bool PicasaIniExists,
                                          IniFile DotPicasa, IniFile DotMisasa)
         {

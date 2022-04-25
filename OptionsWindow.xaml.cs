@@ -7,11 +7,13 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
+using LiteDB;
+using RichtextboxExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -72,6 +74,8 @@ namespace Micasa
             cbOpFileTypePsd.IsChecked = Options.Instance.FileTypePsd;
             cbOpFileTypeNef.IsChecked = Options.Instance.FileTypeNef;
             cbOpFileTypeMov.IsChecked = Options.Instance.FileTypeMov;
+	    // Datgabase Tab
+	    rtbRebuildInstr.SetRtf(Constants.sMcRebuildInstrRTF);
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)
@@ -111,6 +115,24 @@ namespace Micasa
         }
         private void Cancel_Click(object sender, RoutedEventArgs e) => Close();
 
+        private void Rebuild_Click(object sender, RoutedEventArgs e)
+        {
+            if (tbRebuildConfirm.Text == Constants.sMcRebuildConfirm)
+            {
+                using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
+                {
+                    using (new WaitCursorIndicator(this))
+                    {
+                        db.Rebuild();
+                        // Small DBs rebuild so quickly that adding a short pause provides a
+                        // better user experience (i.e., it makes the busy cursor noticeably
+                        // visible).
+                        Thread.Sleep(1500);                   
+                    }
+                }
+            }
+	    }
+	
         private void rbAppModeLegacy_Checked(object sender, RoutedEventArgs e)
         {
             cbUpdPhotoFiles.IsEnabled = false;
