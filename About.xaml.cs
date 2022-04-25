@@ -27,7 +27,8 @@ namespace Micasa
     using RichtextboxExtensions;
 
     /// <summary>
-    /// Interaction logic for About.xaml
+    /// Fetch the contents of the About_Micasa.rtf file and display them in 
+    /// About.xaml.
     /// </summary>
     public partial class About : Window
     {

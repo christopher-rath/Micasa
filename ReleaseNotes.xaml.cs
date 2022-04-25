@@ -17,7 +17,8 @@ using System.Windows.Shapes;
 namespace Micasa
 {
     /// <summary>
-    /// Interaction logic for ReleaseNotes.xaml
+    /// Fetch the contents of the Release_Notes.rtf file and display them in 
+    /// ReleaseNotes.xaml.
     /// </summary>
     public partial class ReleaseNotes : Window
     {
