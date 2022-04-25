@@ -29,66 +29,69 @@ namespace Micasa
         private static readonly string _AppData = Environment.ExpandEnvironmentVariables(@"%APPDATA%");
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
-        public static RoutedCommand NewAlbumCmd = new();
-        public static RoutedCommand AddFolderCmd = new();
+        public static RoutedCommand AboutCmd = new();
         public static RoutedCommand AddFileCmd = new();
-        public static RoutedCommand ImportFromCmd = new();
-        public static RoutedCommand OpenFileInEditorCmd = new();
-        public static RoutedCommand MoveCmd = new();
-        public static RoutedCommand RenameCmd = new();
-        public static RoutedCommand RevertCmd = new();
-        public static RoutedCommand SaveACopyCmd = new();
-        public static RoutedCommand ExportCmd = new();
-        public static RoutedCommand LocateOnDiskCmd = new();
-        public static RoutedCommand EmailCmd = new();
-        public static RoutedCommand ExitCmd = new();
-        public static RoutedCommand LibraryViewCmd = new();
-        public static RoutedCommand SmlThumbCmd = new();
-        public static RoutedCommand NrmlThumbCmd = new();
-        public static RoutedCommand EditViewCmd = new();
-        public static RoutedCommand PropertiesCmd = new();
-        public static RoutedCommand TagsCmd = new();
-        public static RoutedCommand PeopleCmd = new();
-        public static RoutedCommand PlacesCmd = new();
-        public static RoutedCommand ShowEditCtrlsCmd = new();
-        public static RoutedCommand SlideshowCmd = new();
-        public static RoutedCommand TimelineCmd = new();
-        public static RoutedCommand SearchOptCmd = new();
-        public static RoutedCommand SmallPictCmd = new();
-        public static RoutedCommand HiddenPictCmd = new();
-        public static RoutedCommand UseClrMgmtCmd = new();
+        public static RoutedCommand AddFolderCmd = new();
+        public static RoutedCommand AdjustDateCmd = new();
         public static RoutedCommand AutomaticCmd = new();
-        public static RoutedCommand EditDescCmd = new();
-        public static RoutedCommand ViewSlidesCmd = new();
-        public static RoutedCommand RefreshThumbsCmd = new();
-        public static RoutedCommand HideCmd = new();
-        public static RoutedCommand UnhideCmd = new();
-        public static RoutedCommand PrintContactCmd = new();
-        public static RoutedCommand ExportHTMLCmd = new();
-        public static RoutedCommand LocateFolderOnDiskCmd = new();
-        public static RoutedCommand RemoveFromCmd = new();
-        public static RoutedCommand MoveFolderCmd = new();
-        public static RoutedCommand DeleteCmd = new();
-        public static RoutedCommand FolderMgrCmd = new();
-        public static RoutedCommand UploadMgrCmd = new();
-        public static RoutedCommand PeopleMgrCmd = new();
-        public static RoutedCommand ConfigViewCmd = new();
-        public static RoutedCommand ConfigScrnSavCmd = new();
         public static RoutedCommand BackupCmd = new();
         public static RoutedCommand BatchUploadCmd = new();
-        public static RoutedCommand AdjustDateCmd = new();
         public static RoutedCommand ConfigButtonsCmd = new();
-        public static RoutedCommand OptionsCmd = new();
-        public static RoutedCommand HelpContentsCmd = new();
-        public static RoutedCommand ShortcutsCmd = new();
+        public static RoutedCommand ConfigScrnSavCmd = new();
+        public static RoutedCommand ConfigViewCmd = new();
+        public static RoutedCommand DeleteCmd = new();
+        public static RoutedCommand EditDescCmd = new();
+        public static RoutedCommand EditViewCmd = new();
+        public static RoutedCommand EmailCmd = new();
+        public static RoutedCommand ExitCmd = new();
+        public static RoutedCommand ExportCmd = new();
+        public static RoutedCommand ExportHTMLCmd = new();
+        public static RoutedCommand FolderMgrCmd = new();
         public static RoutedCommand ForumsCmd = new();
-        public static RoutedCommand ReadmeCmd = new();
-        public static RoutedCommand ReleaseNotesCmd = new();
+        public static RoutedCommand HelpContentsCmd = new();
+        public static RoutedCommand HiddenPictCmd = new();
+        public static RoutedCommand HideCmd = new();
+        public static RoutedCommand ImportFromCmd = new();
+        public static RoutedCommand LibraryViewCmd = new();
+        public static RoutedCommand LocateFolderOnDiskCmd = new();
+        public static RoutedCommand LocateOnDiskCmd = new();
+        public static RoutedCommand MoveCmd = new();
+        public static RoutedCommand MoveFolderCmd = new();
+        public static RoutedCommand NewAlbumCmd = new();
+        public static RoutedCommand NrmlThumbCmd = new();
+        public static RoutedCommand OpenFileInEditorCmd = new();
+        public static RoutedCommand OptionsCmd = new();
+        public static RoutedCommand PeopleCmd = new();
+        public static RoutedCommand PeopleMgrCmd = new();
+        public static RoutedCommand PlacesCmd = new();
+        public static RoutedCommand PrintContactCmd = new();
         public static RoutedCommand PrivacyCmd = new();
+        public static RoutedCommand PropertiesCmd = new();
+        public static RoutedCommand ReadmeCmd = new();
+        public static RoutedCommand RefreshThumbsCmd = new();
+        public static RoutedCommand ReleaseNotesCmd = new();
+        public static RoutedCommand RemoveFromCmd = new();
+        public static RoutedCommand RenameCmd = new();
+        public static RoutedCommand ResetFacesCmd = new();
+        public static RoutedCommand RevertCmd = new();
+        public static RoutedCommand SaveACopyCmd = new();
+        public static RoutedCommand SearchOptCmd = new();
+        public static RoutedCommand ShortcutsCmd = new();
+        public static RoutedCommand ShowEditCtrlsCmd = new();
+        public static RoutedCommand SlideshowCmd = new();
+        public static RoutedCommand SmallPictCmd = new();
+        public static RoutedCommand SmlThumbCmd = new();
+        public static RoutedCommand TagsCmd = new();
         public static RoutedCommand TermsCmd = new();
+        public static RoutedCommand TimelineCmd = new();
+        public static RoutedCommand UndoAddEditsCmd = new();
+        public static RoutedCommand UnhideCmd = new();
         public static RoutedCommand UninstallingCmd = new();
         public static RoutedCommand UpdatesCmd = new();
-        public static RoutedCommand AboutCmd = new();
+        public static RoutedCommand UploadMgrCmd = new();
+        public static RoutedCommand UseClrMgmtCmd = new();
+        public static RoutedCommand ViewAndEditCmd = new();
+        public static RoutedCommand ViewSlidesCmd = new();
 #pragma warning restore CA2211 // Non-constant fields should not be visible
         #endregion
 
@@ -186,13 +189,25 @@ namespace Micasa
         #endregion
 
         #region UICode
-        // NewAlbumCmd
-        private void NewAlbumCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // AboutCmd
+        private void AboutCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void AboutCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            About AboutWindow = new About();
+            AboutWindow.Show();
+        }
+
+        // AddFileCmd
+        private void AddFileCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void NewAlbumCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void AddFileCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -206,93 +221,103 @@ namespace Micasa
         {
         }
 
-        // AddFileCmd
-        private void AddFileCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // AdjustDateCmd
+        private void AdjustDateCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void AddFileCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void AdjustDateCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
-        // ImportFromCmd
-        private void ImportFromCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ImportFromCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // OpenFileInEditorCmd
-        private void OpenFileInEditorCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // AutomaticCmd
+        private void AutomaticCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void OpenFileInEditorCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void AutomaticCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
-        // MoveCmd
-        private void MoveCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void MoveCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // RenameCmd
-        private void RenameCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // BackupCmd
+        private void BackupCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void RenameCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void BackupCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
-        // RevertCmd
-        private void RevertCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void RevertCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // SaveACopyCmd
-        private void SaveACopyCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // BatchUploadCmd
+        private void BatchUploadCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void SaveACopyCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void BatchUploadCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
-        // ExportCmd
-        private void ExportCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ExportCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // LocateOnDiskCmd
-        private void LocateOnDiskCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // ConfigButtonsCmd
+        private void ConfigButtonsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void LocateOnDiskCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void ConfigButtonsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ConfigScrnSavCmd
+        private void ConfigScrnSavCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ConfigScrnSavCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ConfigViewCmd
+        private void ConfigViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ConfigViewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // DeleteCmd
+        private void DeleteCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void DeleteCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+	// EditViewCmd
+        private void EditViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void EditViewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // EditDescCmd
+        private void EditDescCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void EditDescCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -317,6 +342,98 @@ namespace Micasa
             this.Close();
         }
 
+        // ExportCmd
+        private void ExportCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ExportCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ExportHTMLCmd
+        private void ExportHTMLCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ExportHTMLCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // FolderMgrCmd
+        private void FolderMgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void FolderMgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            FolderManagerWindow FolderManagerWindow = new FolderManagerWindow();
+            FolderManagerWindow.Show();
+        }
+
+        // ForumsCmd
+        private void ForumsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ForumsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // HelpContentsCmd
+        private void HelpContentsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void HelpContentsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // HideCmd
+        private void HideCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void HideCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // HiddenPictCmd
+        private void HiddenPictCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void HiddenPictCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ImportFromCmd
+        private void ImportFromCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ImportFromCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // LocateFolderOnDiskCmd
+        private void LocateFolderOnDiskCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void LocateFolderOnDiskCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
         // LibraryViewCmd
         private void LibraryViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -327,13 +444,43 @@ namespace Micasa
         {
         }
 
-        // SmlThumbCmd
-        private void SmlThumbCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // LocateOnDiskCmd
+        private void LocateOnDiskCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void SmlThumbCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void LocateOnDiskCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // MoveCmd
+        private void MoveCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void MoveCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // MoveFolderCmd
+        private void MoveFolderCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void MoveFolderCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // NewAlbumCmd
+        private void NewAlbumCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void NewAlbumCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -347,12 +494,75 @@ namespace Micasa
         {
         }
 
-        private void EditViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // OpenFileInEditorCmd
+        private void OpenFileInEditorCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void EditViewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void OpenFileInEditorCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // OptionsCmd
+        private void OptionsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void OptionsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            OptionsWindow OptionsWindow = new OptionsWindow();
+            OptionsWindow.Show();
+        }
+
+        // PeopleCmd
+        private void PeopleCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void PeopleCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // PeopleMgrCmd
+        private void PeopleMgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void PeopleMgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // PlacesCmd
+        private void PlacesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void PlacesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // PrintContactCmd
+        private void PrintContactCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void PrintContactCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // PrivacyCmd
+        private void PrivacyCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void PrivacyCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -366,33 +576,105 @@ namespace Micasa
         {
         }
 
-        // TagsCmd
-        private void TagsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // ReadmeCmd
+        private void ReadmeCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void TagsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void ReadmeCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
-        // PeopleCmd
-        private void PeopleCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void PeopleCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // PlacesCmd
-        private void PlacesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // RefreshThumbsCmd
+        private void RefreshThumbsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void PlacesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void RefreshThumbsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ReleaseNotesCmd
+        private void ReleaseNotesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ReleaseNotesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            ReleaseNotes ReleaseNotesWindow = new ReleaseNotes();
+            ReleaseNotesWindow.Show();
+        }
+
+        // RemoveFromCmd
+        private void RemoveFromCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void RemoveFromCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // RenameCmd
+        private void RenameCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void RenameCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ResetFacesCmd
+        private void ResetFacesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ResetFacesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // RevertCmd
+        private void RevertCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void RevertCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // SaveACopyCmd
+        private void SaveACopyCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void SaveACopyCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // SearchOptCmd
+        private void SearchOptCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void SearchOptCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ShortcutsCmd
+        private void ShortcutsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ShortcutsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -416,23 +698,13 @@ namespace Micasa
         {
         }
 
-        // TimelineCmd
-        private void TimelineCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // SmlThumbCmd
+        private void SmlThumbCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void TimelineCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // SearchOptCmd
-        private void SearchOptCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void SearchOptCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void SmlThumbCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -446,309 +718,13 @@ namespace Micasa
         {
         }
 
-        // HiddenPictCmd
-        private void HiddenPictCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // TagsCmd
+        private void TagsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
         }
 
-        private void HiddenPictCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // UseClrMgmtCmd
-        private void UseClrMgmtCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void UseClrMgmtCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // AutomaticCmd
-        private void AutomaticCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void AutomaticCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // EditDescCmd
-        private void EditDescCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void EditDescCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ViewSlidesCmd
-        private void ViewSlidesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ViewSlidesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // RefreshThumbsCmd
-        private void RefreshThumbsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void RefreshThumbsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // HideCmd
-        private void HideCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void HideCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // UnhideCmd
-        private void UnhideCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void UnhideCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // PrintContactCmd
-        private void PrintContactCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void PrintContactCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ExportHTMLCmd
-        private void ExportHTMLCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ExportHTMLCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // LocateFolderOnDiskCmd
-        private void LocateFolderOnDiskCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void LocateFolderOnDiskCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // RemoveFromCmd
-        private void RemoveFromCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void RemoveFromCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // MoveFolderCmd
-        private void MoveFolderCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void MoveFolderCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // DeleteCmd
-        private void DeleteCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void DeleteCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // FolderMgrCmd
-        private void FolderMgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void FolderMgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            FolderManagerWindow FolderManagerWindow = new FolderManagerWindow();
-            FolderManagerWindow.Show();
-        }
-
-        // UploadMgrCmd
-        private void UploadMgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void UploadMgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // PeopleMgrCmd
-        private void PeopleMgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void PeopleMgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ConfigViewCmd
-        private void ConfigViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ConfigViewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ConfigScrnSavCmd
-        private void ConfigScrnSavCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ConfigScrnSavCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // BackupCmd
-        private void BackupCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void BackupCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // BatchUploadCmd
-        private void BatchUploadCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void BatchUploadCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // AdjustDateCmd
-        private void AdjustDateCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void AdjustDateCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ConfigButtonsCmd
-        private void ConfigButtonsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ConfigButtonsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // OptionsCmd
-        private void OptionsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void OptionsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            OptionsWindow OptionsWindow = new OptionsWindow();
-            OptionsWindow.Show();
-        }
-
-        // HelpContentsCmd
-        private void HelpContentsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void HelpContentsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ShortcutsCmd
-        private void ShortcutsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ShortcutsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ForumsCmd
-        private void ForumsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ForumsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ReadmeCmd
-        private void ReadmeCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void ReadmeCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ReleaseNotesCmd
-        private void ReleaseNotesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void ReleaseNotesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            ReleaseNotes ReleaseNotesWindow = new ReleaseNotes();
-            ReleaseNotesWindow.Show();
-        }
-
-        // PrivacyCmd
-        private void PrivacyCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = false;
-        }
-
-        private void PrivacyCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void TagsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -762,6 +738,16 @@ namespace Micasa
         {
             Terms TermsWindow = new Terms();
             TermsWindow.Show();
+        }
+
+        // TimelineCmd
+        private void TimelineCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void TimelineCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
         }
 
         // UninstallingCmd
@@ -784,17 +770,66 @@ namespace Micasa
         {
         }
 
-        // AboutCmd
-        private void AboutCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        // UploadMgrCmd
+        private void UploadMgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            e.CanExecute = false;
         }
 
-        private void AboutCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void UploadMgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            About AboutWindow = new About();
-            AboutWindow.Show();
         }
+
+        // UnhideCmd
+        private void UnhideCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void UnhideCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // UseClrMgmtCmd
+        private void UseClrMgmtCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void UseClrMgmtCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ViewAndEditCmd
+        private void ViewAndEditCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ViewAndEditCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ViewSlidesCmd
+        private void ViewSlidesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ViewSlidesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // UndoAddEditsCmd
+        private void UndoAddEditsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void UndoAddEditsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+	
         #endregion UICode
     }
 

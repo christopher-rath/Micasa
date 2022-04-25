@@ -17,66 +17,72 @@
     Title="Micasa" SizeToContent="WidthAndHeight" MinHeight="100" Closing="Window_Closing">
 
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static local:MainWindow.NewAlbumCmd}" CanExecute="NewAlbumCmdCanExecute" Executed="NewAlbumCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.AddFolderCmd}" CanExecute="AddFolderCmdCanExecute" Executed="AddFolderCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AboutCmd}" CanExecute="AboutCmdCanExecute" Executed="AboutCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AddFileCmd}" CanExecute="AddFileCmdCanExecute" Executed="AddFileCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ImportFromCmd}" CanExecute="ImportFromCmdCanExecute" Executed="ImportFromCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.OpenFileInEditorCmd}" CanExecute="OpenFileInEditorCmdCanExecute" Executed="OpenFileInEditorCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.MoveCmd}" CanExecute="MoveCmdCanExecute" Executed="MoveCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.RenameCmd}" CanExecute="RenameCmdCanExecute" Executed="RenameCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.RevertCmd}" CanExecute="RevertCmdCanExecute" Executed="RevertCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.SaveACopyCmd}" CanExecute="SaveACopyCmdCanExecute" Executed="SaveACopyCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ExportCmd}" CanExecute="ExportCmdCanExecute" Executed="ExportCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.LocateOnDiskCmd}" CanExecute="LocateOnDiskCmdCanExecute" Executed="LocateOnDiskCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.EmailCmd}" CanExecute="EmailCmdCanExecute" Executed="EmailCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ExitCmd}" CanExecute="ExitCmdCanExecute" Executed="ExitCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.LibraryViewCmd}" CanExecute="LibraryViewCmdCanExecute" Executed="LibraryViewCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.SmlThumbCmd}" CanExecute="SmlThumbCmdCanExecute" Executed="SmlThumbCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.NrmlThumbCmd}" CanExecute="NrmlThumbCmdCanExecute" Executed="NrmlThumbCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.EditViewCmd}" CanExecute="EditViewCmdCanExecute" Executed="EditViewCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.PropertiesCmd}" CanExecute="PropertiesCmdCanExecute" Executed="PropertiesCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.TagsCmd}" CanExecute="TagsCmdCanExecute" Executed="TagsCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.PeopleCmd}" CanExecute="PeopleCmdCanExecute" Executed="PeopleCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.PlacesCmd}" CanExecute="PlacesCmdCanExecute" Executed="PlacesCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ShowEditCtrlsCmd}" CanExecute="ShowEditCtrlsCmdCanExecute" Executed="ShowEditCtrlsCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.SlideshowCmd}" CanExecute="SlideshowCmdCanExecute" Executed="SlideshowCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.TimelineCmd}" CanExecute="TimelineCmdCanExecute" Executed="TimelineCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.SearchOptCmd}" CanExecute="SearchOptCmdCanExecute" Executed="SearchOptCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.SmallPictCmd}" CanExecute="SmallPictCmdCanExecute" Executed="SmallPictCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.HiddenPictCmd}" CanExecute="HiddenPictCmdCanExecute" Executed="HiddenPictCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.UseClrMgmtCmd}" CanExecute="UseClrMgmtCmdCanExecute" Executed="UseClrMgmtCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AddFolderCmd}" CanExecute="AddFolderCmdCanExecute" Executed="AddFolderCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AdjustDateCmd}" CanExecute="AdjustDateCmdCanExecute" Executed="AdjustDateCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AutomaticCmd}" CanExecute="AutomaticCmdCanExecute" Executed="AutomaticCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.EditDescCmd}" CanExecute="EditDescCmdCanExecute" Executed="EditDescCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ViewSlidesCmd}" CanExecute="ViewSlidesCmdCanExecute" Executed="ViewSlidesCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.RefreshThumbsCmd}" CanExecute="RefreshThumbsCmdCanExecute" Executed="RefreshThumbsCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.HideCmd}" CanExecute="HideCmdCanExecute" Executed="HideCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.UnhideCmd}" CanExecute="UnhideCmdCanExecute" Executed="UnhideCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.PrintContactCmd}" CanExecute="PrintContactCmdCanExecute" Executed="PrintContactCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ExportHTMLCmd}" CanExecute="ExportHTMLCmdCanExecute" Executed="ExportHTMLCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.LocateFolderOnDiskCmd}" CanExecute="LocateFolderOnDiskCmdCanExecute" Executed="LocateFolderOnDiskCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.RemoveFromCmd}" CanExecute="RemoveFromCmdCanExecute" Executed="RemoveFromCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.MoveFolderCmd}" CanExecute="MoveFolderCmdCanExecute" Executed="MoveFolderCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.DeleteCmd}" CanExecute="DeleteCmdCanExecute" Executed="DeleteCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.FolderMgrCmd}" CanExecute="FolderMgrCmdCanExecute" Executed="FolderMgrCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.UploadMgrCmd}" CanExecute="UploadMgrCmdCanExecute" Executed="UploadMgrCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.PeopleMgrCmd}" CanExecute="PeopleMgrCmdCanExecute" Executed="PeopleMgrCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ConfigViewCmd}" CanExecute="ConfigViewCmdCanExecute" Executed="ConfigViewCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ConfigScrnSavCmd}" CanExecute="ConfigScrnSavCmdCanExecute" Executed="ConfigScrnSavCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.BackupCmd}" CanExecute="BackupCmdCanExecute" Executed="BackupCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.BatchUploadCmd}" CanExecute="BatchUploadCmdCanExecute" Executed="BatchUploadCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.AdjustDateCmd}" CanExecute="AdjustDateCmdCanExecute" Executed="AdjustDateCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ConfigButtonsCmd}" CanExecute="ConfigButtonsCmdCanExecute" Executed="ConfigButtonsCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.OptionsCmd}" CanExecute="OptionsCmdCanExecute" Executed="OptionsCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.HelpContentsCmd}" CanExecute="HelpContentsCmdCanExecute" Executed="HelpContentsCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ShortcutsCmd}" CanExecute="ShortcutsCmdCanExecute" Executed="ShortcutsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ConfigScrnSavCmd}" CanExecute="ConfigScrnSavCmdCanExecute" Executed="ConfigScrnSavCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ConfigViewCmd}" CanExecute="ConfigViewCmdCanExecute" Executed="ConfigViewCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.DeleteCmd}" CanExecute="DeleteCmdCanExecute" Executed="DeleteCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.EditDescCmd}" CanExecute="EditDescCmdCanExecute" Executed="EditDescCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.EditViewCmd}" CanExecute="EditViewCmdCanExecute" Executed="EditViewCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.EmailCmd}" CanExecute="EmailCmdCanExecute" Executed="EmailCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ExitCmd}" CanExecute="ExitCmdCanExecute" Executed="ExitCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ExportCmd}" CanExecute="ExportCmdCanExecute" Executed="ExportCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ExportHTMLCmd}" CanExecute="ExportHTMLCmdCanExecute" Executed="ExportHTMLCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.FolderMgrCmd}" CanExecute="FolderMgrCmdCanExecute" Executed="FolderMgrCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ForumsCmd}" CanExecute="ForumsCmdCanExecute" Executed="ForumsCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ReadmeCmd}" CanExecute="ReadmeCmdCanExecute" Executed="ReadmeCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ReleaseNotesCmd}" CanExecute="ReleaseNotesCmdCanExecute" Executed="ReleaseNotesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.HelpContentsCmd}" CanExecute="HelpContentsCmdCanExecute" Executed="HelpContentsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.HiddenPictCmd}" CanExecute="HiddenPictCmdCanExecute" Executed="HiddenPictCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.HideCmd}" CanExecute="HideCmdCanExecute" Executed="HideCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.HideCmd}" CanExecute="HideCmdCanExecute" Executed="HideCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ImportFromCmd}" CanExecute="ImportFromCmdCanExecute" Executed="ImportFromCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.LibraryViewCmd}" CanExecute="LibraryViewCmdCanExecute" Executed="LibraryViewCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.LocateFolderOnDiskCmd}" CanExecute="LocateFolderOnDiskCmdCanExecute" Executed="LocateFolderOnDiskCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.LocateOnDiskCmd}" CanExecute="LocateOnDiskCmdCanExecute" Executed="LocateOnDiskCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.MoveCmd}" CanExecute="MoveCmdCanExecute" Executed="MoveCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.MoveFolderCmd}" CanExecute="MoveFolderCmdCanExecute" Executed="MoveFolderCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.NewAlbumCmd}" CanExecute="NewAlbumCmdCanExecute" Executed="NewAlbumCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.NrmlThumbCmd}" CanExecute="NrmlThumbCmdCanExecute" Executed="NrmlThumbCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.OpenFileInEditorCmd}" CanExecute="OpenFileInEditorCmdCanExecute" Executed="OpenFileInEditorCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.OptionsCmd}" CanExecute="OptionsCmdCanExecute" Executed="OptionsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PeopleCmd}" CanExecute="PeopleCmdCanExecute" Executed="PeopleCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PeopleMgrCmd}" CanExecute="PeopleMgrCmdCanExecute" Executed="PeopleMgrCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PlacesCmd}" CanExecute="PlacesCmdCanExecute" Executed="PlacesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PrintContactCmd}" CanExecute="PrintContactCmdCanExecute" Executed="PrintContactCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PrivacyCmd}" CanExecute="PrivacyCmdCanExecute" Executed="PrivacyCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PropertiesCmd}" CanExecute="PropertiesCmdCanExecute" Executed="PropertiesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PropertiesCmd}" CanExecute="PropertiesCmdCanExecute" Executed="PropertiesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ReadmeCmd}" CanExecute="ReadmeCmdCanExecute" Executed="ReadmeCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.RefreshThumbsCmd}" CanExecute="RefreshThumbsCmdCanExecute" Executed="RefreshThumbsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ReleaseNotesCmd}" CanExecute="ReleaseNotesCmdCanExecute" Executed="ReleaseNotesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.RemoveFromCmd}" CanExecute="RemoveFromCmdCanExecute" Executed="RemoveFromCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.RenameCmd}" CanExecute="RenameCmdCanExecute" Executed="RenameCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ResetFacesCmd}" CanExecute="ResetFacesCmdCanExecute" Executed="ResetFacesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.RevertCmd}" CanExecute="RevertCmdCanExecute" Executed="RevertCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SaveACopyCmd}" CanExecute="SaveACopyCmdCanExecute" Executed="SaveACopyCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SearchOptCmd}" CanExecute="SearchOptCmdCanExecute" Executed="SearchOptCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ShortcutsCmd}" CanExecute="ShortcutsCmdCanExecute" Executed="ShortcutsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ShowEditCtrlsCmd}" CanExecute="ShowEditCtrlsCmdCanExecute" Executed="ShowEditCtrlsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SlideshowCmd}" CanExecute="SlideshowCmdCanExecute" Executed="SlideshowCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SmallPictCmd}" CanExecute="SmallPictCmdCanExecute" Executed="SmallPictCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SmlThumbCmd}" CanExecute="SmlThumbCmdCanExecute" Executed="SmlThumbCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.TagsCmd}" CanExecute="TagsCmdCanExecute" Executed="TagsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.TermsCmd}" CanExecute="TermsCmdCanExecute" Executed="TermsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.TimelineCmd}" CanExecute="TimelineCmdCanExecute" Executed="TimelineCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UndoAddEditsCmd}" CanExecute="UndoAddEditsCmdCanExecute" Executed="UndoAddEditsCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UnhideCmd}" CanExecute="UnhideCmdCanExecute" Executed="UnhideCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UnhideCmd}" CanExecute="UnhideCmdCanExecute" Executed="UnhideCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.UninstallingCmd}" CanExecute="UninstallingCmdCanExecute" Executed="UninstallingCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.UpdatesCmd}" CanExecute="UpdatesCmdCanExecute" Executed="UpdatesCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.AboutCmd}" CanExecute="AboutCmdCanExecute" Executed="AboutCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UploadMgrCmd}" CanExecute="UploadMgrCmdCanExecute" Executed="UploadMgrCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.UseClrMgmtCmd}" CanExecute="UseClrMgmtCmdCanExecute" Executed="UseClrMgmtCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ViewAndEditCmd}" CanExecute="ViewAndEditCmdCanExecute" Executed="ViewAndEditCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ViewSlidesCmd}" CanExecute="ViewSlidesCmdCanExecute" Executed="ViewSlidesCmdExecuted" />
     </Window.CommandBindings>
 
     <Grid>
@@ -178,6 +184,18 @@
                 <MenuItem Command="{x:Static local:MainWindow.DeleteCmd}" Header="Delete..." />
             </MenuItem>
             <MenuItem Header="_Picture">
+                <MenuItem Command="{x:Static local:MainWindow.ViewAndEditCmd}" Header="_View and Edit" />
+                <MenuItem Header="_Batch Edit">
+                </MenuItem>
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.UndoAddEditsCmd}" Header="Undo _All Edits" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.HideCmd}" Header="_Hide" />
+                <MenuItem Command="{x:Static local:MainWindow.UnhideCmd}" Header="_Unhide" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.ResetFacesCmd}" Header="Reset _Faces" />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.PropertiesCmd}" Header="Properties" />
             </MenuItem>
             <MenuItem Header="_Create">
             </MenuItem>
