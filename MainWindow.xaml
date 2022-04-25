@@ -20,6 +20,7 @@
         <CommandBinding Command="{x:Static local:MainWindow.AboutCmd}" CanExecute="AboutCmdCanExecute" Executed="AboutCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AddFileCmd}" CanExecute="AddFileCmdCanExecute" Executed="AddFileCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AddFolderCmd}" CanExecute="AddFolderCmdCanExecute" Executed="AddFolderCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.AddToScrnSvrCmd}" CanExecute="AddToScrnSvrCmdCanExecute" Executed="AddToScrnSvrCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AdjustDateCmd}" CanExecute="AdjustDateCmdCanExecute" Executed="AdjustDateCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AutomaticCmd}" CanExecute="AutomaticCmdCanExecute" Executed="AutomaticCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.BackupCmd}" CanExecute="BackupCmdCanExecute" Executed="BackupCmdExecuted" />
@@ -27,6 +28,7 @@
         <CommandBinding Command="{x:Static local:MainWindow.ConfigButtonsCmd}" CanExecute="ConfigButtonsCmdCanExecute" Executed="ConfigButtonsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ConfigScrnSavCmd}" CanExecute="ConfigScrnSavCmdCanExecute" Executed="ConfigScrnSavCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ConfigViewCmd}" CanExecute="ConfigViewCmdCanExecute" Executed="ConfigViewCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.CreateGCDCmd}" CanExecute="CreateGCDCmdCanExecute" Executed="CreateGCDCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.DeleteCmd}" CanExecute="DeleteCmdCanExecute" Executed="DeleteCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.EditDescCmd}" CanExecute="EditDescCmdCanExecute" Executed="EditDescCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.EditViewCmd}" CanExecute="EditViewCmdCanExecute" Executed="EditViewCmdExecuted" />
@@ -34,6 +36,7 @@
         <CommandBinding Command="{x:Static local:MainWindow.ExitCmd}" CanExecute="ExitCmdCanExecute" Executed="ExitCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ExportCmd}" CanExecute="ExportCmdCanExecute" Executed="ExportCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ExportHTMLCmd}" CanExecute="ExportHTMLCmdCanExecute" Executed="ExportHTMLCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.ExportToDVRCmd}" CanExecute="ExportToDVRCmdCanExecute" Executed="ExportToDVRCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.FolderMgrCmd}" CanExecute="FolderMgrCmdCanExecute" Executed="FolderMgrCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ForumsCmd}" CanExecute="ForumsCmdCanExecute" Executed="ForumsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.HelpContentsCmd}" CanExecute="HelpContentsCmdCanExecute" Executed="HelpContentsCmdExecuted" />
@@ -44,6 +47,7 @@
         <CommandBinding Command="{x:Static local:MainWindow.LibraryViewCmd}" CanExecute="LibraryViewCmdCanExecute" Executed="LibraryViewCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.LocateFolderOnDiskCmd}" CanExecute="LocateFolderOnDiskCmdCanExecute" Executed="LocateFolderOnDiskCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.LocateOnDiskCmd}" CanExecute="LocateOnDiskCmdCanExecute" Executed="LocateOnDiskCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.MakeAPosterCmd}" CanExecute="MakeAPosterCmdCanExecute" Executed="MakeAPosterCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.MoveCmd}" CanExecute="MoveCmdCanExecute" Executed="MoveCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.MoveFolderCmd}" CanExecute="MoveFolderCmdCanExecute" Executed="MoveFolderCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.NewAlbumCmd}" CanExecute="NewAlbumCmdCanExecute" Executed="NewAlbumCmdExecuted" />
@@ -52,11 +56,13 @@
         <CommandBinding Command="{x:Static local:MainWindow.OptionsCmd}" CanExecute="OptionsCmdCanExecute" Executed="OptionsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PeopleCmd}" CanExecute="PeopleCmdCanExecute" Executed="PeopleCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PeopleMgrCmd}" CanExecute="PeopleMgrCmdCanExecute" Executed="PeopleMgrCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PictureCollageCmd}" CanExecute="PictureCollageCmdCanExecute" Executed="PictureCollageCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PlacesCmd}" CanExecute="PlacesCmdCanExecute" Executed="PlacesCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PrintContactCmd}" CanExecute="PrintContactCmdCanExecute" Executed="PrintContactCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PrivacyCmd}" CanExecute="PrivacyCmdCanExecute" Executed="PrivacyCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PropertiesCmd}" CanExecute="PropertiesCmdCanExecute" Executed="PropertiesCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PropertiesCmd}" CanExecute="PropertiesCmdCanExecute" Executed="PropertiesCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.PublishToBlgrCmd}" CanExecute="PublishToBlgrCmdCanExecute" Executed="PublishToBlgrCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ReadmeCmd}" CanExecute="ReadmeCmdCanExecute" Executed="ReadmeCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.RefreshThumbsCmd}" CanExecute="RefreshThumbsCmdCanExecute" Executed="RefreshThumbsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ReleaseNotesCmd}" CanExecute="ReleaseNotesCmdCanExecute" Executed="ReleaseNotesCmdExecuted" />
@@ -66,6 +72,7 @@
         <CommandBinding Command="{x:Static local:MainWindow.RevertCmd}" CanExecute="RevertCmdCanExecute" Executed="RevertCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.SaveACopyCmd}" CanExecute="SaveACopyCmdCanExecute" Executed="SaveACopyCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.SearchOptCmd}" CanExecute="SearchOptCmdCanExecute" Executed="SearchOptCmdExecuted" />
+        <CommandBinding Command="{x:Static local:MainWindow.SetAsDesktopCmd}" CanExecute="SetAsDesktopCmdCanExecute" Executed="SetAsDesktopCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ShortcutsCmd}" CanExecute="ShortcutsCmdCanExecute" Executed="ShortcutsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ShowEditCtrlsCmd}" CanExecute="ShowEditCtrlsCmdCanExecute" Executed="ShowEditCtrlsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.SlideshowCmd}" CanExecute="SlideshowCmdCanExecute" Executed="SlideshowCmdExecuted" />
@@ -198,6 +205,17 @@
                 <MenuItem Command="{x:Static local:MainWindow.PropertiesCmd}" Header="Properties" />
             </MenuItem>
             <MenuItem Header="_Create">
+                <MenuItem Command="{x:Static local:MainWindow.SetAsDesktopCmd}" Header="Set as _Desktop..." />
+                <MenuItem Command="{x:Static local:MainWindow.MakeAPosterCmd}" Header="Make a _Poster..." />
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.PictureCollageCmd}" Header="_Picture Collage..." />
+                <MenuItem Command="{x:Static local:MainWindow.AddToScrnSvrCmd}" Header="Add to _Screensaver..." />
+                <MenuItem Command="{x:Static local:MainWindow.CreateGCDCmd}" Header="Create a _Gift CD..." />
+                <MenuItem Header="_Movie">
+                </MenuItem>
+                <Separator />
+                <MenuItem Command="{x:Static local:MainWindow.PublishToBlgrCmd}" Header="Publish to _Blogger..." />
+                <MenuItem Command="{x:Static local:MainWindow.ExportToDVRCmd}" Header="_Export to TiVo(r) DVR..." />
             </MenuItem>
             <MenuItem Header="_Tools">
                 <MenuItem Command="{x:Static local:MainWindow.FolderMgrCmd}" Header="Folder Manager..." />

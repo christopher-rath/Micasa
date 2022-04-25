@@ -32,6 +32,7 @@ namespace Micasa
         public static RoutedCommand AboutCmd = new();
         public static RoutedCommand AddFileCmd = new();
         public static RoutedCommand AddFolderCmd = new();
+        public static RoutedCommand AddToScrnSvrCmd = new();
         public static RoutedCommand AdjustDateCmd = new();
         public static RoutedCommand AutomaticCmd = new();
         public static RoutedCommand BackupCmd = new();
@@ -39,6 +40,7 @@ namespace Micasa
         public static RoutedCommand ConfigButtonsCmd = new();
         public static RoutedCommand ConfigScrnSavCmd = new();
         public static RoutedCommand ConfigViewCmd = new();
+        public static RoutedCommand CreateGCDCmd = new();
         public static RoutedCommand DeleteCmd = new();
         public static RoutedCommand EditDescCmd = new();
         public static RoutedCommand EditViewCmd = new();
@@ -46,6 +48,7 @@ namespace Micasa
         public static RoutedCommand ExitCmd = new();
         public static RoutedCommand ExportCmd = new();
         public static RoutedCommand ExportHTMLCmd = new();
+        public static RoutedCommand ExportToDVRCmd = new();
         public static RoutedCommand FolderMgrCmd = new();
         public static RoutedCommand ForumsCmd = new();
         public static RoutedCommand HelpContentsCmd = new();
@@ -55,6 +58,7 @@ namespace Micasa
         public static RoutedCommand LibraryViewCmd = new();
         public static RoutedCommand LocateFolderOnDiskCmd = new();
         public static RoutedCommand LocateOnDiskCmd = new();
+        public static RoutedCommand MakeAPosterCmd = new();
         public static RoutedCommand MoveCmd = new();
         public static RoutedCommand MoveFolderCmd = new();
         public static RoutedCommand NewAlbumCmd = new();
@@ -63,10 +67,12 @@ namespace Micasa
         public static RoutedCommand OptionsCmd = new();
         public static RoutedCommand PeopleCmd = new();
         public static RoutedCommand PeopleMgrCmd = new();
+        public static RoutedCommand PictureCollageCmd = new();
         public static RoutedCommand PlacesCmd = new();
         public static RoutedCommand PrintContactCmd = new();
         public static RoutedCommand PrivacyCmd = new();
         public static RoutedCommand PropertiesCmd = new();
+        public static RoutedCommand PublishToBlgrCmd = new();
         public static RoutedCommand ReadmeCmd = new();
         public static RoutedCommand RefreshThumbsCmd = new();
         public static RoutedCommand ReleaseNotesCmd = new();
@@ -76,6 +82,7 @@ namespace Micasa
         public static RoutedCommand RevertCmd = new();
         public static RoutedCommand SaveACopyCmd = new();
         public static RoutedCommand SearchOptCmd = new();
+        public static RoutedCommand SetAsDesktopCmd = new();
         public static RoutedCommand ShortcutsCmd = new();
         public static RoutedCommand ShowEditCtrlsCmd = new();
         public static RoutedCommand SlideshowCmd = new();
@@ -221,6 +228,16 @@ namespace Micasa
         {
         }
 
+        // AddToScrnSvrCmd
+        private void AddToScrnSvrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void AddToScrnSvrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
         // AdjustDateCmd
         private void AdjustDateCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -288,6 +305,16 @@ namespace Micasa
         }
 
         private void ConfigViewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // CreateGCDCmd
+        private void CreateGCDCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void CreateGCDCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -359,6 +386,16 @@ namespace Micasa
         }
 
         private void ExportHTMLCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // ExportToDVRCmd
+        private void ExportToDVRCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void ExportToDVRCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -454,6 +491,16 @@ namespace Micasa
         {
         }
 
+        // MakeAPosterCmd
+        private void MakeAPosterCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void MakeAPosterCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
         // MoveCmd
         private void MoveCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -536,6 +583,16 @@ namespace Micasa
         {
         }
 
+        // PictureCollageCmd
+        private void PictureCollageCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void PictureCollageCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
         // PlacesCmd
         private void PlacesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -573,6 +630,16 @@ namespace Micasa
         }
 
         private void PropertiesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // PublishToBlgrCmd
+        private void PublishToBlgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void PublishToBlgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -665,6 +732,16 @@ namespace Micasa
         }
 
         private void SearchOptCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // SetAsDesktopCmd
+        private void SetAsDesktopCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = false;
+        }
+
+        private void SetAsDesktopCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
