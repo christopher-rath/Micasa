@@ -123,11 +123,15 @@ namespace Micasa
                 {
                     using (new WaitCursorIndicator(this))
                     {
-                        db.Rebuild();
+                        // Stop the picture scanner before we rebuild the DB.
+                        MainWindow.Stopscanners();
                         // Small DBs rebuild so quickly that adding a short pause provides a
                         // better user experience (i.e., it makes the busy cursor noticeably
-                        // visible).
-                        Thread.Sleep(1500);                   
+                        // visible).  It also give the scanners time to stop.
+                        Thread.Sleep(2000);
+                        db.Rebuild();
+                        // Restart the scanners now that the rebuild is done.
+                        MainWindow.StartScanners();
                     }
                 }
             }
