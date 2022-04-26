@@ -23,6 +23,9 @@ namespace Micasa
 
     public partial class MainWindow : Window
     {
+        private static readonly DeletedScanner _DeletedScanner = new();
+        private static CancellationTokenSource DeletedScannerCancellationSource = new();
+        private static CancellationToken DeletedScannerCancellationToken = DeletedScannerCancellationSource.Token;
         private static readonly PictureScanner _PictureScanner = new();
         private static CancellationTokenSource PictureScannerCancellationSource = new();
         private static CancellationToken PictureScannerCancellationToken = PictureScannerCancellationSource.Token;
@@ -156,11 +159,17 @@ namespace Micasa
             PictureScannerCancellationSource = new CancellationTokenSource();
             PictureScannerCancellationToken = PictureScannerCancellationSource.Token;
             Task.Run(() => PictureScanner.StartScanner(PictureScannerCancellationToken), PictureScannerCancellationToken);
+
+            // We always create a fresh token in case the existing one is in a cancalled state.
+            DeletedScannerCancellationSource = new CancellationTokenSource();
+            DeletedScannerCancellationToken = DeletedScannerCancellationSource.Token;
+            Task.Run(() => DeletedScanner.StartScanner(DeletedScannerCancellationToken), DeletedScannerCancellationToken);
         }
-        
+
         public static void Stopscanners()
         {
             PictureScannerCancellationSource.Cancel();
+            DeletedScannerCancellationSource.Cancel();
         }
         #endregion Thread_Code
 
