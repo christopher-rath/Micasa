@@ -119,6 +119,8 @@ namespace Micasa
         {
             if (tbRebuildConfirm.Text == Constants.sMcRebuildConfirm)
             {
+                tbRebuildConfirm.Text = "";
+
                 using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
                 {
                     using (new WaitCursorIndicator(this))
