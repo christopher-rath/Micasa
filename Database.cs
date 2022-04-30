@@ -140,10 +140,10 @@ namespace Micasa
 
         /// <summary>
         /// Compare two DateTime objects.  This function is needed to work around
-        /// an oddity I'm experiencing where storing and retrieving a DateTime in
-        /// a LiteDB causes the DateTime to be very slightly modified -- probably
-        /// due to serialisation.  So, this function limits its comparison to 
-        /// seconds; that is, it doesn't compare the milliseconds or ticks.
+        /// the fact that LiteDB stores dates as UTC milliseconds since the Unix 
+        /// epoch; which is less precision than the C# DateTime object contains.  
+        /// So, this function limits its comparison to milliseconds; that is, it 
+        /// doesn't compare the ticks.
         /// </summary>
         /// <param name="date1">A DateTime</param>
         /// <param name="date2">A DateTime</param>
