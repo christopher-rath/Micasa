@@ -132,6 +132,7 @@ namespace Micasa
                                     {
                                         AddPhotoToDB(PhotoCol, f, PicasaIniExists, DotPicasa, DotMicasa);
                                         AddFolderToDB(wPath, FolderCol, Path.GetDirectoryName(f));
+                                        // TO DO: add thumbnail
                                     }
                                 }
                             }
