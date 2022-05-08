@@ -99,7 +99,7 @@ namespace Micasa
             using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
             {
                 ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
-                ILiteCollection<Folders> FolderCol = db.GetCollection<Folders>(Constants.sMcFoldersColNm);
+                ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
 
                 // For each folder in the watchlist we have to 
                 //  a) retrive the files in that folder and add the appropriate ones
@@ -156,7 +156,7 @@ namespace Micasa
         /// <param name="dir">The folder to be scanned</param>
         /// <param name="wDir">The parent Watched folder</param>
         /// <param name="myCancelToken">The thread's CancellationToken</param>
-        private static void Scanfolder(ILiteCollection<PhotosTbl> pCol, ILiteCollection<Folders> fCol, string dir, 
+        private static void Scanfolder(ILiteCollection<PhotosTbl> pCol, ILiteCollection<FoldersTbl> fCol, string dir, 
                                        string wDir, CancellationToken myCancelToken)
         {
             foreach (string d in Directory.GetDirectories(dir))
@@ -238,9 +238,9 @@ namespace Micasa
             }
         }
 
-        private static void AddFolderToDB(string watchedPath, ILiteCollection<Folders> fCol, string pathname)
+        private static void AddFolderToDB(string watchedPath, ILiteCollection<FoldersTbl> fCol, string pathname)
         {
-            Folders aFolder = new Folders
+            FoldersTbl aFolder = new FoldersTbl
             {
                 Pathname = pathname,
                 ModificationDate = File.GetLastWriteTime(pathname),

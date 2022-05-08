@@ -64,7 +64,7 @@ namespace Micasa
             using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
             {
                 ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
-                ILiteCollection<Folders> FolderCol = db.GetCollection<Folders>(Constants.sMcFoldersColNm);
+                ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
 
                 if (!myCancelToken.IsCancellationRequested)
 	        {

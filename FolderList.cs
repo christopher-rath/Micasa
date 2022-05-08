@@ -12,14 +12,14 @@ namespace Micasa
         private FolderListTypes _theListType;
         private LiteDatabase _db = new(Database.ConnectionString(Database.DBFilename));
         private ILiteCollection<PhotosTbl> _PhotoCol;
-        private ILiteCollection<Folders> _FolderCol;
+        private ILiteCollection<FoldersTbl> _FolderCol;
         private string[] _WatchedFolders = WatchedLists.Instance.WatchedFolders;
         private long _WatchedFolderItem = 0;
 
         public FolderList(FolderListTypes ListType)
         {
             _PhotoCol = _db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
-            _FolderCol = _db.GetCollection<Folders>(Constants.sMcFoldersColNm);
+            _FolderCol = _db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
             _theListType = ListType;
         }
 

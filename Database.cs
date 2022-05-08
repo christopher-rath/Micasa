@@ -86,7 +86,7 @@ namespace Micasa
             using (var db = new LiteDatabase(ConnectionString(Database.DBFilename)))
             {
                 var PhotoCol = db.GetCollection<PhotosTbl>("Photos");
-                var FolderCol = db.GetCollection<Folders>("Folders");
+                var FolderCol = db.GetCollection<FoldersTbl>("Folders");
 
                 try
                 {
@@ -113,7 +113,7 @@ namespace Micasa
     /// there is a proper correspondance between the folders in this table and the folders 
     /// in the Photos table.
     /// </summary>
-    public class Folders
+    public class FoldersTbl
     {
         public int Id { get; set; }
         public string Pathname { get; set; }
