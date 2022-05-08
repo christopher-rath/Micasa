@@ -85,7 +85,7 @@ namespace Micasa
         {
             using (var db = new LiteDatabase(ConnectionString(Database.DBFilename)))
             {
-                var PhotoCol = db.GetCollection<Photos>("Photos");
+                var PhotoCol = db.GetCollection<PhotosTbl>("Photos");
                 var FolderCol = db.GetCollection<Folders>("Folders");
 
                 try
@@ -126,7 +126,7 @@ namespace Micasa
     /// This DB table is used to track all photos contained in Micasa Watched or One Tine 
     /// folder.
     /// </summary>
-    public class Photos
+    public class PhotosTbl
     {
         public int Id { get; set; }
         public string Picture { get; set; }

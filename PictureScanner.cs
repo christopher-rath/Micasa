@@ -98,7 +98,7 @@ namespace Micasa
             Thread.Sleep(500);
             using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
             {
-                ILiteCollection<Photos> PhotoCol = db.GetCollection<Photos>(Constants.sMcPhotosColNm);
+                ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
                 ILiteCollection<Folders> FolderCol = db.GetCollection<Folders>(Constants.sMcFoldersColNm);
 
                 // For each folder in the watchlist we have to 
@@ -156,7 +156,7 @@ namespace Micasa
         /// <param name="dir">The folder to be scanned</param>
         /// <param name="wDir">The parent Watched folder</param>
         /// <param name="myCancelToken">The thread's CancellationToken</param>
-        private static void Scanfolder(ILiteCollection<Photos> pCol, ILiteCollection<Folders> fCol, string dir, 
+        private static void Scanfolder(ILiteCollection<PhotosTbl> pCol, ILiteCollection<Folders> fCol, string dir, 
                                        string wDir, CancellationToken myCancelToken)
         {
             foreach (string d in Directory.GetDirectories(dir))
@@ -204,11 +204,11 @@ namespace Micasa
         /// <param name="col">The database coldection we're updating.</param>
         /// <param name="f">The filename of the photo to add to the database.</param>
         /// <param name="dir">The folder in which the filename is located.</param>
-        private static void AddPhotoToDB(ILiteCollection<Photos> pCol, 
+        private static void AddPhotoToDB(ILiteCollection<PhotosTbl> pCol, 
                                          string f, bool PicasaIniExists,
                                          IniFile DotPicasa, IniFile DotMisasa)
         {
-            Photos aPhoto = new Photos
+            PhotosTbl aPhoto = new PhotosTbl
             {
                 Picture = Path.GetFileName(f),
                 Caption = GetCaptionFromImage(f),
@@ -230,7 +230,7 @@ namespace Micasa
             }
             else
             {
-                if (!Photos.IsDateTimeEqual(aPhoto.ModificationDate, results.ModificationDate))
+                if (!PhotosTbl.IsDateTimeEqual(aPhoto.ModificationDate, results.ModificationDate))
                 {
                     results.ModificationDate = aPhoto.ModificationDate;
                     pCol.Update(results);
