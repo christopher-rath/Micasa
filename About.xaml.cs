@@ -1,6 +1,6 @@
 ﻿#region Copyright
 // Micasa -- Your Photo Home -- A lightweight photo organiser & editor.
-// Author: Christopher Rath <christopher@rath.ca>
+// Author: Christopher Rath <christopher@rath.ca> 
 // Archived at: http://rath.ca/
 // Copyright 2021-2022 © Christopher Rath
 // Distributed under the GNU Lesser General Public License v2.1

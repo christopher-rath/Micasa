@@ -15,6 +15,9 @@
     <Copyright>(c)2022 Christopher Rath</Copyright>
     <StartupObject>Micasa.App</StartupObject>
     <Nullable>disable</Nullable>
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyFile>C:\Users\chris\OneDrive - Thought-Sight Consulting Corp\Personal_Data\Developer\Micasa\Micasa Resources\Cert\TSCcert.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
