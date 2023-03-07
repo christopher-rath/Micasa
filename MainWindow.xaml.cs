@@ -213,7 +213,7 @@ namespace Micasa
 
         private void AboutCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            About AboutWindow = new About();
+            About AboutWindow = new();
             AboutWindow.Show();
         }
 
@@ -416,7 +416,7 @@ namespace Micasa
 
         private void FolderMgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            FolderManagerWindow FolderManagerWindow = new FolderManagerWindow();
+            FolderManagerWindow FolderManagerWindow = new();
             FolderManagerWindow.Show();
         }
 
@@ -568,7 +568,7 @@ namespace Micasa
 
         private void OptionsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            OptionsWindow OptionsWindow = new OptionsWindow();
+            OptionsWindow OptionsWindow = new();
             OptionsWindow.Show();
         }
 
@@ -680,7 +680,7 @@ namespace Micasa
 
         private void ReleaseNotesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            ReleaseNotes ReleaseNotesWindow = new ReleaseNotes();
+            ReleaseNotes ReleaseNotesWindow = new();
             ReleaseNotesWindow.Show();
         }
 
@@ -822,7 +822,7 @@ namespace Micasa
 
         private void TermsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            Terms TermsWindow = new Terms();
+            Terms TermsWindow = new();
             TermsWindow.Show();
         }
 

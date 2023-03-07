@@ -37,12 +37,12 @@ namespace Micasa
         // return an empty string.
         public static readonly string ComputerPath = System.IO.Path.GetDirectoryName(DesktopPath);
         public static readonly string ThisPCStr = " > This PC > ";
-        private Dictionary<string, WatchType> _FolderList = new Dictionary<string, WatchType>();
+        private Dictionary<string, WatchType> _FolderList = new();
         private bool _WriteLocked = false;
         // The single instance of WatchedLists.
-        public static WatchedLists Instance = new WatchedLists();
+        public static WatchedLists Instance = new();
         // Locks
-        public readonly object WatchedListsWriteLock = new object();
+        public readonly object WatchedListsWriteLock = new();
 
         /// <summary>
         /// This WatchedLists class uses private constructor to implement the Singleton design pattern.  
@@ -154,7 +154,7 @@ namespace Micasa
         {
             get
             {
-                List<string> theList = new List<string>();
+                List<string> theList = new();
 
                 foreach (var item in FolderList)
                 {
@@ -174,7 +174,7 @@ namespace Micasa
         {
             get
             {
-                List<string> theList = new List<string>();
+                List<string> theList = new();
 
                 foreach (var item in FolderList)
                 {
@@ -194,7 +194,7 @@ namespace Micasa
         {
             get
             {
-                List<string> theList = new List<string>();
+                List<string> theList = new();
 
                 foreach (var item in FolderList)
                 {

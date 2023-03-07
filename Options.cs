@@ -38,10 +38,10 @@ namespace Micasa
         private bool _FileTypeWebp = false;       
         private AppMode _MyAppMode = AppMode.Migrate;
         private bool _UpdPhotoFiles = false;
-        private IniFile iniFile = new IniFile(iniFileNm);
+        private IniFile iniFile = new(iniFileNm);
         public  AppMode DefaultAppMode = AppMode.Migrate;
         // The single instance of Options.
-        public static Options Instance = new Options();
+        public static Options Instance = new();
 
         /// <summary>
         /// This Options class uses private constructor to implement the Singleton design pattern.  

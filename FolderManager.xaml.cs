@@ -31,7 +31,7 @@ namespace Micasa
     public partial class FolderManagerWindow : Window
     {
         private object dummyNode = null;
-        private Dictionary<string, WatchType> _SavedFolderList = new Dictionary<string, WatchType>();
+        private Dictionary<string, WatchType> _SavedFolderList = new();
         private TreeViewItem SelectedItem = null;
         private string SelectedFolderSaved = null;
         // Allow changing of how the rbMonitor radio button list is displayed, without
@@ -145,7 +145,7 @@ namespace Micasa
                                 || !((theFAs & FileAttributes.System) == FileAttributes.System))
                             & !s.IsSpecialDir() & isThisPC_OKtoList(item, s))
                         {
-                            TreeViewItem subitem = new TreeViewItem();
+                            TreeViewItem subitem = new();
                             subitem.Header = s.Substring(s.LastIndexOf(System.IO.Path.DirectorySeparatorChar) + 1);
                             subitem.Tag = s;
                             subitem.FontWeight = FontWeights.Normal;
@@ -383,7 +383,7 @@ namespace Micasa
 
         private void replaceItemWithClone(TreeViewItem item)
         {
-            TreeViewItem newItem = new TreeViewItem();
+            TreeViewItem newItem = new();
 
             if (item.Parent.GetType().Equals(typeof(TreeView)))
             {

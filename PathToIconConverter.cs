@@ -25,14 +25,14 @@ namespace Micasa
     {
         // See https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?view=netframeworkdesktop-4.8
         // for an explanation of the "pack:" Uri type.
-        private static readonly BitmapImage computerBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/Computer.png"));
-        private static readonly BitmapImage driveBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/HardDrive.png"));
-        private static readonly BitmapImage desktopBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/Desktop.png"));
-        private static readonly BitmapImage documentsBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/DocumentsFolder.png"));
-        private static readonly BitmapImage folderBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/FolderClosed.png"));
-        private static readonly BitmapImage picturesBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/ImageGroup.png"));
+        private static readonly BitmapImage computerBitmap = new(new Uri("pack://application:,,,/Resources/Computer.png"));
+        private static readonly BitmapImage driveBitmap = new(new Uri("pack://application:,,,/Resources/HardDrive.png"));
+        private static readonly BitmapImage desktopBitmap = new(new Uri("pack://application:,,,/Resources/Desktop.png"));
+        private static readonly BitmapImage documentsBitmap = new(new Uri("pack://application:,,,/Resources/DocumentsFolder.png"));
+        private static readonly BitmapImage folderBitmap = new(new Uri("pack://application:,,,/Resources/FolderClosed.png"));
+        private static readonly BitmapImage picturesBitmap = new(new Uri("pack://application:,,,/Resources/ImageGroup.png"));
         // The single instance of PathToIconConverter.
-        public static PathToIconConverter Instance = new PathToIconConverter();
+        public static PathToIconConverter Instance = new();
 
         /// <summary>
         /// This PathToIconConverter class uses private constructor to implement the Singleton 

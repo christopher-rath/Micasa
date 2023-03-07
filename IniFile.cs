@@ -89,8 +89,12 @@ namespace Micasa
         ///     </code>
         ///     Note that BOOL is type int, and LPCSTR is string.
         /// </remarks>
+#pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
         [DllImport("kernel32")]
+#pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
+#pragma warning disable CA5392 // Use DefaultDllImportSearchPaths attribute for P/Invokes
         private static extern int WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
+#pragma warning restore CA5392 // Use DefaultDllImportSearchPaths attribute for P/Invokes
         /// <summary>
         ///     GetPrivateProfileString reads an string value from an INI file. The parameters passed to the function 
         ///     specify which value will be read from. The function always returns the length in characters of the string 
@@ -170,8 +174,12 @@ namespace Micasa
         ///     </code>
         ///     Note that UINT is uint, INT is int, and LPCTCSTR is string
         /// </remarks>
+#pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
         [DllImport("kernel32")]
+#pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
+#pragma warning disable CA5392 // Use DefaultDllImportSearchPaths attribute for P/Invokes
         private static extern uint GetPrivateProfileInt(string lpAppName, string lpKeyName, int nDefault, string lpFileName);
+#pragma warning restore CA5392 // Use DefaultDllImportSearchPaths attribute for P/Invokes
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="IniFile"/> class.
@@ -236,11 +244,11 @@ namespace Micasa
 
             temp = GetString(section, key, defStr);
 
-            if (0 == String.Compare(strTrue, temp, true))
+            if (string.Equals(strTrue, temp, StringComparison.OrdinalIgnoreCase))
             {
                 rtnVal = true;
             }
-            else if (0 == String.Compare(strFalse, temp, true))
+            else if (string.Equals(strFalse, temp, StringComparison.OrdinalIgnoreCase))
             {
                 rtnVal = false;
             }
@@ -310,8 +318,8 @@ namespace Micasa
         /// <returns>The value from the INI file or the defaultValue.</returns>
         public string GetString(string section, string key, string defaultValue = "")
         {
-            StringBuilder temp = new StringBuilder(255);
-            uint i = GetPrivateProfileString(section, key, defaultValue, temp, 255, TheFile);
+            StringBuilder temp = new(255);
+            _ = GetPrivateProfileString(section, key, defaultValue, temp, 255, TheFile);
             return temp.ToString();
         }
 

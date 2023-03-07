@@ -24,13 +24,13 @@ namespace Micasa
     {
         // See https://docs.microsoft.com/en-us/dotnet/desktop/wpf/app-development/pack-uris-in-wpf?view=netframeworkdesktop-4.8
         // for an explanation of the "pack:" Uri type.
-        private static readonly BitmapImage blankBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/Blank.png"));
-        private static readonly BitmapImage excludeBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/Exclude.png"));
-        private static readonly BitmapImage oneTimeBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/OneTime.png"));
-        private static readonly BitmapImage watchedBitmap = new BitmapImage(new Uri("pack://application:,,,/Resources/Watched.png"));
-        private static readonly Random rnd = new Random();
+        private static readonly BitmapImage blankBitmap = new(new Uri("pack://application:,,,/Resources/Blank.png"));
+        private static readonly BitmapImage excludeBitmap = new(new Uri("pack://application:,,,/Resources/Exclude.png"));
+        private static readonly BitmapImage oneTimeBitmap = new(new Uri("pack://application:,,,/Resources/OneTime.png"));
+        private static readonly BitmapImage watchedBitmap = new(new Uri("pack://application:,,,/Resources/Watched.png"));
+        private static readonly Random rnd = new();
         // The single instance of WatchListToIconConverter.
-        public static WatchListToIconConverter Instance = new WatchListToIconConverter();
+        public static WatchListToIconConverter Instance = new();
 
         /// <summary>
         /// This WatchListToIconConverter class uses private constructor to implement the Singleton 

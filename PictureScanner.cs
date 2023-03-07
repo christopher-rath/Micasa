@@ -165,8 +165,8 @@ namespace Micasa
                 {
                     // Create IniFile objects for the .Micasa and .Picasa files in this folder.
                     bool PicasaIniExists = File.Exists(d + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
-                    IniFile DotPicasa = new IniFile(d + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
-                    IniFile DotMicasa = new IniFile(d + Path.DirectorySeparatorChar + Constants.sMcDotMicasa);
+                    IniFile DotPicasa = new(d + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
+                    IniFile DotMicasa = new(d + Path.DirectorySeparatorChar + Constants.sMcDotMicasa);
 
                     Debug.WriteLine(d + " ==> " + WatchedLists.FolderDisposition(d));
                     if (WatchedLists.FolderDisposition(d) == WatchType.Watched)
@@ -208,7 +208,7 @@ namespace Micasa
                                          string f, bool PicasaIniExists,
                                          IniFile DotPicasa, IniFile DotMisasa)
         {
-            PhotosTbl aPhoto = new PhotosTbl
+            PhotosTbl aPhoto = new()
             {
                 Picture = Path.GetFileName(f),
                 Caption = GetCaptionFromImage(f),
@@ -240,7 +240,7 @@ namespace Micasa
 
         private static void AddFolderToDB(string watchedPath, ILiteCollection<FoldersTbl> fCol, string pathname)
         {
-            FoldersTbl aFolder = new FoldersTbl
+            FoldersTbl aFolder = new()
             {
                 Pathname = pathname,
                 ModificationDate = File.GetLastWriteTime(pathname),
