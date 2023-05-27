@@ -1,8 +1,9 @@
-﻿#region Copyright
+﻿
+#region Copyright
 // Micasa -- Your Photo Home -- A lightweight photo organiser & editor.
 // Author: Christopher Rath <christopher@rath.ca>
 // Archived at: http://rath.ca/
-// Copyright 2021-2022 © Christopher Rath
+// Copyright 2021-2023 © Christopher Rath
 // Distributed under the GNU Lesser General Public License v2.1
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
@@ -38,7 +39,7 @@ namespace StringExtensions
             {
                 try
                 {
-                    if (s.EndsWith(sd))
+                    if (s.EndsWith(sd, System.StringComparison.Ordinal))
                     {
                         rtnVal = true;
                         break;
@@ -65,7 +66,7 @@ namespace StringExtensions
         {
             string rtnVal = s;
 
-            if (s.StartsWith(p))
+            if (s.StartsWith(p, System.StringComparison.Ordinal))
             {
                 rtnVal = s.Substring(p.Length);
             }
