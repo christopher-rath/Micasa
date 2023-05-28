@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -92,9 +93,9 @@ namespace Micasa
 #pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
         [DllImport("kernel32")]
 #pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
-#pragma warning disable CA5392 // Use DefaultDllImportSearchPaths attribute for P/Invokes
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
         private static extern int WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
-#pragma warning restore CA5392 // Use DefaultDllImportSearchPaths attribute for P/Invokes
+#pragma warning restore SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
         /// <summary>
         ///     GetPrivateProfileString reads an string value from an INI file. The parameters passed to the function 
         ///     specify which value will be read from. The function always returns the length in characters of the string 
@@ -142,8 +143,12 @@ namespace Micasa
         ///     </code>
         ///     Note that DWARD is uint, and LPCTCSTR is string
         /// </remarks>
+#pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
         [DllImport("kernel32")]
+#pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
+#pragma warning disable CA1838 // Avoid 'StringBuilder' parameters for P/Invokes
         private static extern uint GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, StringBuilder lpReturnedString, int nSize, string lpFileName);
+#pragma warning restore CA1838 // Avoid 'StringBuilder' parameters for P/Invokes
         /// <summary>
         ///     GetPrivateProfileInt reads an integer value from any INI file. The parameters passed to the function 
         ///     specify which value will be read from. If successful, the function returns the value read. If the value 
@@ -177,9 +182,9 @@ namespace Micasa
 #pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
         [DllImport("kernel32")]
 #pragma warning restore CA2101 // Specify marshaling for P/Invoke string arguments
-#pragma warning disable CA5392 // Use DefaultDllImportSearchPaths attribute for P/Invokes
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
         private static extern uint GetPrivateProfileInt(string lpAppName, string lpKeyName, int nDefault, string lpFileName);
-#pragma warning restore CA5392 // Use DefaultDllImportSearchPaths attribute for P/Invokes
+#pragma warning restore SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="IniFile"/> class.
@@ -272,11 +277,13 @@ namespace Micasa
         {
             string temp;
             DateTime tempDT;
+            // Retrieve a CultureInfo object.
+            CultureInfo invC = CultureInfo.InvariantCulture;
 
             try
             {
                 temp = GetString(section, key, defaultValue.ToString("O"));
-                tempDT = DateTime.Parse(temp);
+                tempDT = DateTime.Parse(temp, invC);
             }
             catch
             {
@@ -368,10 +375,12 @@ namespace Micasa
         public bool SetInteger(string section, string key, int value)
         {
             string strValue;
+            // Retrieve a CultureInfo object.
+            CultureInfo invC = CultureInfo.InvariantCulture;
 
             try
             {
-                strValue = value.ToString();
+                strValue = value.ToString(invC);
             }
             catch
             {
