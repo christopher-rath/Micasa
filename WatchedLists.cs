@@ -82,10 +82,7 @@ namespace Micasa
 
                 if (0 < line.Length)
                 {
-                    if (FolderList.ContainsKey(line))
-                    {
-                        FolderList.Remove(line);
-                    }
+                    FolderList.Remove(line);
                     FolderList.Add(line, WatchType.Excluded);
                 }
             }
@@ -96,10 +93,7 @@ namespace Micasa
 
                 if (0 < line.Length)
                 {
-                    if (FolderList.ContainsKey(line))
-                    {
-                        FolderList.Remove(line);
-                    }
+                    FolderList.Remove(line);
                     FolderList.Add(line, WatchType.Onetime);
                 }
             }
@@ -110,10 +104,7 @@ namespace Micasa
 
                 if (0 < line.Length)
                 {
-                    if (FolderList.ContainsKey(line))
-                    {
-                        FolderList.Remove(line);
-                    }
+                    FolderList.Remove(line);
                     FolderList.Add(line, WatchType.Watched);
                 }
             }
@@ -243,7 +234,7 @@ namespace Micasa
         /// <returns></returns>
         public static WatchType FolderDisposition(string pathStr)
         {
-            if (pathStr.Equals(ThisPCStr))
+            if (pathStr.Equals(ThisPCStr, StringComparison.Ordinal))
             {
                 return WatchType.Excluded;
             }
@@ -255,7 +246,7 @@ namespace Micasa
                 }
                 else
                 {
-                    if (pathStr.EndsWith(@":\"))
+                    if (pathStr.EndsWith(@":\", StringComparison.Ordinal))
                     {
                         return WatchType.Excluded;
                     }
@@ -271,7 +262,7 @@ namespace Micasa
                             {
                                 return WatchedLists.Instance.FolderList[subPath];
                             }
-                        } while (!subPath.EndsWith(@":\"));
+                        } while (!subPath.EndsWith(@":\", StringComparison.Ordinal));
 
                         return WatchType.Excluded;
                     }

@@ -49,26 +49,28 @@ namespace Micasa
         /// <param name="parameter">Unused.</param>
         /// <param name="culture">Unused.</param>
         /// <returns>A BitmapImage object--the icon to display.</returns>
+#pragma warning disable CA1725 // Parameter names should match base declaration
         public object Convert(object path, Type targetType, object parameter, CultureInfo culture)
+#pragma warning restore CA1725 // Parameter names should match base declaration
         {
             string pathStr = (path as string);
 
             pathStr = pathStr.RmPrefix(WatchedLists.ThisPCStr);
-            if (pathStr.EndsWith(@":\"))
+            if (pathStr.EndsWith(@":\", StringComparison.Ordinal))
             {
                 return driveBitmap;
             }
-            else if (pathStr.Equals(WatchedLists.ThisPCStr) || pathStr.Equals(WatchedLists.ComputerPath))
+            else if (pathStr.Equals(WatchedLists.ThisPCStr, StringComparison.Ordinal) || pathStr.Equals(WatchedLists.ComputerPath, StringComparison.Ordinal))
             {
                 return computerBitmap;
             }
-            else if (pathStr.Equals(WatchedLists.DesktopPath))
+            else if (pathStr.Equals(WatchedLists.DesktopPath, StringComparison.Ordinal))
             {
                 return desktopBitmap;
-            } else if (pathStr.Equals(WatchedLists.DocumentsPath))
+            } else if (pathStr.Equals(WatchedLists.DocumentsPath, StringComparison.Ordinal))
             {
                 return documentsBitmap;
-            } else if (pathStr.Equals(WatchedLists.PicturesPath))
+            } else if (pathStr.Equals(WatchedLists.PicturesPath, StringComparison.Ordinal))
             {
                 return picturesBitmap;
             } else
@@ -77,7 +79,9 @@ namespace Micasa
             }
         }
 
+#pragma warning disable CA1725 // Parameter names should match base declaration
         public object ConvertBack(object path, Type targetType, object parameter, CultureInfo culture)
+#pragma warning restore CA1725 // Parameter names should match base declaration
         {
             throw new NotSupportedException("Cannot convert back");
         }
