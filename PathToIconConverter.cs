@@ -32,7 +32,9 @@ namespace Micasa
         private static readonly BitmapImage folderBitmap = new(new Uri("pack://application:,,,/Resources/FolderClosed.png"));
         private static readonly BitmapImage picturesBitmap = new(new Uri("pack://application:,,,/Resources/ImageGroup.png"));
         // The single instance of PathToIconConverter.
+#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static PathToIconConverter Instance = new();
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 
         /// <summary>
         /// This PathToIconConverter class uses private constructor to implement the Singleton 

@@ -29,8 +29,10 @@ namespace Micasa
         private static readonly BitmapImage oneTimeBitmap = new(new Uri("pack://application:,,,/Resources/OneTime.png"));
         private static readonly BitmapImage watchedBitmap = new(new Uri("pack://application:,,,/Resources/Watched.png"));
         private static readonly Random rnd = new();
+#pragma warning disable CA2211 // Non-constant fields should not be visible
         // The single instance of WatchListToIconConverter.
         public static WatchListToIconConverter Instance = new();
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 
         /// <summary>
         /// This WatchListToIconConverter class uses private constructor to implement the Singleton 
@@ -54,11 +56,13 @@ namespace Micasa
         /// <param name="parameter">Unused.</param>
         /// <param name="culture">Unused.</param>
         /// <returns>A BitmapImage object--the icon to display.</returns>
+#pragma warning disable CA1725 // Parameter names should match base declaration
         public object Convert(object path, Type targetType, object parameter, CultureInfo culture)
+#pragma warning restore CA1725 // Parameter names should match base declaration
         {
             string pathStr = (path as string);
 
-            if (pathStr.StartsWith(WatchedLists.ThisPCStr))
+            if (pathStr.StartsWith(WatchedLists.ThisPCStr, StringComparison.Ordinal))
             {
                 return blankBitmap;
             }
@@ -78,7 +82,9 @@ namespace Micasa
             }
         }
 
+#pragma warning disable CA1725 // Parameter names should match base declaration
         public object ConvertBack(object path, Type targetType, object parameter, CultureInfo culture)
+#pragma warning restore CA1725 // Parameter names should match base declaration
         {
             throw new NotSupportedException("Cannot convert back");
         }
