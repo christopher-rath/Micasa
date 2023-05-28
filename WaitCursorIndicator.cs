@@ -17,9 +17,10 @@ namespace Micasa
     /// mouse cursor when the task completes.
     /// 
     /// Author: Sergey Alexandrovich Kryukov (https://www.sakryukov.org/).
+    /// URL: https://www.codeproject.com/Tips/137802/Hourglass-Mouse-Cursor-Always-Changes-Back-to-its
     /// License: The Code Project Open License (CPOL) 1.02 (https://www.codeproject.com/info/cpol10.aspx).
     /// </summary>
-    public class WaitCursorIndicator : IDisposable
+    sealed public class WaitCursorIndicator : IDisposable
     {
         /// <summary>
         /// Display the busy cursor while a task is running, and then restore the original 
@@ -37,19 +38,26 @@ namespace Micasa
             Debug.Assert(
                 owner != null,
                 "WaitCursorIndicator expects non-null argument");
-            if (owner == null) return;
+            if (owner == null)
+            {
+                return;
+            }
             Previous = owner.Cursor;
             owner.Cursor = Cursors.Wait;
         } //WaitCursorIndicator
 
         void IDisposable.Dispose()
         {
-            if (this.Onwer == null) return;
+            if (this.Onwer == null)
+            {
+                return;
+            }
             this.Onwer.Cursor = Previous;
         } //IDisposable.Dispose
 
+#pragma warning disable IDE0044 // Add readonly modifier
         FrameworkElement Onwer;
         Cursor Previous;
-
+#pragma warning restore IDE0044 // Add readonly modifier
     } //class WaitCursorIndicator
 }
