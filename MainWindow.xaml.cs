@@ -928,6 +928,7 @@ namespace Micasa
 
     public static class Constants
     {
+#pragma warning disable CA1707 // Identifiers should not contain underscores
         // Main Micasa .INI file -- Section: File Types
         public const string sMcFT_Section = @"File Types";
         public const string sMcFT_Avi = @".avi";
@@ -944,6 +945,7 @@ namespace Micasa
         // Alternate types (used in filenames, not .INI file)
         public const string sMcFT_JpgA = @".jpeg";
         public const string sMcFT_TifA = @".tiff";
+#pragma warning restore CA1707 // Identifiers should not contain underscores
 
         // Application Options
         public const string sMcOpAppMode = @"AppMode";

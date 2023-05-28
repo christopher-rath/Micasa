@@ -39,10 +39,12 @@ namespace Micasa
         public static readonly string ThisPCStr = " > This PC > ";
         private Dictionary<string, WatchType> _FolderList = new();
         private bool _WriteLocked = false;
+#pragma warning disable CA2211 // Non-constant fields should not be visible
         // The single instance of WatchedLists.
         public static WatchedLists Instance = new();
-        // Locks
-        public readonly object WatchedListsWriteLock = new();
+#pragma warning restore CA2211 // Non-constant fields should not be visible
+                              // Locks
+        private readonly object watchedListsWriteLock = new();
 
         /// <summary>
         /// This WatchedLists class uses private constructor to implement the Singleton design pattern.  
@@ -117,6 +119,7 @@ namespace Micasa
             }
         }
 
+        #region GetterSetters
         /// <summary>
         /// Return a reference to the FolderList object.
         /// </summary>
@@ -206,6 +209,12 @@ namespace Micasa
                 return theList.ToArray();
             }
         }
+
+        public object WatchedListsWriteLock
+        {
+            get => watchedListsWriteLock;
+        }
+        #endregion GetterSetters
 
         /// <summary>
         /// Write all the Watched lists to disk.

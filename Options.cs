@@ -39,9 +39,11 @@ namespace Micasa
         private AppMode _MyAppMode = AppMode.Migrate;
         private bool _UpdPhotoFiles = false;
         private IniFile iniFile = new(iniFileNm);
-        public  AppMode DefaultAppMode = AppMode.Migrate;
+        private AppMode defaultAppMode = AppMode.Migrate;
+#pragma warning disable CA2211
         // The single instance of Options.
         public static Options Instance = new();
+#pragma warning restore CA2211
 
         /// <summary>
         /// This Options class uses private constructor to implement the Singleton design pattern.  
@@ -69,6 +71,10 @@ namespace Micasa
         }
 
         #region GetterSetters
+        public AppMode DefaultAppMode
+        { 
+            get => defaultAppMode; 
+        }
         public bool FileTypeAvi
         {
             get => _FileTypeAvi;
