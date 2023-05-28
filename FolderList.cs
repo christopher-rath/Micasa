@@ -7,7 +7,7 @@ using LiteDB;
 
 namespace Micasa
 {
-    class FolderList : IDisposable
+    sealed class FolderList : IDisposable
     {
         private readonly FolderListTypes _theListType;
         private readonly LiteDatabase _db = new(Database.ConnectionString(Database.DBFilename));

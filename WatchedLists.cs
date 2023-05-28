@@ -234,15 +234,16 @@ namespace Micasa
         /// <returns></returns>
         public static WatchType FolderDisposition(string pathStr)
         {
+#pragma warning disable CA1854 // Prefer the IDictionary.TryGetValue(TKey, out TValue) method
             if (pathStr.Equals(ThisPCStr, StringComparison.Ordinal))
             {
                 return WatchType.Excluded;
             }
             else
             {
-                if (WatchedLists.Instance.FolderList.ContainsKey(pathStr))
+                if (Instance.FolderList.ContainsKey(pathStr))
                 {
-                    return WatchedLists.Instance.FolderList[pathStr];
+                    return Instance.FolderList[pathStr];
                 }
                 else
                 {
@@ -258,9 +259,9 @@ namespace Micasa
                         {
                             subPath = System.IO.Path.GetDirectoryName(subPath);
 
-                            if (WatchedLists.Instance.FolderList.ContainsKey(subPath))
+                            if (Instance.FolderList.ContainsKey(subPath))
                             {
-                                return WatchedLists.Instance.FolderList[subPath];
+                                return Instance.FolderList[subPath];
                             }
                         } while (!subPath.EndsWith(@":\", StringComparison.Ordinal));
 
@@ -269,5 +270,6 @@ namespace Micasa
                 }
             }
         }
+#pragma warning restore CA1854 // Prefer the IDictionary.TryGetValue(TKey, out TValue) method
     }
 }

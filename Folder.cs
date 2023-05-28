@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Micasa
 {
-    class Folder
+    sealed class Folder
     {
         /// <summary>
         /// Each Folder instance represents a unique pathname (that is, drive letter plus full pathname)

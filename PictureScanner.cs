@@ -17,10 +17,11 @@ using LiteDB;
 using System.Diagnostics;
 using ExifLibrary;
 using System.Windows.Media.Imaging;
+using System.Globalization;
 
 namespace Micasa
 {
-    class PictureScanner
+    sealed class PictureScanner
     {
         /// <summary>
         /// When files are added to a folder, or an existing file is modified,
@@ -208,18 +209,20 @@ namespace Micasa
                                          string f, bool PicasaIniExists,
                                          IniFile DotPicasa, IniFile DotMisasa)
         {
+            // Retrieve a CultureInfo object.
+            CultureInfo invC = CultureInfo.InvariantCulture;
             PhotosTbl aPhoto = new()
             {
                 Picture = Path.GetFileName(f),
                 Caption = GetCaptionFromImage(f),
-                FileType = Path.GetExtension(f).ToLower(),
+                FileType = Path.GetExtension(f).ToLower(invC),
                 Pathname = Path.GetDirectoryName(f),
                 FQFilename = f,
                 ModificationDate = File.GetLastWriteTime(f),
                 Faces = new string[] { "" },
                 Albums = new string[] { "" }
             };
-            var results = pCol.FindOne(x => x.FQFilename.Equals(f));
+            var results = pCol.FindOne(x => x.FQFilename.Equals(f, StringComparison.Ordinal));
             // Some code to use as an example in the event that I need the EXIF data.
             //var file = ImageFile.FromFile(f);
             //var caption = file.Properties.Get<ExifAscii>(ExifTag.PNGDescription);
@@ -247,7 +250,7 @@ namespace Micasa
                 LastScannedDate = DateTime.Now,
                 WatchedParent = watchedPath
             };
-            var results = fCol.FindOne(x => x.Pathname.Equals(pathname));
+            var results = fCol.FindOne(x => x.Pathname.Equals(pathname, StringComparison.Ordinal));
 
             if (results == null)
             {
@@ -272,9 +275,11 @@ namespace Micasa
         private static string GetCaptionFromImage(string imgFl)
         {
             string caption = "";
+            // Retrieve a CultureInfo object.
+            CultureInfo invC = CultureInfo.InvariantCulture;
             bool supportedImg = false;
 
-            switch (Path.GetExtension(imgFl).ToLower())
+            switch (Path.GetExtension(imgFl).ToLower(invC))
             {
                 case Constants.sMcFT_Jpg:
                 case Constants.sMcFT_JpgA:
@@ -304,7 +309,7 @@ namespace Micasa
                 }
                 catch
                 {
-                    Debug.WriteLine(string.Format("GetCaptionFromImage ({0}): Unknown exception; returning empty string.", imgFl));
+                    Debug.WriteLine(string.Format(invC, "GetCaptionFromImage ({0}): Unknown exception; returning empty string.", imgFl));
                 }
             }
             return caption;

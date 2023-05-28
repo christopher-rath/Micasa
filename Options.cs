@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Globalization;
 
 namespace Micasa
 {
@@ -217,9 +218,12 @@ namespace Micasa
         public bool IsFileTypeToScan(string filename)
         {
             string Extension;
+            // Retrieve a CultureInfo object.
+            CultureInfo invC = CultureInfo.InvariantCulture;
+
             try
             {
-                Extension = Path.GetExtension(filename).ToLower();
+                Extension = Path.GetExtension(filename).ToLower(invC);
                 switch (Extension)
                 {
                     case Constants.sMcFT_Avi:

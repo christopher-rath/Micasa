@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Micasa
 {
-    class DeletedScanner
+    sealed class DeletedScanner
     {
         /// <summary>
         /// In parallel with a scan for new pictures, we also need to scan for 
