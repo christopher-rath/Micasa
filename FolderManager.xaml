@@ -40,7 +40,7 @@
             </Grid.ColumnDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" Content="Folder List" />
-            <TreeView x:Name="foldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="foldersItem_SelectedItemChanged" Width="Auto" >
+            <TreeView x:Name="foldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="FoldersItem_SelectedItemChanged" Width="Auto" >
                 <TreeView.Resources>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="HeaderTemplate">

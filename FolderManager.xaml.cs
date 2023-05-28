@@ -59,7 +59,7 @@ namespace Micasa
             anItem.Tag = WatchedLists.ThisPCStr + WatchedLists.ComputerPath;
             anItem.FontWeight = FontWeights.Bold;
             anItem.Items.Add(dummyNode);
-            anItem.Expanded += new RoutedEventHandler(folder_Expanded);
+            anItem.Expanded += new RoutedEventHandler(Folder_Expanded);
             //anItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
             foldersItem.Items.Add(anItem);
             myCompItem = (TreeViewItem)foldersItem.Items[0];
@@ -67,12 +67,14 @@ namespace Micasa
             // Now load the file system items...
             foreach (string s in Directory.GetLogicalDrives())
             {
-                anItem = new TreeViewItem();
-                anItem.Header = s;
-                anItem.Tag = s;
-                anItem.FontWeight = FontWeights.Bold;
+                anItem = new TreeViewItem
+                {
+                    Header = s,
+                    Tag = s,
+                    FontWeight = FontWeights.Bold
+                };
                 anItem.Items.Add(dummyNode);
-                anItem.Expanded += new RoutedEventHandler(folder_Expanded);
+                anItem.Expanded += new RoutedEventHandler(Folder_Expanded);
                 //anItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
                 foldersItem.Items.Add(anItem);
             }
@@ -120,7 +122,7 @@ namespace Micasa
         //    item.Items.Add(dummyNode);
         //}
 
-        void folder_Expanded(object sender, RoutedEventArgs e)
+        void Folder_Expanded(object sender, RoutedEventArgs e)
         {
             bool showHidden = false;
             bool showSystem = false;
@@ -152,12 +154,12 @@ namespace Micasa
                             subitem.Items.Add(dummyNode);
                             if (isThisPC_Item(item))
                             {
-                                subitem.Expanded += new RoutedEventHandler(folder_ExpandedThisPC);
+                                subitem.Expanded += new RoutedEventHandler(Folder_ExpandedThisPC);
                                 //subitem.Collapsed += new RoutedEventHandler(folder_Collapsed);
                             }
                             else
                             {
-                                subitem.Expanded += new RoutedEventHandler(folder_Expanded);
+                                subitem.Expanded += new RoutedEventHandler(Folder_Expanded);
                                 //subitem.Collapsed += new RoutedEventHandler(folder_Collapsed);
                             }
                             item.Items.Add(subitem);
@@ -168,7 +170,7 @@ namespace Micasa
             }
         }
 
-        void folder_ExpandedThisPC(object sender, RoutedEventArgs e)
+        void Folder_ExpandedThisPC(object sender, RoutedEventArgs e)
         {
             TreeViewItem item = (TreeViewItem)sender;
             if (item.Items.Count == 1 && item.Items[0] == dummyNode)
@@ -177,7 +179,7 @@ namespace Micasa
             }
         }
 
-        private void foldersItem_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void FoldersItem_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeView tree = (TreeView)sender;
             TreeViewItem item = ((TreeViewItem)tree.SelectedItem);
@@ -253,53 +255,50 @@ namespace Micasa
             return;
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void rbOneTime_Checked(object sender, RoutedEventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!blindSet && SelectedFolderSaved != null)
             {
-                if (WatchedLists.Instance.FolderList.ContainsKey(SelectedFolderSaved))
-                {
-                    WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
-                }
+                WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
                 WatchedLists.Instance.FolderList.Add(SelectedFolderSaved, WatchType.Onetime);
                 tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
                 tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
                 tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
-                replaceItemWithClone(SelectedItem);
+                ReplaceItemWithClone(SelectedItem);
                 foldersItem.Focus();
             }
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void rbExclude_Checked(object sender, RoutedEventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!blindSet && SelectedFolderSaved != null)
             {
-                if (WatchedLists.Instance.FolderList.ContainsKey(SelectedFolderSaved))
-                {
-                    WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
-                }
+                WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
                 WatchedLists.Instance.FolderList.Add(SelectedFolderSaved, WatchType.Excluded);
                 tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
                 tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
                 tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
-                replaceItemWithClone(SelectedItem);
+                ReplaceItemWithClone(SelectedItem);
                 foldersItem.Focus();
             }
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void rbMonitor_Checked(object sender, RoutedEventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!blindSet && SelectedFolderSaved != null)
             {
-                if (WatchedLists.Instance.FolderList.ContainsKey(SelectedFolderSaved))
-                {
-                    WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
-                }
+                WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
                 WatchedLists.Instance.FolderList.Add(SelectedFolderSaved, WatchType.Watched);
                 tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
                 tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
                 tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
-                replaceItemWithClone(SelectedItem);
+                ReplaceItemWithClone(SelectedItem);
                 foldersItem.Focus();
             }
         }
@@ -338,19 +337,18 @@ namespace Micasa
         {
             if (SelectedFolderSaved != null)
             {
-                if (WatchedLists.Instance.FolderList.ContainsKey(SelectedFolderSaved))
-                {
-                    WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
-                }
+                WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
                 tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
                 tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
                 tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
-                replaceItemWithClone(SelectedItem);
+                ReplaceItemWithClone(SelectedItem);
                 foldersItem.Focus();
             }
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private bool isThisPC_OKtoList(TreeViewItem item, string path)
+#pragma warning restore IDE1006 // Naming Styles
         {
             bool rtnVal = true;
 
@@ -358,9 +356,9 @@ namespace Micasa
             // is a ThisPC item.
             if (isThisPC_Item(item))
             {
-                if (!(path.Equals(WatchedLists.DesktopPath)
-                      || path.Equals(WatchedLists.DocumentsPath)
-                      || path.Equals(WatchedLists.PicturesPath)))
+                if (!(path.Equals(WatchedLists.DesktopPath, StringComparison.Ordinal)
+                      || path.Equals(WatchedLists.DocumentsPath, StringComparison.Ordinal)
+                      || path.Equals(WatchedLists.PicturesPath, StringComparison.Ordinal)))
                 {
                     // If path wasn't one of the special foldernames tested for in the if() then we 
                     // return false.
@@ -370,7 +368,11 @@ namespace Micasa
             return rtnVal;
         }
 
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable IDE1006 // Naming Styles
         private bool isThisPC_Item(TreeViewItem item)
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore CA1822 // Mark members as static
         {
             bool rtnVal = false;
 
@@ -381,7 +383,7 @@ namespace Micasa
             return rtnVal;
         }
 
-        private void replaceItemWithClone(TreeViewItem item)
+        private void ReplaceItemWithClone(TreeViewItem item)
         {
             TreeViewItem newItem = new();
 
@@ -394,7 +396,7 @@ namespace Micasa
                 newItem.Tag = SelectedItem.Tag;
                 newItem.FontWeight = SelectedItem.FontWeight;
                 newItem.Items.Add(dummyNode);
-                newItem.Expanded += new RoutedEventHandler(folder_Expanded);
+                newItem.Expanded += new RoutedEventHandler(Folder_Expanded);
                 //newItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
                 newItem.IsSelected = true;
                 SelectedItem = newItem;
@@ -411,12 +413,12 @@ namespace Micasa
                 newItem.Items.Add(dummyNode);
                 if (isThisPC_Item(destItem)) 
                 {
-                    newItem.Expanded += new RoutedEventHandler(folder_ExpandedThisPC);
+                    newItem.Expanded += new RoutedEventHandler(Folder_ExpandedThisPC);
                     //newItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
                 }
                 else
                 {
-                    newItem.Expanded += new RoutedEventHandler(folder_Expanded);
+                    newItem.Expanded += new RoutedEventHandler(Folder_Expanded);
                     //newItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
                 }
                 newItem.IsSelected = true;

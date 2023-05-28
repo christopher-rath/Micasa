@@ -7,13 +7,13 @@ using LiteDB;
 
 namespace Micasa
 {
-    class FolderList
+    class FolderList : IDisposable
     {
-        private FolderListTypes _theListType;
-        private LiteDatabase _db = new(Database.ConnectionString(Database.DBFilename));
+        private readonly FolderListTypes _theListType;
+        private readonly LiteDatabase _db = new(Database.ConnectionString(Database.DBFilename));
         private ILiteCollection<PhotosTbl> _PhotoCol;
         private ILiteCollection<FoldersTbl> _FolderCol;
-        private string[] _WatchedFolders = WatchedLists.Instance.WatchedFolders;
+        private readonly string[] _WatchedFolders = WatchedLists.Instance.WatchedFolders;
         private long _WatchedFolderItem = 0;
 
         public FolderList(FolderListTypes ListType)
@@ -29,6 +29,7 @@ namespace Micasa
             {
                 if (FolderListTypes.ComprehensiveScan == _theListType)
                 {
+#pragma warning disable CA1829
                     if (_WatchedFolders.Count() > _WatchedFolderItem)
                     {
                         return _WatchedFolders[_WatchedFolderItem++];
@@ -37,6 +38,7 @@ namespace Micasa
                     {
                         return "";
                     }
+#pragma warning restore CA1829
                 }
                 else if (FolderListTypes.ScanForAdd == _theListType)
                 {
@@ -47,6 +49,11 @@ namespace Micasa
                     return "";
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 

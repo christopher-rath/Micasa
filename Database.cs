@@ -44,10 +44,11 @@ namespace Micasa
         /// <returns>The connection string to use in a LiteDatabase constructor.</returns>
         public static string ConnectionString(string fn)
         {
-            if (fn.Contains(@""""))
+            if (fn.Contains('"'))
             {
                 throw new ArgumentException("ERROR: unexpected error creating or opening database file ("
-                                             + fn + ").\n\nUnable to continue.");
+                                             + fn + ").\n\nUnable to continue.  Note: a database filename"
+                                             + " may NOT contain a double quote character(s).");
             }
 
             return @"Filename=""" + fn + @"""; Connection=shared";
