@@ -29,7 +29,7 @@ namespace Micasa
             {
                 if (FolderListTypes.ComprehensiveScan == _theListType)
                 {
-#pragma warning disable CA1829
+#pragma warning disable CA1829 // Use Length/Count property instead of Enumerable.Count method
                     if (_WatchedFolders.Count() > _WatchedFolderItem)
                     {
                         return _WatchedFolders[_WatchedFolderItem++];
@@ -38,7 +38,7 @@ namespace Micasa
                     {
                         return "";
                     }
-#pragma warning restore CA1829
+#pragma warning restore CA1829 // Use Length/Count property instead of Enumerable.Count method
                 }
                 else if (FolderListTypes.ScanForAdd == _theListType)
                 {

@@ -40,10 +40,10 @@ namespace Micasa
         private Dictionary<string, WatchType> _FolderList = new();
         private bool _WriteLocked = false;
 #pragma warning disable CA2211 // Non-constant fields should not be visible
-        // The single instance of WatchedLists.
+        // The single instance of WatchedLists (Singleton design pattern).
         public static WatchedLists Instance = new();
 #pragma warning restore CA2211 // Non-constant fields should not be visible
-                              // Locks
+        // Locks
         private readonly object watchedListsWriteLock = new();
 
         /// <summary>
@@ -73,41 +73,54 @@ namespace Micasa
             // Now that we've initialised the files, we load any content into the FolderList 
             // dictionary.  We load the Excluded list first, then Onetime, then Watched; and, 
             // if each "load" activiy encouters a conflict we remove the preceding entry and
-            // make the new entry the master.  Once we've loaded all three files we write
-            // them back out to crystalize the normalization.
-            reader = new StreamReader(excludeListFilename);
-            while (reader.Peek() >= 0)
+            // make the new entry the master.
+            //
+            // Note: this means that Watched folders take precedence over Onetime folders,
+            // which take precendence over Excluded folders.  TODO: determine if Excluded
+            // folders should take precedence over the other two.
+            using (reader = new StreamReader(excludeListFilename))
             {
-                string line = reader.ReadLine();
-
-                if (0 < line.Length)
+                while (reader.Peek() >= 0)
                 {
-                    FolderList.Remove(line);
-                    FolderList.Add(line, WatchType.Excluded);
+                    string line = reader.ReadLine();
+
+                    if (0 < line.Length)
+                    {
+                        FolderList.Remove(line);
+                        FolderList.Add(line, WatchType.Excluded);
+                    }
                 }
             }
-            reader = new StreamReader(oneTimeListFilename);
-            while (reader.Peek() >= 0)
+            using (reader = new StreamReader(oneTimeListFilename))
             {
-                string line = reader.ReadLine();
-
-                if (0 < line.Length)
+                while (reader.Peek() >= 0)
                 {
-                    FolderList.Remove(line);
-                    FolderList.Add(line, WatchType.Onetime);
+                    string line = reader.ReadLine();
+
+                    if (0 < line.Length)
+                    {
+                        FolderList.Remove(line);
+                        FolderList.Add(line, WatchType.Onetime);
+                    }
                 }
             }
-            reader = new StreamReader(watchedListFilename);
-            while (reader.Peek() >= 0)
+            using (reader = new StreamReader(watchedListFilename))
             {
-                string line = reader.ReadLine();
-
-                if (0 < line.Length)
+                while (reader.Peek() >= 0)
                 {
-                    FolderList.Remove(line);
-                    FolderList.Add(line, WatchType.Watched);
+                    string line = reader.ReadLine();
+
+                    if (0 < line.Length)
+                    {
+                        FolderList.Remove(line);
+                        FolderList.Add(line, WatchType.Watched);
+                    }
                 }
             }
+            //
+            // Now that we've loaded all three files, write them back out to crystalize 
+            // the normalization (i.e., the ellimination of conflicting entries).
+            WriteWatchFiles();
         }
 
         #region GetterSetters
