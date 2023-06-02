@@ -9,6 +9,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -86,8 +87,14 @@ namespace Micasa
 
                     if (0 < line.Length)
                     {
-                        FolderList.Remove(line);
-                        FolderList.Add(line, WatchType.Excluded);
+                        if (IsPathFormatOK(line)) 
+                        { 
+                            FolderList.Remove(line);
+                            FolderList.Add(line, WatchType.Excluded);
+                        } else
+                        {
+                            Debug.WriteLine("Discarded invalid path (" + line + ") from " + excludeListFilename + ".");
+                        }
                     }
                 }
             }
@@ -99,8 +106,15 @@ namespace Micasa
 
                     if (0 < line.Length)
                     {
-                        FolderList.Remove(line);
-                        FolderList.Add(line, WatchType.Onetime);
+                        if (IsPathFormatOK(line))
+                        {
+                            FolderList.Remove(line);
+                            FolderList.Add(line, WatchType.Onetime);
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Discarded invalid path (" + line + ") from " + oneTimeListFilename + ".");
+                        }
                     }
                 }
             }
@@ -112,8 +126,15 @@ namespace Micasa
 
                     if (0 < line.Length)
                     {
-                        FolderList.Remove(line);
-                        FolderList.Add(line, WatchType.Watched);
+                        if (IsPathFormatOK(line))
+                        {
+                            FolderList.Remove(line);
+                            FolderList.Add(line, WatchType.Watched);
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Discarded invalid path (" + line + ") from " + watchedListFilename + ".");
+                        }
                     }
                 }
             }
@@ -282,7 +303,22 @@ namespace Micasa
                     }
                 }
             }
-        }
 #pragma warning restore CA1854 // Prefer the IDictionary.TryGetValue(TKey, out TValue) method
+        }
+    
+        private static bool IsPathFormatOK(string pathStr)
+        {
+            bool pathOK;
+
+            try 
+            {
+                pathOK = Path.IsPathFullyQualified(pathStr);    
+            }
+            catch 
+            {
+                pathOK = false;
+            }
+            return pathOK;
+        }
     }
 }
