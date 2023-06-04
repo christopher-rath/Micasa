@@ -132,7 +132,7 @@ namespace Micasa
                                     if (Options.Instance.IsFileTypeToScan(f))
                                     {
                                         AddPhotoToDB(PhotoCol, f, PicasaIniExists, DotPicasa, DotMicasa);
-                                        AddFolderToDB(wPath, FolderCol, Path.GetDirectoryName(f));
+                                        AddFolderToDB(wPath, FolderCol, Path.GetDirectoryName(f), false);
                                         // TO DO: add thumbnail
                                     }
                                 }
@@ -144,6 +144,9 @@ namespace Micasa
                     {
                         break;
                     }
+                    /// Now that we've scanned all files and all folders (recursively) in this Watched folder, we
+                    /// mark scanCompmleted as true.
+                    AddFolderToDB(wPath, FolderCol, wPath, true);
                 }
             }
         }
@@ -185,10 +188,13 @@ namespace Micasa
                                 if (Options.Instance.IsFileTypeToScan(f))
                                 {
                                     AddPhotoToDB(pCol, f, PicasaIniExists, DotPicasa, DotMicasa);
-                                    AddFolderToDB(wDir, fCol, Path.GetDirectoryName(f));
+                                    AddFolderToDB(wDir, fCol, Path.GetDirectoryName(f), false);
                                 }
                             }
                         }
+                        /// Now that we've scanned all files and all folders (recursively) in folder 'd', we
+                        /// mark scanCompmleted as true.
+                        AddFolderToDB(wDir, fCol, d, true);
                     }
                     Scanfolder(pCol, fCol, d, wDir, myCancelToken);
                 }
@@ -241,14 +247,16 @@ namespace Micasa
             }
         }
 
-        private static void AddFolderToDB(string watchedPath, ILiteCollection<FoldersTbl> fCol, string pathname)
+        private static void AddFolderToDB(string watchedPath, ILiteCollection<FoldersTbl> fCol, string pathname,
+                                            bool scanCompleted)
         {
             FoldersTbl aFolder = new()
             {
                 Pathname = pathname,
                 ModificationDate = File.GetLastWriteTime(pathname),
                 LastScannedDate = DateTime.Now,
-                WatchedParent = watchedPath
+                WatchedParent = watchedPath,
+                CompletedScan = scanCompleted
             };
             var results = fCol.FindOne(x => x.Pathname.Equals(pathname, StringComparison.Ordinal));
 
@@ -260,6 +268,7 @@ namespace Micasa
             {
                 results.ModificationDate = aFolder.ModificationDate;
                 results.LastScannedDate = aFolder.LastScannedDate;
+                results.CompletedScan = aFolder.CompletedScan;
                 fCol.Update(results);
             }
         }

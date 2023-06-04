@@ -114,6 +114,12 @@ namespace Micasa
     /// there is a proper correspondance between the folders in this table and the folders 
     /// in the Photos table.
     /// </summary>
+    /// <param name="Id">Unique ID number assigned by LiteDB.</param>
+    /// <param name="Pathname">The folder's fully qualified name; i.e., not a relative path.</param>
+    /// <param name="ModificationDate">The folder's modification date (retrieved from the file sysetem).</param>
+    /// <param name="LastScannedDate">The time and date when this DB record was updated.</param>
+    /// <param name="WatchedParent">The watchlist folder to which this folder is a child.</param>
+    /// <param name="CompletedScan">Assigned a value of <c>true</c> when every file in the folder has been scanned.</param>
     public class FoldersTbl
     {
         public int Id { get; set; }
@@ -121,6 +127,7 @@ namespace Micasa
         public DateTime ModificationDate { get; set; }
         public DateTime LastScannedDate { get; set; }
         public string WatchedParent { get; set; }
+        public bool CompletedScan { get; set; }
     }
 
     /// <summary>
