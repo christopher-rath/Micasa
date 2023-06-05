@@ -172,6 +172,10 @@ namespace Micasa
         }
 
         #region Thread_Code
+        
+        /// <summary>
+        /// Start the scanners.
+        /// </summary>
         public static void StartScanners()
         {
             // We always create a fresh token in case the existing one is in a cancalled state.
@@ -185,12 +189,18 @@ namespace Micasa
             Task.Run(() => DeletedScanner.StartScanner(DeletedScannerCancellationToken), DeletedScannerCancellationToken);
         }
 
+        /// <summary>
+        /// Stop the scanners.
+        /// </summary>
         public static void Stopscanners()
         {
             PictureScannerCancellationSource.Cancel();
             DeletedScannerCancellationSource.Cancel();
         }
 
+        /// <summary>
+        /// Start the watchers; one for each folder in the WatchedFolders list.
+        /// </summary>
         public static void StartWatchers()
         {
             try
@@ -210,6 +220,9 @@ namespace Micasa
             }
         }
 
+        /// <summary>
+        /// The Public method to call to stop the watchers.
+        /// </summary>
         public static void StopWatchers()
         {
             _ActiveWatchers.StopWatchers();

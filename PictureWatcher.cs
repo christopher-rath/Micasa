@@ -53,6 +53,9 @@ namespace Micasa
             Debug.WriteLine($"PictureWather: started watching {wPath}");
         }
 
+        /// <summary>
+        /// Stop all the watchers by disposing the objects and then clearing the list.
+        /// </summary>
         public void StopWatchers()
         {
             foreach (FileSystemWatcher fsw in _activeWatchers)
