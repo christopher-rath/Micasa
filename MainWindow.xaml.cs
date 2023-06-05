@@ -14,6 +14,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Threading;
 using System.ComponentModel;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Micasa
 {
@@ -30,6 +32,7 @@ namespace Micasa
         private static CancellationTokenSource PictureScannerCancellationSource = new();
         private static CancellationToken PictureScannerCancellationToken = PictureScannerCancellationSource.Token;
         private static readonly string _AppData = Environment.ExpandEnvironmentVariables(@"%APPDATA%");
+        private static PictureWatcher _ActiveWatchers = new();
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
         public static RoutedCommand AboutCmd = new();
@@ -122,6 +125,7 @@ namespace Micasa
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
+
             try
             {
                 Database.CreateDB();
@@ -140,16 +144,31 @@ namespace Micasa
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
+
+            try
+            {
+                StartWatchers();
+            }
+            catch (Exception ex)
+            {
+                string msg = $"ERROR: unexpected error setting up FileSystemWatchers for watched folders: {ex.Message}\n\nUnable to continue.";
+                MessageBox.Show(msg, "FileSystemWatcher Creation Error", MessageBoxButton.OK, MessageBoxImage.Error,
+                                MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                this.Close();
+            }
         }
 
+        #region GetterSetters
         public static string AppData
         {
             get { return _AppData; }
         }
+        #endregion GetterSetters
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Stopscanners();
+            _ActiveWatchers.StopWatchers();
         }
 
         #region Thread_Code
@@ -170,6 +189,30 @@ namespace Micasa
         {
             PictureScannerCancellationSource.Cancel();
             DeletedScannerCancellationSource.Cancel();
+        }
+
+        public static void StartWatchers()
+        {
+            try
+            {
+                foreach (string wPath in WatchedLists.Instance.WatchedFolders)
+                {
+                    // Ignore folders that don't exist.
+                    if (Directory.Exists(wPath))
+                    {
+                        _ActiveWatchers.WatchFolder(wPath);
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public static void StopWatchers()
+        {
+            _ActiveWatchers.StopWatchers();
         }
         #endregion Thread_Code
 

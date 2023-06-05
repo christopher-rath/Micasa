@@ -50,11 +50,13 @@ namespace Micasa
             TreeViewItem anItem = null;
             TreeViewItem myCompItem = null;
 
-            // Stop the picture scanner while we have this dialog box open.
+            // Stop the picture scanners and folder watchers while we have this dialog
+            // box open.
             MainWindow.Stopscanners();
+            MainWindow.StopWatchers();
 
-            // Load special folders before loading the filesystem.
-            anItem = new TreeViewItem();
+           // Load special folders before loading the filesystem.
+           anItem = new TreeViewItem();
             anItem.Header = WatchedLists.ThisPCStr;
             anItem.Tag = WatchedLists.ThisPCStr + WatchedLists.ComputerPath;
             anItem.FontWeight = FontWeights.Bold;
@@ -312,6 +314,7 @@ namespace Micasa
             }
             // Restart the scanner as we close the dialog box.
             MainWindow.StartScanners();
+            MainWindow.StopWatchers();
             this.Close();
         }
 
@@ -330,6 +333,7 @@ namespace Micasa
             }
             // Restart the scanner as we close the dialog box.
             MainWindow.StartScanners();
+            MainWindow.StartWatchers();
             this.Close();
         }
 
