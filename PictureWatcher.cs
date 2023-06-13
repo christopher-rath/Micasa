@@ -1,9 +1,12 @@
-﻿using System;
+﻿using LiteDB;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Micasa
@@ -20,6 +23,57 @@ namespace Micasa
         // Each folder to be monitored has an active FileSystemWatcher.  We maintain
         // the set in this list.
         private List<FileSystemWatcher> _activeWatchers = new();
+        public struct PhotoToQueue
+        {
+            public PhotoToQueue(
+                Int64 eventTicks,
+                WatcherChangeTypes pAction,
+                string fullpath,
+                string filename,
+                string oldpath,
+                string oldname)
+            {
+                EventTicks = eventTicks;
+                PAction = pAction;
+                Fullpath = fullpath;
+                Filename = filename;
+                Oldpath = oldpath;
+                Oldname = oldname;
+            }
+            public Int64 EventTicks { get; private set; }
+            public WatcherChangeTypes PAction { get; private set; }
+            public string Fullpath { get; private set; }
+            public string Filename { get; private set; }
+            public string Oldpath { get; private set; }
+            public string Oldname { get; private set; }
+        }
+        private static Queue<PhotoToQueue> _photosToProcess = new();
+
+        #region GetterSetters
+        public static int QCount
+        {
+            get
+            {
+                return _photosToProcess.Count;
+            }
+        }
+
+        public static PhotoToQueue QDequeue
+        {
+            get
+            {
+                return _photosToProcess.Dequeue();
+            }
+        }
+
+        public static PhotoToQueue QPeek
+        {
+            get
+            {
+                return _photosToProcess.Peek();
+            }
+        }
+        #endregion GetterSetters
 
         /// <summary>
         /// Begin to watch a new folder for new, changed, renamed, and deleted
@@ -74,24 +128,25 @@ namespace Micasa
 
         private static void OnChanged(object sender, FileSystemEventArgs e)
         {
-            if (e.ChangeType != WatcherChangeTypes.Changed)
-            {
-                return;
-            }
+            QueuePhoto(e.ChangeType, e.FullPath, e.Name, "", "");
             Debug.WriteLine($"Changed: {e.FullPath}");
         }
 
         private static void OnCreated(object sender, FileSystemEventArgs e)
         {
-            string value = $"Created: {e.FullPath}";
-            Debug.WriteLine(value);
+            QueuePhoto(e.ChangeType, e.FullPath, e.Name, "", "");
+            Debug.WriteLine($"Created: {e.FullPath}");
         }
 
-        private static void OnDeleted(object sender, FileSystemEventArgs e) =>
+        private static void OnDeleted(object sender, FileSystemEventArgs e)
+        {
+            QueuePhoto(e.ChangeType, e.FullPath, e.Name, "", "");
             Debug.WriteLine($"Deleted: {e.FullPath}");
+        }
 
         private static void OnRenamed(object sender, RenamedEventArgs e)
         {
+            QueuePhoto(e.ChangeType, e.FullPath, e.Name, e.OldFullPath, e.OldName);
             Debug.WriteLine(@"Renamed:");
             Debug.WriteLine($"    Old: {e.OldFullPath}");
             Debug.WriteLine($"    New: {e.FullPath}");
@@ -110,6 +165,13 @@ namespace Micasa
                 Debug.WriteLine($"");
                 PrintException(ex.InnerException);
             }
+        }
+
+        private static void QueuePhoto(WatcherChangeTypes c, string path, string name, string oldpath, string oldname)
+        {
+            PhotoToQueue p = new(DateTime.Now.Ticks, c, path, name, oldpath, oldname);
+            _photosToProcess.Enqueue(p);
+            Debug.WriteLine($"Queued: {path}");
         }
     }
 }

@@ -33,6 +33,8 @@ namespace Micasa
         private static CancellationToken PictureScannerCancellationToken = PictureScannerCancellationSource.Token;
         private static readonly string _AppData = Environment.ExpandEnvironmentVariables(@"%APPDATA%");
         private static PictureWatcher _ActiveWatchers = new();
+        private static CancellationTokenSource PictureProcessorCancellationSource = new();
+        private static CancellationToken PictureProcessorCancellationToken = PictureProcessorCancellationSource.Token;
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
         public static RoutedCommand AboutCmd = new();
@@ -200,11 +202,13 @@ namespace Micasa
 
         /// <summary>
         /// Start the watchers; one for each folder in the WatchedFolders list.
+        /// Then start the associated processor.
         /// </summary>
         public static void StartWatchers()
         {
             try
             {
+                // First, star the FileSystemWatcher daemons.
                 foreach (string wPath in WatchedLists.Instance.WatchedFolders)
                 {
                     // Ignore folders that don't exist.
@@ -213,6 +217,11 @@ namespace Micasa
                         _ActiveWatchers.WatchFolder(wPath);
                     }
                 }
+                // Then, start the thread that processes the photo Queue<T>.
+                // We always create a fresh token in case the existing one is in a cancalled state.
+                PictureProcessorCancellationSource = new CancellationTokenSource();
+                PictureProcessorCancellationToken = PictureProcessorCancellationSource.Token;
+                Task.Run(() => PictureListProcessor.StartProcessor(PictureProcessorCancellationToken), PictureProcessorCancellationToken);
             }
             catch
             {
@@ -221,11 +230,12 @@ namespace Micasa
         }
 
         /// <summary>
-        /// The Public method to call to stop the watchers.
+        /// The Public method to call to stop the watchers and the associated processor.
         /// </summary>
         public static void StopWatchers()
         {
             _ActiveWatchers.StopWatchers();
+            PictureProcessorCancellationSource.Cancel();
         }
         #endregion Thread_Code
 
