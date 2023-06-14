@@ -81,7 +81,7 @@ namespace Micasa
                                         // The two events are for the same Fullpath and are either Created or Changed
                                         // events; so, we are allowed to collapse them into a single event.  We 
                                         // dequeue the next entry overtop of the previous one.
-                                        ptq = PictureWatcher.QDequeue;
+                                        //ptq = PictureWatcher.QDequeue;
                                         Debug.WriteLine($"Collapsed: {ptq.Fullpath}");
                                     }
                                     else
