@@ -27,11 +27,11 @@ namespace Micasa
     /// the watchers and restart them; just as it does with the filesystem 
     /// scanners.
     /// </summary>
-    internal class PictureWatcher
+    internal sealed class PictureWatcher
     {
         // Each folder to be monitored has an active FileSystemWatcher.  We maintain
         // the set in this list.
-        private List<FileSystemWatcher> _activeWatchers = new();
+        private readonly List<FileSystemWatcher> _activeWatchers = new();
         public struct PhotoToQueue
         {
             public PhotoToQueue(
@@ -56,32 +56,14 @@ namespace Micasa
             public string Oldpath { get; private set; }
             public string Oldname { get; private set; }
         }
-        private static Queue<PhotoToQueue> _photosToProcess = new();
+        private static readonly Queue<PhotoToQueue> _photosToProcess = new();
 
         #region GetterSetters
-        public static int QCount
-        {
-            get
-            {
-                return _photosToProcess.Count;
-            }
-        }
+        public static int QCount => _photosToProcess.Count;
 
-        public static PhotoToQueue QDequeue
-        {
-            get
-            {
-                return _photosToProcess.Dequeue();
-            }
-        }
+        public static PhotoToQueue QDequeue => _photosToProcess.Dequeue();
 
-        public static PhotoToQueue QPeek
-        {
-            get
-            {
-                return _photosToProcess.Peek();
-            }
-        }
+        public static PhotoToQueue QPeek => _photosToProcess.Peek();
         #endregion GetterSetters
 
         /// <summary>
@@ -164,7 +146,7 @@ namespace Micasa
         private static void OnError(object sender, ErrorEventArgs e) =>
             PrintException(e.GetException());
 
-        private static void PrintException(Exception? ex)
+        private static void PrintException(Exception ex)
         {
             if (ex != null)
             {

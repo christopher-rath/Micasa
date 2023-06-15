@@ -20,7 +20,7 @@ using static Micasa.PictureWatcher;
 
 namespace Micasa
 {
-    internal class PictureListProcessor
+    internal sealed class PictureListProcessor
     {
         /// <summary>
         /// Start the photo processor that takes filenames from the PictureWatcher List<T>
