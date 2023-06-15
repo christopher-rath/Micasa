@@ -93,19 +93,18 @@
     </Window.CommandBindings>
 
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-        </Grid>
-        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" DockPanel.Dock="Top" Background="White"
+              BorderThickness="0,0,0,1" BorderBrush="DarkGray" >
             <MenuItem Header="_File">
                 <MenuItem Command="{x:Static local:MainWindow.NewAlbumCmd}" Header="New Album..." />
                 <Separator />
@@ -255,6 +254,12 @@
                 <MenuItem Command="{x:Static local:MainWindow.AboutCmd}" Header="About Micasa" />
             </MenuItem>
         </Menu>
-
+        <TextBlock Grid.Row="1" Grid.Column="0" Height="100">TBD</TextBlock>
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Background="#FFF0F0F0" BorderThickness="0,1,0,0" BorderBrush="DarkGray">
+            <StatusBarItem>
+                <TextBox x:Name="tbStatusMsg" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" IsReadOnly="True" 
+                         Width="300" BorderThickness="0,0,0,0" BorderBrush="#FFF0F0F0" Background="#FFF0F0F0" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

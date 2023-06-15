@@ -158,6 +158,7 @@ namespace Micasa
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
+            this.tbStatusMsg.Text = "TEST";
         }
 
         #region GetterSetters
@@ -981,7 +982,7 @@ namespace Micasa
         private void UndoAddEditsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
-	
+
         #endregion UICode
     }
 
