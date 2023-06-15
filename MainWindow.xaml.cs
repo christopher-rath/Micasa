@@ -1061,7 +1061,7 @@ namespace Micasa
         // Micasa About panel.  This section is at the end of the file to make it 
         // easy to find, to update the version information.
         public const string sMcMainSection = @"Main";
-        public const string sMcVersion = @"0.04";
+        public const string sMcVersion = @"0.05";
         public const string sMcPlatform = @"Windows 10";
         public const string sMcCopyright = @"2021{\'96}2023"; // "{\'96}" is an RTF en dash character.
         public const string sVersionToRepl = @"[@Version String@]";
