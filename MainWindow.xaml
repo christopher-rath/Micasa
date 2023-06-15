@@ -14,7 +14,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Micasa"
         mc:Ignorable="d"
-    Title="Micasa" SizeToContent="WidthAndHeight" MinHeight="100" Closing="Window_Closing">
+    Title="Micasa" SizeToContent="WidthAndHeight" MinHeight="100" MinWidth="550" Closing="Window_Closing">
 
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:MainWindow.AboutCmd}" CanExecute="AboutCmdCanExecute" Executed="AboutCmdExecuted" />
@@ -258,7 +258,7 @@
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Background="#FFF0F0F0" BorderThickness="0,1,0,0" BorderBrush="DarkGray">
             <StatusBarItem>
                 <TextBox x:Name="tbStatusMsg" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" IsReadOnly="True" 
-                         Width="300" BorderThickness="0,0,0,0" BorderBrush="#FFF0F0F0" Background="#FFF0F0F0" />
+                         BorderThickness="0,0,0,0" BorderBrush="#FFF0F0F0" Background="#FFF0F0F0" />
             </StatusBarItem>
         </StatusBar>
     </Grid>

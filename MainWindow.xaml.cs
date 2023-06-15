@@ -158,7 +158,7 @@ namespace Micasa
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
-            this.tbStatusMsg.Text = "TEST";
+            this.tbStatusMsg.Text = "Open the Folder Manager (Tools→Folder Manager) and configure folders to be watched by Micasa.";
         }
 
         #region GetterSetters
