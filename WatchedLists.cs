@@ -91,6 +91,7 @@ namespace Micasa
                         { 
                             FolderList.Remove(line);
                             FolderList.Add(line, WatchType.Excluded);
+                            MainStatusBar.Instance.StatusBarMsg = $"Excluded from watch: " + line;
                         } else
                         {
                             Debug.WriteLine("Discarded invalid path (" + line + ") from " + excludeListFilename + ".");
@@ -110,6 +111,7 @@ namespace Micasa
                         {
                             FolderList.Remove(line);
                             FolderList.Add(line, WatchType.Onetime);
+                            MainStatusBar.Instance.StatusBarMsg = $"Scanned once: " + line;
                         }
                         else
                         {
@@ -130,6 +132,7 @@ namespace Micasa
                         {
                             FolderList.Remove(line);
                             FolderList.Add(line, WatchType.Watched);
+                            MainStatusBar.Instance.StatusBarMsg = $"Watching: " + line;
                         }
                         else
                         {

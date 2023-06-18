@@ -16,6 +16,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Micasa
 {
@@ -25,6 +26,7 @@ namespace Micasa
 
     public partial class MainWindow : Window
     {
+        public static MainWindow Instance { get; private set; } 
         private static readonly DeletedScanner _DeletedScanner = new();
         private static CancellationTokenSource DeletedScannerCancellationSource = new();
         private static CancellationToken DeletedScannerCancellationToken = DeletedScannerCancellationSource.Token;
@@ -35,6 +37,7 @@ namespace Micasa
         private static PictureWatcher _ActiveWatchers = new();
         private static CancellationTokenSource PictureProcessorCancellationSource = new();
         private static CancellationToken PictureProcessorCancellationToken = PictureProcessorCancellationSource.Token;
+
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
         public static RoutedCommand AboutCmd = new();
@@ -115,6 +118,9 @@ namespace Micasa
             InitializeComponent();
 
             // Custom code.
+            Instance = this;
+            this.tbStatusMsg.Text = "Open the Folder Manager (Tools→Folder Manager) and configure folders to be watched by Micasa.";
+
             try
             {
                 Directory.CreateDirectory(AppData + System.IO.Path.DirectorySeparatorChar + Constants.sMcAppDataFolder);
@@ -123,7 +129,7 @@ namespace Micasa
             {
                 string msg = "ERROR: unable to create Micasa roaming folder (" + AppData + System.IO.Path.DirectorySeparatorChar
                             + Constants.sMcAppDataFolder + ").\n\nUnable to continue.";
-                MessageBox.Show(msg, "Roaming Folder Creation Error", MessageBoxButton.OK, MessageBoxImage.Error, 
+                MessageBox.Show(msg, "Roaming Folder Creation Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
@@ -158,7 +164,6 @@ namespace Micasa
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
-            this.tbStatusMsg.Text = "Open the Folder Manager (Tools→Folder Manager) and configure folders to be watched by Micasa.";
         }
 
         #region GetterSetters
@@ -175,7 +180,7 @@ namespace Micasa
         }
 
         #region Thread_Code
-        
+
         /// <summary>
         /// Start the scanners.
         /// </summary>
@@ -269,7 +274,7 @@ namespace Micasa
                 }
             }
         }
-        #endregion
+        #endregion Utility_Functions
 
         #region UICode
         // AboutCmd
@@ -404,7 +409,7 @@ namespace Micasa
         {
         }
 
-	// EditViewCmd
+        // EditViewCmd
         private void EditViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = false;
@@ -986,7 +991,8 @@ namespace Micasa
         #endregion UICode
     }
 
-    [Flags] public enum AppMode
+    [Flags]
+    public enum AppMode
     {
         Legacy,
         Migrate,

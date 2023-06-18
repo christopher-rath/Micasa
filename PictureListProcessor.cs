@@ -64,6 +64,7 @@ namespace Micasa
                         if (PictureWatcher.QCount == 0)
                         {
                             Debug.WriteLine($"Processed (no loop): {ptq.Fullpath}");
+                            MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
                         } 
                         else
                         {
@@ -92,18 +93,21 @@ namespace Micasa
                                         // dequeue the next entry overtop of the previous one.
                                         //ptq = PictureWatcher.QDequeue;
                                         Debug.WriteLine($"Collapsed: {ptq.Fullpath}");
+                                        MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
                                     }
                                     else
                                     {
                                         // We are not allowed to collapse the two events; so, we process the one that
                                         // was last dequeued.
                                         Debug.WriteLine($"Processed (tuple): {ptq.Fullpath}");
+                                        MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
                                     }
                                 }
                                 else
                                 {
                                     // There was only one entry in the Queue<T>; so, we simply it.
                                     Debug.WriteLine($"Processed (single): {ptq.Fullpath}");
+                                    MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
                                 }
                             }
                         }
