@@ -2,3 +2,6 @@
 
 # CA1805: Do not initialize unnecessarily
 dotnet_diagnostic.CA1805.severity = none
+# Use Unix EOL.
+end_of_line = lf
+
