@@ -13,7 +13,7 @@ namespace Micasa
     /// XAML widget are centralised in this class.  Any code that needs to update
     /// the status bar widget does so through this class.
     /// </summary>
-    internal class MainStatusBar
+    internal sealed class MainStatusBar
     {
         private string _StatusBarMsg { get; set; }
 #pragma warning disable CA2211
