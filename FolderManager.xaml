@@ -93,8 +93,10 @@
 
             <!-- Reminder: Margin="left,top,right,bottom" -->
 
-            <Label Grid.Row="0" Grid.Column="0" Content="For a selected folder, choose the scan frequency." Margin="0,0,0,0"/>
-            
+            <Label Grid.Row="0" Grid.Column="0" Margin="0,0,0,5">
+                <TextBlock TextWrapping="Wrap" 
+                           Text="For a selected folder, choose whether to have Micasa watch for pictures in that folder, and whether to scan once or watch continuously; or, you may choose to exclude that folder from Micasa." />
+            </Label>
             <!-- This Grid holds the monitor type radio buttons and the [Reset] button. -->
             <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,5">
                 <Grid.RowDefinitions>
@@ -124,8 +126,9 @@
                         </WrapPanel>
                     </RadioButton>
                 </StackPanel>
-                <Button x:Name="Reset" Content="Reset" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,52.5,3" VerticalAlignment="Top" Width="75" Height="19.96" Click="Reset_Click" IsDefault="False" 
-                        ToolTip="Reset this folder's behaviour to Micasa's default."/>
+                <Button x:Name="Reset" Content="Reset Folder" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" 
+                        Margin="0,0,52.5,3" VerticalAlignment="Center"  Width="75" Height="19.96" Click="Reset_Click" 
+                        IsDefault="False" ToolTip="Reset this folder's behaviour to Micasa's default."/>
             </Grid>
 
             <WrapPanel Grid.Row="2" Grid.Column="0">
