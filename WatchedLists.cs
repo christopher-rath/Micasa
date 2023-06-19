@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Micasa
 {
@@ -95,6 +96,7 @@ namespace Micasa
                         } else
                         {
                             Debug.WriteLine("Discarded invalid path (" + line + ") from " + excludeListFilename + ".");
+                            WarnDiscardedWatch(WatchType.Excluded, line);
                         }
                     }
                 }
@@ -116,6 +118,7 @@ namespace Micasa
                         else
                         {
                             Debug.WriteLine("Discarded invalid path (" + line + ") from " + oneTimeListFilename + ".");
+                            WarnDiscardedWatch(WatchType.Onetime, line);
                         }
                     }
                 }
@@ -137,6 +140,7 @@ namespace Micasa
                         else
                         {
                             Debug.WriteLine("Discarded invalid path (" + line + ") from " + watchedListFilename + ".");
+                            WarnDiscardedWatch(WatchType.Watched, line);
                         }
                     }
                 }
@@ -322,6 +326,47 @@ namespace Micasa
                 pathOK = false;
             }
             return pathOK;
+        }
+
+        private static void WarnDiscardedWatch(WatchType type, string path)
+        {
+            string msg = "An invalid foldername (" + path + ") was found in the list of folders to ";
+
+            switch (type)
+            {
+                case WatchType.Excluded:
+                    msg += "Exclude.";
+                    break;
+                case WatchType.Onetime:
+                    msg += "Scan Once.";
+                    break;
+                case WatchType.Watched:
+                    msg += "Watch.";
+                    break;
+            }
+            msg += "\n\nIt has been discarded.";
+            // TO DO: Write to log class instead of posting a MessageBox -- since the MessageBox doesn't always 
+            //        display correctly.
+            MessageBox.Show(MainWindow.Instance, msg, Constants.sMcAppName, MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        /// <summary>
+        /// Determine if there are any folders in the WatchedFolders list.
+        /// </summary>
+        /// <returns>True if there is 1 or more folders being watched; otherwise return false.</returns>
+        public bool IsWatchingFolders
+        {
+            get
+            {
+                if (WatchedFolders.Length > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
     }
 }

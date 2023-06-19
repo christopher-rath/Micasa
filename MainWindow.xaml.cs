@@ -119,7 +119,16 @@ namespace Micasa
 
             // Custom code.
             Instance = this;
-            this.tbStatusMsg.Text = "Open the Folder Manager (Tools→Folder Manager) and configure folders to be watched by Micasa.";
+            // Load a default message in the StatusBar.  What we load depends whether or not the 
+            // user has configured any folders to watch.
+            if (WatchedLists.Instance.IsWatchingFolders)
+            {
+                this.tbStatusMsg.Text = Constants.sMcAppName + " is watching folders; open the Folder Manager to see the list.";
+            }
+            else
+            {
+                this.tbStatusMsg.Text = "Open the Folder Manager (Tools→Folder Manager) and configure folders to be watched by Micasa.";
+            }
 
             try
             {
@@ -157,9 +166,9 @@ namespace Micasa
             {
                 StartWatchers();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                string msg = $"ERROR: unexpected error setting up FileSystemWatchers for watched folders: {ex.Message}\n\nUnable to continue.";
+                string msg = $"ERROR: unexpected error setting up FileSystemWatchers for watched folders: {e.Message}\n\nUnable to continue.";
                 MessageBox.Show(msg, "FileSystemWatcher Creation Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
@@ -173,11 +182,17 @@ namespace Micasa
         }
         #endregion GetterSetters
 
+        #region Event_Handlers
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Stopscanners();
             _ActiveWatchers.StopWatchers();
         }
+
+        //private void Window_ContentRendered(object sender, EventArgs e)
+        //{
+        //}
+        #endregion Event_Handlers
 
         #region Thread_Code
 
@@ -1001,6 +1016,7 @@ namespace Micasa
 
     public static class Constants
     {
+        public const string sMcAppName = @"Micasa";
 #pragma warning disable CA1707 // Identifiers should not contain underscores
         // Main Micasa .INI file -- Section: File Types
         public const string sMcFT_Section = @"File Types";
