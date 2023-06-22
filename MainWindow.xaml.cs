@@ -242,7 +242,7 @@ namespace Micasa
                 // We always create a fresh token in case the existing one is in a cancalled state.
                 PictureProcessorCancellationSource = new CancellationTokenSource();
                 PictureProcessorCancellationToken = PictureProcessorCancellationSource.Token;
-                Task.Run(() => PictureListProcessor.StartProcessor(PictureProcessorCancellationToken), PictureProcessorCancellationToken);
+                Task.Run(() => PictureWatcher.StartProcessor(PictureProcessorCancellationToken), PictureProcessorCancellationToken);
             }
             catch
             {

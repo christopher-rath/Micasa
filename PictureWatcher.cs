@@ -59,10 +59,6 @@ namespace Micasa
         private static readonly Queue<PhotoToQueue> _photosToProcess = new();
 
         #region GetterSetters
-        public static int QCount => _photosToProcess.Count;
-
-        public static PhotoToQueue QDequeue => _photosToProcess.Dequeue();
-
         public static PhotoToQueue QPeek => _photosToProcess.Peek();
         #endregion GetterSetters
 
@@ -96,6 +92,100 @@ namespace Micasa
             watcher.EnableRaisingEvents = true;
             _activeWatchers.Add(watcher);
             Debug.WriteLine($"PictureWather: started watching {wPath}");
+        }
+
+        /// <summary>
+        /// Start the photo processor that takes filenames from the PictureWatcher List<T>
+        /// and processes the makes the applicable updates to the Micasa photo database.
+        /// </summary>
+        /// <param name="token">The cancellation token.</param>
+        public static void StartProcessor(object token)
+        {
+            CancellationToken myCancelToken = (CancellationToken)token;
+
+            // Pause for a moment to provide a delay to make threads more apparent.
+            Thread.Sleep(500);
+
+            // Open the database.
+            using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
+            {
+                ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
+                ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
+
+                // Loop until asekd to cancel; however, the thread will sleep between iterations
+                // of this while() loop.
+                while (!myCancelToken.IsCancellationRequested)
+                {
+                    bool firstLoop = true;
+                    PhotoToQueue ptq;
+                    PhotoToQueue ptqPk;
+
+                    // Process photos in the queue until its empty or a request to cancel
+                    // has been made.
+                    if (_photosToProcess.Count > 0)
+                    {
+                        firstLoop = true;
+
+                        // Get the first entry and then start to loop if there are more entries.
+                        ptq = _photosToProcess.Dequeue();
+
+                        // Sleep briefly to allow multiple events to post.
+                        Thread.Sleep(50);
+                        // If there are mulitple events in the Queue<T> then loop; otherwise just
+                        // process the single event.
+                        if (_photosToProcess.Count == 0)
+                        {
+                            Debug.WriteLine($"Processed (no loop): {ptq.Fullpath}");
+                            MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
+                        }
+                        else
+                        {
+                            while ((_photosToProcess.Count > 0) && (!myCancelToken.IsCancellationRequested))
+                            {
+                                if (!firstLoop && (_photosToProcess.Count > 0))
+                                {
+                                    ptq = _photosToProcess.Dequeue();
+                                }
+                                else
+                                {
+                                    firstLoop = false;
+                                }
+
+                                if (_photosToProcess.Count > 0)
+                                {
+                                    // There is a dequeued entry and another one still in the queue; so, we
+                                    // check for the opportunity to collapse the events.
+                                    ptqPk = _photosToProcess.Peek();
+                                    if (((ptq.PAction == WatcherChangeTypes.Created) || (ptq.PAction == WatcherChangeTypes.Changed))
+                                        && ((ptqPk.PAction == WatcherChangeTypes.Created) || (ptqPk.PAction == WatcherChangeTypes.Changed))
+                                        && (ptq.Fullpath == ptqPk.Fullpath))
+                                    {
+                                        // The two events are for the same Fullpath and are either Created or Changed
+                                        // events; so, we are allowed to collapse them into a single event.  We 
+                                        // dequeue the next entry overtop of the previous one.
+                                        //ptq = _photosToProcess.Dequeue();
+                                        Debug.WriteLine($"Collapsed: {ptq.Fullpath}");
+                                        MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
+                                    }
+                                    else
+                                    {
+                                        // We are not allowed to collapse the two events; so, we process the one that
+                                        // was last dequeued.
+                                        Debug.WriteLine($"Processed (tuple): {ptq.Fullpath}");
+                                        MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
+                                    }
+                                }
+                                else
+                                {
+                                    // There was only one entry in the Queue<T>; so, we simply it.
+                                    Debug.WriteLine($"Processed (single): {ptq.Fullpath}");
+                                    MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
