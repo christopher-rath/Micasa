@@ -1,3 +1,12 @@
+#region Copyright
+// Micasa -- Your Photo Home -- A lightweight photo organiser & editor.
+// Author: Christopher Rath <christopher@rath.ca>
+// Archived at: http://rath.ca/
+// Copyright 2021-2023 © Christopher Rath
+// Distributed under the GNU Lesser General Public License v2.1
+//     (see the About–?Terms menu item for the license text).
+// Warranty: None, see the license.
+#endregion
 using System.Reflection;
 using System.Windows;
 
@@ -9,4 +18,5 @@ using System.Windows;
                                               //(used if a resource is not found in the page,
                                               // app, or any theme specific resource dictionaries)
     ),
-    AssemblyVersion("0.4.*")]
+    AssemblyVersion("0.6.*") // --> Also update in "MainWindow.xaml.cs" <--
+    ]
