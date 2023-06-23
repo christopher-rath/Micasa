@@ -217,7 +217,7 @@
                 <MenuItem Command="{x:Static local:MainWindow.ExportToDVRCmd}" Header="_Export to TiVo(r) DVR..." />
             </MenuItem>
             <MenuItem Header="_Tools">
-                <MenuItem Command="{x:Static local:MainWindow.FolderMgrCmd}" Header="Folder Manager..." />
+                <MenuItem Command="{x:Static local:MainWindow.FolderMgrCmd}" Header="_Folder Manager..." />
                 <MenuItem Command="{x:Static local:MainWindow.UploadMgrCmd}" Header="Upload Manager..." />
                 <MenuItem Command="{x:Static local:MainWindow.PeopleMgrCmd}" Header="People Manager..." />
                 <Separator />
@@ -236,7 +236,7 @@
                 </MenuItem>
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.ConfigButtonsCmd}" Header="Configure Buttons..." />
-                <MenuItem Command="{x:Static local:MainWindow.OptionsCmd}" Header="Options..." />
+                <MenuItem Command="{x:Static local:MainWindow.OptionsCmd}" Header="_Options..." />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Command="{x:Static local:MainWindow.HelpContentsCmd}" Header="Help Contents and Index" />
@@ -244,14 +244,14 @@
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.ForumsCmd}" Header="Micasa Formus" />
                 <MenuItem Command="{x:Static local:MainWindow.ReadmeCmd}" Header="Online Readme" />
-                <MenuItem Command="{x:Static local:MainWindow.ReleaseNotesCmd}" Header="Release Notes" />
+                <MenuItem Command="{x:Static local:MainWindow.ReleaseNotesCmd}" Header="_Release Notes" />
                 <MenuItem Command="{x:Static local:MainWindow.PrivacyCmd}" Header="Privacy Policy" />
-                <MenuItem Command="{x:Static local:MainWindow.TermsCmd}" Header="Terms" />
+                <MenuItem Command="{x:Static local:MainWindow.TermsCmd}" Header="_Terms" />
                 <MenuItem Command="{x:Static local:MainWindow.UninstallingCmd}" Header="Uninstalling Micasa" />
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.UpdatesCmd}" Header="Check for Updates" />
                 <Separator />
-                <MenuItem Command="{x:Static local:MainWindow.AboutCmd}" Header="About Micasa" />
+                <MenuItem Command="{x:Static local:MainWindow.AboutCmd}" Header="_About Micasa" />
             </MenuItem>
         </Menu>
         <TextBlock Grid.Row="1" Grid.Column="0" Height="100">TBD</TextBlock>
