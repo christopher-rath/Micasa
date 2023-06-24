@@ -17,6 +17,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Windows.Shapes;
+using System.Xml.Linq;
 
 namespace Micasa
 {
@@ -35,21 +37,18 @@ namespace Micasa
         public struct PhotoToQueue
         {
             public PhotoToQueue(
-                Int64 eventTicks,
                 WatcherChangeTypes pAction,
                 string fullpath,
                 string filename,
                 string oldpath,
                 string oldname)
             {
-                EventTicks = eventTicks;
                 PAction = pAction;
                 Fullpath = fullpath;
                 Filename = filename;
                 Oldpath = oldpath;
                 Oldname = oldname;
             }
-            public Int64 EventTicks { get; private set; }
             public WatcherChangeTypes PAction { get; private set; }
             public string Fullpath { get; private set; }
             public string Filename { get; private set; }
@@ -161,9 +160,9 @@ namespace Micasa
                                         && (ptq.Fullpath == ptqPk.Fullpath))
                                     {
                                         // The two events are for the same Fullpath and are either Created or Changed
-                                        // events; so, we are allowed to collapse them into a single event.  We 
-                                        // dequeue the next entry overtop of the previous one.
-                                        //ptq = _photosToProcess.Dequeue();
+                                        // events; so, we are allowed to collapse them into a single event.  We will
+                                        // dequeue the next entry overtop of the previous one at the top of the while()
+                                        // loop.
                                         Debug.WriteLine($"Collapsed: {ptq.Fullpath}");
                                         MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
                                     }
@@ -209,25 +208,29 @@ namespace Micasa
 
         private static void OnChanged(object sender, FileSystemEventArgs e)
         {
-            QueuePhoto(e.ChangeType, e.FullPath, e.Name, "", "");
+            PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
+            _photosToProcess.Enqueue(p);
             Debug.WriteLine($"Changed: {e.FullPath}");
         }
 
         private static void OnCreated(object sender, FileSystemEventArgs e)
         {
-            QueuePhoto(e.ChangeType, e.FullPath, e.Name, "", "");
+            PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
+            _photosToProcess.Enqueue(p);
             Debug.WriteLine($"Created: {e.FullPath}");
         }
 
         private static void OnDeleted(object sender, FileSystemEventArgs e)
         {
-            QueuePhoto(e.ChangeType, e.FullPath, e.Name, "", "");
+            PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
+            _photosToProcess.Enqueue(p);
             Debug.WriteLine($"Deleted: {e.FullPath}");
         }
 
         private static void OnRenamed(object sender, RenamedEventArgs e)
         {
-            QueuePhoto(e.ChangeType, e.FullPath, e.Name, e.OldFullPath, e.OldName);
+            PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, e.OldFullPath, e.OldName);
+            _photosToProcess.Enqueue(p);
             Debug.WriteLine(@"Renamed:");
             Debug.WriteLine($"    Old: {e.OldFullPath}");
             Debug.WriteLine($"    New: {e.FullPath}");
@@ -246,13 +249,6 @@ namespace Micasa
                 Debug.WriteLine($"");
                 PrintException(ex.InnerException);
             }
-        }
-
-        private static void QueuePhoto(WatcherChangeTypes c, string path, string name, string oldpath, string oldname)
-        {
-            PhotoToQueue p = new(DateTime.Now.Ticks, c, path, name, oldpath, oldname);
-            _photosToProcess.Enqueue(p);
-            Debug.WriteLine($"Queued: {path}");
         }
     }
 }
