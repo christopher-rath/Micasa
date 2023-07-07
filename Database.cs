@@ -150,7 +150,7 @@ namespace Micasa
         /// <param name="watchedPath">The watched path that encloses the folder 'pathname'.</param>
         /// <param name="fCol">The DB folder collection.</param>
         /// <param name="pathname">The full pathname of the folder being added.</param>
-        /// <param name="scanCompleted">The timestamp for when the folder was last scanned.</param>
+        /// <param name="scanCompleted">Has the scan of the folder been completed?</param>
         public static void AddFolderToDB(string watchedPath, ILiteCollection<FoldersTbl> fCol, string pathname,
                                             bool scanCompleted)
         {
