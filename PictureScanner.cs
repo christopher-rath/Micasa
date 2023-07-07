@@ -7,17 +7,10 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.IO;
 using LiteDB;
 using System.Diagnostics;
-using ExifLibrary;
-using System.Windows.Media.Imaging;
-using System.Globalization;
 
 namespace Micasa
 {
@@ -131,8 +124,8 @@ namespace Micasa
                                 {
                                     if (Options.Instance.IsFileTypeToScan(f))
                                     {
-                                        AddPhotoToDB(PhotoCol, f, PicasaIniExists, DotPicasa, DotMicasa);
-                                        AddFolderToDB(wPath, FolderCol, Path.GetDirectoryName(f), false);
+                                        Database.AddPhotoToDB(PhotoCol, f, PicasaIniExists, DotPicasa, DotMicasa);
+                                        Database.AddFolderToDB(wPath, FolderCol, Path.GetDirectoryName(f), false);
                                         // TO DO: add thumbnail
                                     }
                                 }
@@ -146,7 +139,7 @@ namespace Micasa
                     }
                     /// Now that we've scanned all files and all folders (recursively) in this Watched folder, we
                     /// mark scanCompmleted as true.
-                    AddFolderToDB(wPath, FolderCol, wPath, true);
+                    Database.AddFolderToDB(wPath, FolderCol, wPath, true);
                 }
             }
         }
@@ -187,141 +180,18 @@ namespace Micasa
                             {
                                 if (Options.Instance.IsFileTypeToScan(f))
                                 {
-                                    AddPhotoToDB(pCol, f, PicasaIniExists, DotPicasa, DotMicasa);
-                                    AddFolderToDB(wDir, fCol, Path.GetDirectoryName(f), false);
+                                    Database.AddPhotoToDB(pCol, f, PicasaIniExists, DotPicasa, DotMicasa);
+                                    Database.AddFolderToDB(wDir, fCol, Path.GetDirectoryName(f), false);
                                 }
                             }
                         }
                         /// Now that we've scanned all files and all folders (recursively) in folder 'd', we
                         /// mark scanCompmleted as true.
-                        AddFolderToDB(wDir, fCol, d, true);
+                        Database.AddFolderToDB(wDir, fCol, d, true);
                     }
                     Scanfolder(pCol, fCol, d, wDir, myCancelToken);
                 }
             }
-        }
-
-        /// <summary>
-        /// Add a photo to the Photos table in the database.  This function must eventually:
-        ///  * check the table for an existing entry, and update it if it's found;
-        ///  * look for an existing .Micasa file and read meta-data from it to write into
-        ///    the database;
-        ///  * look inside the file itself for EXIF data to be used (and possibly updated).
-        /// </summary>
-        /// <param name="col">The database coldection we're updating.</param>
-        /// <param name="f">The filename of the photo to add to the database.</param>
-        /// <param name="dir">The folder in which the filename is located.</param>
-        private static void AddPhotoToDB(ILiteCollection<PhotosTbl> pCol, 
-                                         string f, bool PicasaIniExists,
-                                         IniFile DotPicasa, IniFile DotMisasa)
-        {
-            // Retrieve a CultureInfo object.
-            CultureInfo invC = CultureInfo.InvariantCulture;
-            PhotosTbl aPhoto = new()
-            {
-                Picture = Path.GetFileName(f),
-                Caption = GetCaptionFromImage(f),
-                FileType = Path.GetExtension(f).ToLower(invC),
-                Pathname = Path.GetDirectoryName(f),
-                FQFilename = f,
-                ModificationDate = File.GetLastWriteTime(f),
-                Faces = new string[] { "" },
-                Albums = new string[] { "" }
-            };
-            var results = pCol.FindOne(x => x.FQFilename.Equals(f, StringComparison.Ordinal));
-            // Some code to use as an example in the event that I need the EXIF data.
-            //var file = ImageFile.FromFile(f);
-            //var caption = file.Properties.Get<ExifAscii>(ExifTag.PNGDescription);
-
-            if (results == null)
-            {
-                pCol.Insert(aPhoto);
-            }
-            else
-            {
-                if (!PhotosTbl.IsDateTimeEqual(aPhoto.ModificationDate, results.ModificationDate))
-                {
-                    results.ModificationDate = aPhoto.ModificationDate;
-                    pCol.Update(results);
-                }
-            }
-        }
-
-        private static void AddFolderToDB(string watchedPath, ILiteCollection<FoldersTbl> fCol, string pathname,
-                                            bool scanCompleted)
-        {
-            FoldersTbl aFolder = new()
-            {
-                Pathname = pathname,
-                ModificationDate = File.GetLastWriteTime(pathname),
-                LastScannedDate = DateTime.Now,
-                WatchedParent = watchedPath,
-                CompletedScan = scanCompleted
-            };
-            var results = fCol.FindOne(x => x.Pathname.Equals(pathname, StringComparison.Ordinal));
-
-            if (results == null)
-            {
-                fCol.Insert(aFolder);
-            }
-            else
-            {
-                results.ModificationDate = aFolder.ModificationDate;
-                results.LastScannedDate = aFolder.LastScannedDate;
-                results.CompletedScan = aFolder.CompletedScan;
-                fCol.Update(results);
-            }
-        }
-
-
-        /// <summary>
-        /// Get the Caption from the image file.  
-        /// 
-        /// If any error occurs, this method will silently return an empty string.
-        /// </summary>
-        /// <param name="imgFl">Filename with any required path.</param>
-        /// <returns>A string.</returns>
-        private static string GetCaptionFromImage(string imgFl)
-        {
-            string caption = "";
-            // Retrieve a CultureInfo object.
-            CultureInfo invC = CultureInfo.InvariantCulture;
-            bool supportedImg = false;
-
-            switch (Path.GetExtension(imgFl).ToLower(invC))
-            {
-                case Constants.sMcFT_Jpg:
-                case Constants.sMcFT_JpgA:
-                case Constants.sMcFT_Tif:
-                case Constants.sMcFT_TifA:
-                    supportedImg = true;
-                    break;
-                default:
-                    supportedImg = false;
-                    break;
-            }
-            if (supportedImg)
-            {
-                try
-                {
-                    using (FileStream fs = File.OpenRead(imgFl))
-                    {
-                        BitmapSource img = BitmapFrame.Create(fs);
-                        BitmapMetadata md = (BitmapMetadata)img.Metadata;
-
-                        caption = md.Title;
-                        if (caption == null)
-                        {
-                            caption = "";
-                        }
-                    }
-                }
-                catch
-                {
-                    Debug.WriteLine(string.Format(invC, "GetCaptionFromImage ({0}): Unknown exception; returning empty string.", imgFl));
-                }
-            }
-            return caption;
         }
     }
 }

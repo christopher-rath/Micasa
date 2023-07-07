@@ -8,13 +8,10 @@
 // Warranty: None, see the license.
 #endregion
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Media.Imaging;
 using LiteDB;
 
 namespace Micasa
@@ -100,6 +97,157 @@ namespace Micasa
                 }
             }
         }
+
+        /// <summary>
+        /// Add a photo to the Photos table in the database.  This function must eventually:
+        ///  * check the table for an existing entry, and update it if it's found;
+        ///  * look for an existing .Micasa file and read meta-data from it to write into
+        ///    the database;
+        ///  * look inside the file itself for EXIF data to be used (and possibly updated).
+        /// </summary>
+        /// <param name="col">The database coldection we're updating.</param>
+        /// <param name="f">The filename of the photo to add to the database.</param>
+        /// <param name="dir">The folder in which the filename is located.</param>
+        public static void AddPhotoToDB(ILiteCollection<PhotosTbl> pCol,
+                                         string f, bool PicasaIniExists,
+                                         IniFile DotPicasa, IniFile DotMisasa)
+        {
+            // Retrieve a CultureInfo object.
+            CultureInfo invC = CultureInfo.InvariantCulture;
+            PhotosTbl aPhoto = new()
+            {
+                Picture = Path.GetFileName(f),
+                Caption = GetCaptionFromImage(f),
+                FileType = Path.GetExtension(f).ToLower(invC),
+                Pathname = Path.GetDirectoryName(f),
+                FQFilename = f,
+                ModificationDate = File.GetLastWriteTime(f),
+                Faces = new string[] { "" },
+                Albums = new string[] { "" }
+            };
+            var results = pCol.FindOne(x => x.FQFilename.Equals(f, StringComparison.Ordinal));
+            // Some code to use as an example in the event that I need the EXIF data.
+            //var file = ImageFile.FromFile(f);
+            //var caption = file.Properties.Get<ExifAscii>(ExifTag.PNGDescription);
+
+            if (results == null)
+            {
+                pCol.Insert(aPhoto);
+            }
+            else
+            {
+                if (!Database.IsDateTimeEqual(aPhoto.ModificationDate, results.ModificationDate))
+                {
+                    results.ModificationDate = aPhoto.ModificationDate;
+                    pCol.Update(results);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add a folder to the Folders table in the database.
+        /// </summary>
+        /// <param name="watchedPath">The watched path that encloses the folder 'pathname'.</param>
+        /// <param name="fCol">The DB folder collection.</param>
+        /// <param name="pathname">The full pathname of the folder being added.</param>
+        /// <param name="scanCompleted">The timestamp for when the folder was last scanned.</param>
+        public static void AddFolderToDB(string watchedPath, ILiteCollection<FoldersTbl> fCol, string pathname,
+                                            bool scanCompleted)
+        {
+            FoldersTbl aFolder = new()
+            {
+                Pathname = pathname,
+                ModificationDate = File.GetLastWriteTime(pathname),
+                LastScannedDate = DateTime.Now,
+                WatchedParent = watchedPath,
+                CompletedScan = scanCompleted
+            };
+            var results = fCol.FindOne(x => x.Pathname.Equals(pathname, StringComparison.Ordinal));
+
+            if (results == null)
+            {
+                fCol.Insert(aFolder);
+            }
+            else
+            {
+                results.ModificationDate = aFolder.ModificationDate;
+                results.LastScannedDate = aFolder.LastScannedDate;
+                results.CompletedScan = aFolder.CompletedScan;
+                fCol.Update(results);
+            }
+        }
+
+        /// <summary>
+        /// Compare two DateTime objects.  This function is needed to work around
+        /// the fact that LiteDB stores dates as UTC milliseconds since the Unix 
+        /// epoch; which is less precision than the C# DateTime object contains.  
+        /// So, this function limits its comparison to milliseconds; that is, it 
+        /// doesn't compare the ticks.
+        /// </summary>
+        /// <param name="date1">A DateTime</param>
+        /// <param name="date2">A DateTime</param>
+        /// <returns>True if the timestamps are equal.</returns>
+        public static bool IsDateTimeEqual(DateTime date1, DateTime date2)
+        {
+            if ((date1.Year == date2.Year) && (date1.Month == date2.Month)
+                && (date1.Day == date2.Day) && (date1.Hour == date2.Hour)
+                && (date1.Minute == date2.Minute) && (date1.Second == date2.Second)
+                && (date1.Millisecond == date2.Millisecond))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Get the Caption from the image file.  
+        /// 
+        /// If any error occurs, this method will silently return an empty string.
+        /// </summary>
+        /// <param name="imgFl">Filename with any required path.</param>
+        /// <returns>A string.</returns>
+        private static string GetCaptionFromImage(string imgFl)
+        {
+            string caption = "";
+            // Retrieve a CultureInfo object.
+            CultureInfo invC = CultureInfo.InvariantCulture;
+            bool supportedImg = false;
+
+            switch (Path.GetExtension(imgFl).ToLower(invC))
+            {
+                case Constants.sMcFT_Jpg:
+                case Constants.sMcFT_JpgA:
+                case Constants.sMcFT_Tif:
+                case Constants.sMcFT_TifA:
+                    supportedImg = true;
+                    break;
+                default:
+                    supportedImg = false;
+                    break;
+            }
+            if (supportedImg)
+            {
+                try
+                {
+                    using (FileStream fs = File.OpenRead(imgFl))
+                    {
+                        BitmapSource img = BitmapFrame.Create(fs);
+                        BitmapMetadata md = (BitmapMetadata)img.Metadata;
+
+                        caption = md.Title;
+                        if (caption == null)
+                        {
+                            caption = "";
+                        }
+                    }
+                }
+                catch
+                {
+                    Debug.WriteLine(string.Format(invC, "GetCaptionFromImage ({0}): Unknown exception; returning empty string.", imgFl));
+                }
+            }
+            return caption;
+        }
     }
 
     /// <summary>
@@ -145,27 +293,5 @@ namespace Micasa
         public DateTime ModificationDate { get; set; }
         public string[] Faces { get; set; }
         public string[] Albums { get; set; }
-
-        /// <summary>
-        /// Compare two DateTime objects.  This function is needed to work around
-        /// the fact that LiteDB stores dates as UTC milliseconds since the Unix 
-        /// epoch; which is less precision than the C# DateTime object contains.  
-        /// So, this function limits its comparison to milliseconds; that is, it 
-        /// doesn't compare the ticks.
-        /// </summary>
-        /// <param name="date1">A DateTime</param>
-        /// <param name="date2">A DateTime</param>
-        /// <returns>true if </returns>
-        public static bool IsDateTimeEqual(DateTime date1, DateTime date2)
-        {
-            if ((date1.Year == date2.Year) && (date1.Month == date2.Month)
-                && (date1.Day == date2.Day) && (date1.Hour == date2.Hour)
-                && (date1.Minute == date2.Minute) && (date1.Second == date2.Second)
-                && (date1.Millisecond == date2.Millisecond))
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }
