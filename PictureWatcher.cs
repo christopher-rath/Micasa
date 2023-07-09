@@ -1,4 +1,4 @@
-﻿#region Copyright
+﻿    #region Copyright
 // Micasa -- Your Photo Home -- A lightweight photo organiser & editor.
 // Author: Christopher Rath <christopher@rath.ca>
 // Archived at: http://rath.ca/
@@ -11,14 +11,10 @@ using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace Micasa
 {
@@ -111,8 +107,7 @@ namespace Micasa
                 ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
                 ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
 
-                // Loop until asekd to cancel; however, the thread will sleep between iterations
-                // of this while() loop.
+                // Loop until asked to cancel.
                 while (!myCancelToken.IsCancellationRequested)
                 {
                     bool firstLoop = true;
@@ -130,12 +125,12 @@ namespace Micasa
 
                         // Sleep briefly to allow multiple events to post.
                         Thread.Sleep(50);
-                        // If there are mulitple events in the Queue<T> then loop; otherwise just
+                        // If there are multiple events in the Queue<T> then loop; otherwise just
                         // process the single event.
                         if (_photosToProcess.Count == 0)
                         {
+                            ProcessFileChangeEvent(ptq);
                             Debug.WriteLine($"Processed (no loop): {ptq.Fullpath}");
-                            MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
                         }
                         else
                         {
@@ -171,14 +166,14 @@ namespace Micasa
                                         // We are not allowed to collapse the two events; so, we process the one that
                                         // was last dequeued.
                                         Debug.WriteLine($"Processed (tuple): {ptq.Fullpath}");
-                                        MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
+                                        ProcessFileChangeEvent(ptq);
                                     }
                                 }
                                 else
                                 {
                                     // There was only one entry in the Queue<T>; so, we simply it.
                                     Debug.WriteLine($"Processed (single): {ptq.Fullpath}");
-                                    MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
+                                    ProcessFileChangeEvent(ptq);
                                 }
                             }
                         }
@@ -208,23 +203,35 @@ namespace Micasa
 
         private static void OnChanged(object sender, FileSystemEventArgs e)
         {
-            PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
-            _photosToProcess.Enqueue(p);
-            Debug.WriteLine($"Changed: {e.FullPath}");
+            if (Options.Instance.IsFileTypeToScan(e.FullPath)
+                && WatchedLists.FolderDisposition(e.FullPath) == WatchType.Watched)
+            {
+                PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
+                _photosToProcess.Enqueue(p);
+                Debug.WriteLine($"Changed: {e.FullPath}");
+            }
         }
 
         private static void OnCreated(object sender, FileSystemEventArgs e)
         {
-            PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
-            _photosToProcess.Enqueue(p);
-            Debug.WriteLine($"Created: {e.FullPath}");
+            if (Options.Instance.IsFileTypeToScan(e.FullPath)
+                && WatchedLists.FolderDisposition(e.FullPath) == WatchType.Watched)
+            {
+                PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
+                _photosToProcess.Enqueue(p);
+                Debug.WriteLine($"Created: {e.FullPath}");
+            }
         }
 
         private static void OnDeleted(object sender, FileSystemEventArgs e)
         {
-            PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
-            _photosToProcess.Enqueue(p);
-            Debug.WriteLine($"Deleted: {e.FullPath}");
+            if (Options.Instance.IsFileTypeToScan(e.FullPath)
+                && WatchedLists.FolderDisposition(e.FullPath) == WatchType.Watched)
+            {
+                PhotoToQueue p = new(e.ChangeType, e.FullPath, e.Name, "", "");
+                _photosToProcess.Enqueue(p);
+                Debug.WriteLine($"Deleted: {e.FullPath}");
+            }
         }
 
         private static void OnRenamed(object sender, RenamedEventArgs e)
@@ -248,6 +255,30 @@ namespace Micasa
                 Debug.WriteLine(ex.StackTrace);
                 Debug.WriteLine($"");
                 PrintException(ex.InnerException);
+            }
+        }
+
+        /// <summary>
+        /// Process a file change event that has been dequeued from Queue<PhotoToQueue>.
+        /// </summary>
+        /// <param name="ptq">The dequeued event to process.</param>
+        private static void ProcessFileChangeEvent(PhotoToQueue ptq)
+        {
+            MainStatusBar.Instance.StatusBarMsg = ptq.Filename;
+            if (ptq.PAction == WatcherChangeTypes.Created || ptq.PAction == WatcherChangeTypes.Changed)
+            {
+                // Process these as an adding a photo.  The add methods handle updates to existing photos.
+                //Database.AddPhotoToDB(PhotoCol, ptq.Fullpath, PicasaIniExists, DotPicasa, DotMicasa);
+                //Database.AddFolderToDB(wPath, FolderCol, Path.GetDirectoryName(ptq.Fullpath), false);
+                // TO DO: add thumbnail
+            }
+            else if (ptq.PAction == WatcherChangeTypes.Renamed)
+            {
+                // Process the renaming of a photo.
+            } 
+            else
+            { 
+                // Process the deletion of a photo.
             }
         }
     }
