@@ -187,11 +187,12 @@ namespace Micasa
         /// TO DO: Based on an options setting, delete any associated data from the .micasa
         /// file or leave it in place.
         /// </summary>
-        /// <param name="pCol"></param>
-        /// <param name="f"></param>
+        /// <param name="pCol">The DB table from which the photo is to be deleted.</param>
+        /// <param name="f">The full pathname to the photo to be deleted.</param>
         public static void DeletePhotoFromDB(ILiteCollection<PhotosTbl> pCol,
                                              string f)
         {
+            // Attempt to retrieve the photo's entry and then delete the entry if it was found.
             var results = pCol.FindOne(x => x.FQFilename.Equals(f, StringComparison.Ordinal));
             if (results != null)
             {
