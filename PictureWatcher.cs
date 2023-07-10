@@ -277,8 +277,14 @@ namespace Micasa
                 // Process the renaming of a photo.
             } 
             else
-            { 
+            {
                 // Process the deletion of a photo.
+                // Open the database.
+                using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
+                {
+                    ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
+                    Database.DeletePhotoFromDB(PhotoCol, ptq.Fullpath);
+                }
             }
         }
     }

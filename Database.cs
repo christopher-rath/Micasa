@@ -182,6 +182,25 @@ namespace Micasa
         }
 
         /// <summary>
+        /// Delete a photo from the DB.
+        /// 
+        /// TO DO: Based on an options setting, delete any associated data from the .micasa
+        /// file or leave it in place.
+        /// </summary>
+        /// <param name="pCol"></param>
+        /// <param name="f"></param>
+        public static void DeletePhotoFromDB(ILiteCollection<PhotosTbl> pCol,
+                                             string f)
+        {
+            var results = pCol.FindOne(x => x.FQFilename.Equals(f, StringComparison.Ordinal));
+            if (results != null)
+            {
+                int Id = results.Id;
+                pCol.Delete(Id);
+            }
+        }
+
+        /// <summary>
         /// Compare two DateTime objects.  This function is needed to work around
         /// the fact that LiteDB stores dates as UTC milliseconds since the Unix 
         /// epoch; which is less precision than the C# DateTime object contains.  
