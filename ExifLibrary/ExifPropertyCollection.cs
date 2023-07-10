@@ -404,7 +404,7 @@ namespace ExifLibrary
         /// <returns>
         /// true if the collection contains the given element; otherwise, false.
         /// </returns>
-        /// <exception cref="T:System.ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// <paramref name="item"/> is null.</exception>
         public bool Contains(T item)
         {
@@ -433,7 +433,7 @@ namespace ExifLibrary
         /// <returns>
         /// true if the element is successfully removed; otherwise, false.  
         /// </returns>
-        /// <exception cref="T:System.ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// <paramref name="item"/> is null.</exception>
         public bool Remove(T item)
         {
