@@ -99,15 +99,19 @@ namespace Micasa
         }
 
         /// <summary>
-        /// Add a photo to the Photos table in the database.  This function must eventually:
+        /// Add a photo to the Photos table in the database.  
+        /// 
+        /// TO DO: this function must eventually:
         ///  * check the table for an existing entry, and update it if it's found;
         ///  * look for an existing .Micasa file and read meta-data from it to write into
         ///    the database;
         ///  * look inside the file itself for EXIF data to be used (and possibly updated).
         /// </summary>
         /// <param name="col">The database coldection we're updating.</param>
-        /// <param name="f">The filename of the photo to add to the database.</param>
-        /// <param name="dir">The folder in which the filename is located.</param>
+        /// <param name="f">The full filename (including path) of the photo to add to the database.</param>
+        /// <param name="PicasaIniExists">Does a Picasa.ini exist in this photo's folder?.</param>
+        /// <param name="DotPicasa">The IniFile object that corresonds to the .picasa file in this photo's folder.</param>
+        /// <param name="DotMicasa">The IniFile object that corresonds to the .micasa file in this photo's folder.</param>
         public static void AddPhotoToDB(ILiteCollection<PhotosTbl> pCol,
                                          string f, bool PicasaIniExists,
                                          IniFile DotPicasa, IniFile DotMisasa)
@@ -215,18 +219,11 @@ namespace Micasa
             CultureInfo invC = CultureInfo.InvariantCulture;
             bool supportedImg = false;
 
-            switch (Path.GetExtension(imgFl).ToLower(invC))
+            supportedImg = Path.GetExtension(imgFl).ToLower(invC) switch
             {
-                case Constants.sMcFT_Jpg:
-                case Constants.sMcFT_JpgA:
-                case Constants.sMcFT_Tif:
-                case Constants.sMcFT_TifA:
-                    supportedImg = true;
-                    break;
-                default:
-                    supportedImg = false;
-                    break;
-            }
+                Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Tif or Constants.sMcFT_TifA => true,
+                _ => false,
+            };
             if (supportedImg)
             {
                 try
