@@ -117,7 +117,7 @@ namespace Micasa
             PhotosTbl aPhoto = new()
             {
                 Picture = Path.GetFileName(f),
-                Caption = GetCaptionFromImage(f),
+                Caption = GetCaptionFromImage(f), //TO DO: need to get any caption from the .micasa file & reconcile the two based on timestamps.
                 FileType = Path.GetExtension(f).ToLower(invC),
                 Pathname = Path.GetDirectoryName(f),
                 FQFilename = f,
@@ -200,7 +200,9 @@ namespace Micasa
         }
 
         /// <summary>
-        /// Get the Caption from the image file.  
+        /// Get the Caption from the image file.  This method is agnostic regarding the formatting
+        /// of the caption string; that is, any RTF, HTML, or other markup is simply retrieved 
+        /// from the image and returned by the method in its raw form.
         /// 
         /// If any error occurs, this method will silently return an empty string.
         /// </summary>
@@ -235,10 +237,7 @@ namespace Micasa
                         BitmapMetadata md = (BitmapMetadata)img.Metadata;
 
                         caption = md.Title;
-                        if (caption == null)
-                        {
-                            caption = "";
-                        }
+                        caption ??= ""; // ??= means if 'caption' is null then do the assignment.
                     }
                 }
                 catch
