@@ -7,9 +7,7 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
-
 using System;
-using System.Collections;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;

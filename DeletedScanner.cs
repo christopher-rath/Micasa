@@ -8,12 +8,7 @@
 // Warranty: None, see the license.
 #endregion
 using LiteDB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Micasa
 {

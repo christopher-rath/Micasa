@@ -1,5 +1,4 @@
-﻿
-#region Copyright
+﻿#region Copyright
 // Micasa -- Your Photo Home -- A lightweight photo organiser & editor.
 // Author: Christopher Rath <christopher@rath.ca>
 // Archived at: http://rath.ca/
@@ -8,11 +7,7 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StringExtensions
 {
