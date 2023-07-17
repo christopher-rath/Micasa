@@ -76,5 +76,6 @@ Picasa application.  Key features to include:
 ## Work to Date
 
 My work on Micasa so far has been to create the framework for the actual processing and 
-presentation of photos in the UI.  "If you do decide to pull and compile Micasa, watch the
-debug window for a trace of what Micasa is doing as it scans the file system."
+presentation of photos in the UI.  <em><strong>If you do decide to pull and compile Micasa, watch the
+debug window for a trace of what Micasa is doing as it scans the file system.</strong></em>
+
