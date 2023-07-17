@@ -1,7 +1,58 @@
 # Micasa
-Micasa is my long-term project to build a partial clone of Picasa.  The functionality I need built is the 
-album creation functionality.  Photo editing in Micasa can be very basic, with anything futher being done 
-through a real editor like Photoshop.
 
-Micasa writes all updates to dot files as well as the images themselves; should Micasa be configured to write
-to the images.
+I had been a long-term Picasa for Windows when Google discontinued it.  Since 
+Google declined to open source Picasa's source code, and there is no real alternative
+available -- for purchase or free -- I eventually decided to code a partial clone.
+
+## Background
+
+My use of Picasa is to manage the family's library of photos: the family photo library 
+is stored on a NAS on the home LAN and each user accesses the shared folders of photos.
+While this works well as a way for us to share a library, it does present some 
+challenges:
+* when Picasa writes metadata to a photo there is a noticable delay;
+* each user has their own local Picasa database, so when one user updates a photo's 
+  metadata all other user's databases are out of date and don't automatically update 
+  themselves; and,
+	- this is especially problematic because metadata includes edits to photos that
+	  haven't yet been 'saved' to the photo; and,
+* the name associated with each face tag is different in each user's Picasa database.
+
+These challenges became design constraints in my coding of a partial Picasa clone.
+
+## The Name
+
+The design goal for this partial Picasa clone is to provide me -- and anyone else who
+might use the application -- with a home for their photos.  This thought inspired the 
+name Micasa as a corruption of the Spanish "mi casa" (or, my house); which is also a
+riff on Picasa.
+
+## Key Features to Include
+
+Micasa is intended to be a photo catalogue and touch-up programme modelled after Google’s 
+Picasa application.  Key features to include:
+* information about the pictures will be stored in .micasa files; modelled after Picasa’s .picasa files (ASCII files)
+* two levels of .micasa files
+	- with no file prefix the .micasa files applies to all photos in the folde				r
+	- with a file prefix that exactly matches a photo’s filename, the file applies to that phot		o
+	- if the prefix does not exactly match an existing photo’s filename, then it is ignored
+* cache thumbnails, the catalogue index, and other information in a locally stored database
+* allow the user to indicate that a folder/drive is remote; when a remote store is missing, prompt the user for action to be taken (delete corresponding photos, ignore the missing drives, etc., and remember that setting)
+* do not process touch-up work; rather, store a log of the actions and apply it each time the photo is displayed
+	- however, provide the user with an option to apply the log
+	- when the log is applied, a checkpoint image is stored to allow recovery back to the checkpoint by restoration of the saved image
+* whenever a photo is first edited by Micasa, move the original file to a backup folder (modeled after Picasa) and put a copy in the original location—we’ll refer to these as checkpoint images, and they’ll have to be versioned
+* allow the creation of Albums
+* allow photos to be “starred”; but, allow “numbered stars” so that multiple lists can be simultaneously kept—these are an Album sub-type
+* at program start-up, or anytime it scans for new photos, changes to .micasa files must also be detected — this is to allow photo stores to be shared
+	- any change in a .micasa file will override data in the local database
+	- edits to .micasa files should allow conflicting photo changes; that is, when Micasa detects a conflicting change, it should prompt and allow the user to create a “forked” copy of the picture or discard their own edit — it should never allow another user’s change to be over-written
+* when photos in read-only stores are modified, including through placement in album, use a special local .micasa file and local modified photo folder
+	- the user should be able to specify the location of the “local”, writable folder where the photos and .micasa file(s) will be stored
+	- this upholds the principle that the canonical store for all information is always a text file
+	- the PhotoStore object should manage this read-only finesse
+* photo stores must eventually include:
+	- regular folders; absolute or relative references
+	- URLs
+	- mountable media (for example, CD-ROMs) that can be manually mounted on request by the user; that is, Micasa requests that a named volume be mounted by the user
+ 
