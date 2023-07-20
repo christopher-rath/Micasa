@@ -6,7 +6,7 @@ available&mdash;for purchase or free&mdash;I eventually decided to code a partia
 
 ## About Micasa
 
-Copyright 2021&ndash;2023 Christopher Rath, All rights reserved.<BR>
+Copyright (c) 2021&ndash;2023 Christopher Rath, All rights reserved.<BR>
 Written by Christopher Rath <christopher@rath.ca><BR>
 Archived at https://github.com/christopher-rath/Micasa
 
@@ -15,7 +15,7 @@ of the GNU Lesser General Public License version 2.1 as published by the Free So
 Foundation (see GNU_LGPL.txt for the license text).
 
 Libraries and other code not authored by Christopher Rath but included in Micasa:
-* LiteDB (https://www.litedb.org/) – Copyright (c) 2014-2021 Mauricio David.  Used under 
+* LiteDB (https://www.litedb.org/) – Copyright (c) 2014-2023 Mauricio David.  Used under 
   the terms of The MIT License (https://opensource.org/licenses/MIT).
 * ExifLibrary (http://oozcitak.github.io/exiflibrary/) – Copyright (c) 2013 Ozgur Ozcitak.  
   Used under the terms of The MIT License (https://opensource.org/licenses/MIT).
