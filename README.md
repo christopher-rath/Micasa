@@ -33,6 +33,7 @@ Micasa is intended to be a photo catalogue and touch-up programme modelled after
 Picasa application.  Key features to include:
 * information about the pictures will be stored in .micasa files; modelled after Picasa’s 
   .picasa files (ASCII files)
+    - timestamp .micasa updates (inside the file, just below each heading)
 * two levels of .micasa files
 	- with no file prefix the .micasa files applies to all photos in the folder
 	- with a file prefix that exactly matches a photo’s filename, the file applies to that 
@@ -47,9 +48,9 @@ Picasa application.  Key features to include:
 	- however, provide the user with an option to apply the log
 	- when the log is applied, a checkpoint image is stored to allow recovery back to the 
 	  checkpoint by restoration of the saved image
-* whenever a photo is first edited by Micasa, move the original file to a backup folder 
-  (modeled after Picasa) and put a copy in the original location—we’ll refer to these as 
-  checkpoint images, and they’ll have to be versioned
+    - when a log is first applied to a photo by Micasa, move the original file to a backup 
+	  folder (modeled after Picasa) and put a copy in the original location—we’ll refer to 
+	  these as checkpoint images, and they’ll have to be versioned
 * allow the creation of Albums
 * allow photos to be “starred”; but, allow “numbered stars” so that multiple lists can be 
   simultaneously kept—these are an Album sub-type
@@ -78,4 +79,3 @@ Picasa application.  Key features to include:
 My work on Micasa so far has been to create the framework for the actual processing and 
 presentation of photos in the UI.  <em><strong>If you do decide to pull and compile Micasa, watch the
 debug window for a trace of what Micasa is doing as it scans the file system.</strong></em>
-
