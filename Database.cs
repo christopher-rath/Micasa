@@ -134,6 +134,7 @@ namespace Micasa
             //var file = ImageFile.FromFile(f);
             //var caption = file.Properties.Get<ExifAscii>(ExifTag.PNGDescription);
 
+            MainStatusBar.Instance.StatusBarMsg = Path.GetFileName(f);
             if (results == null)
             {
                 pCol.Insert(aPhoto);
