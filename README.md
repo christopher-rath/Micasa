@@ -77,5 +77,29 @@ Picasa application.  Key features to include:
 ## Work to Date
 
 My work on Micasa so far has been to create the framework for the actual processing and 
-presentation of photos in the UI.  <em><strong>If you do decide to pull and compile Micasa, watch the
-debug window for a trace of what Micasa is doing as it scans the file system.</strong></em>
+presentation of photos in the UI.  <em><strong>If you do decide to pull and compile Micasa, 
+watch the debug window for a trace of what Micasa is doing as it scans the file system.
+</strong></em>
+
+# About Micasa
+
+Copyright 2021&endash;2023 Christopher Rath, All rights reserved.<BR>
+Written by Christopher Rath <christopher@rath.ca><BR>
+Archived at https://github.com/christopher-rath/Micasa
+
+This application is free software; you can redistribute it and/or modify it under the terms 
+of the GNU Lesser General Public License version 2.1 as published by the Free Software 
+Foundation (see GNU_LGPL.txt for the license text).
+
+Libraries and other code not authored by Christopher Rath but included in Micasa:
+* LiteDB (https://www.litedb.org/) – Copyright (c) 2014-2021 Mauricio David.  Used under 
+  the terms of The MIT License (https://opensource.org/licenses/MIT).
+* ExifLibrary (http://oozcitak.github.io/exiflibrary/) – Copyright (c) 2013 Ozgur Ozcitak.  
+  Used under the terms of The MIT License (https://opensource.org/licenses/MIT).
+* WaitCursorIndicator Class (https://www.codeproject.com/Tips/137802/Hourglass-Mouse-Cursor-Always-Changes-Back-to-its) 
+  – Published by Sergey Alexandrovich Kryukov (https://www.sakryukov.org/) under The Code 
+* Project Open License (CPOL) 1.02 (https://www.codeproject.com/info/cpol10.aspx).
+
+Warranty: This application is distributed in the hope that it will be useful, but WITHOUT 
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
