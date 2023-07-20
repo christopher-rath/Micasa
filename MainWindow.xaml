@@ -254,7 +254,7 @@
                 <MenuItem Command="{x:Static local:MainWindow.AboutCmd}" Header="_About Micasa" />
             </MenuItem>
         </Menu>
-        <TextBlock Grid.Row="1" Grid.Column="0" Height="100">TBD</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" Height="100">Watch the Debug window for a trace of what Micasa is doing as it scans the file system.</TextBlock>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Background="#FFF0F0F0" BorderThickness="0,1,0,0" BorderBrush="DarkGray">
             <StatusBarItem>
                 <TextBox x:Name="tbStatusMsg" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" IsReadOnly="True" 
