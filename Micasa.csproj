@@ -117,4 +117,8 @@
     <SplashScreen Include="Micasa_Icon.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
+  </ItemGroup>
+
 </Project>
