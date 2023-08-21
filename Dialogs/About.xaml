@@ -28,7 +28,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Image x:Name="MicasaIcon" HorizontalAlignment="Left" Height="256" Margin="10.6,10.6,0,7" VerticalAlignment="Top" Width="256" 
-               Source="Resources/Micasa_Icon.png" IsEnabled="False"/>
+               Source="../Resources/Micasa_Icon.png" IsEnabled="False"/>
         <RichTextBox x:Name="rtbAboutText" Grid.Column="1" HorizontalAlignment="Left" Height="266.6" Margin="5,0,10.6,0" 
                      VerticalAlignment="Top" Width="530" BorderThickness="0" IsReadOnly="True"
                      VerticalScrollBarVisibility="Auto" >
