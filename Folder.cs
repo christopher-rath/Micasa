@@ -22,7 +22,7 @@ namespace Micasa
         /// objects represented by the instance's properties.
         /// </summary>
         private readonly string thePathname;
-        private string[] subfolderPaths;
+        private readonly string[] subfolderPaths;
 
         public Folder(string Pathname, bool CreateIfDoesNotExist = false)
         {

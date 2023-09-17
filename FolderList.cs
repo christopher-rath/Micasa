@@ -17,8 +17,8 @@ namespace Micasa
     {
         private readonly FolderListTypes _theListType;
         private readonly LiteDatabase _db = new(Database.ConnectionString(Database.DBFilename));
-        private ILiteCollection<PhotosTbl> _PhotoCol;
-        private ILiteCollection<FoldersTbl> _FolderCol;
+        private readonly ILiteCollection<PhotosTbl> _PhotoCol;
+        private readonly ILiteCollection<FoldersTbl> _FolderCol;
         private readonly string[] _WatchedFolders = WatchedLists.Instance.WatchedFolders;
         private long _WatchedFolderItem = 0;
 

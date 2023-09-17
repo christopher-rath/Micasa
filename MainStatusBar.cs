@@ -18,8 +18,10 @@ namespace Micasa
     /// </summary>
     internal sealed class MainStatusBar
     {
-        private string _StatusBarMsg { get; set; }
-#pragma warning disable CA2211
+        private string TheStatusBarMsg { get; set; }
+#pragma warning disable CA2211 // Intellicode says this surpession is unnecessary; but, if it's 
+                               // removed then Intellicode will suggest other changes that break
+                               // the singleton pattern I'm using here.
         // The single instance of MainStatusBar.
         public static MainStatusBar Instance = new();
 #pragma warning restore CA2211
@@ -35,14 +37,14 @@ namespace Micasa
         /// </summary>
         public string StatusBarMsg
         { 
-            get => _StatusBarMsg;
+            get => TheStatusBarMsg;
 
             set
             {
-                _StatusBarMsg = value;
+                TheStatusBarMsg = value;
                 MainWindow.Instance.Dispatcher.Invoke((Action)(() =>
                 {
-                    MainWindow.Instance.tbStatusMsg.Text = _StatusBarMsg;
+                    MainWindow.Instance.tbStatusMsg.Text = TheStatusBarMsg;
                 }));
             }
         } 

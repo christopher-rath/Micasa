@@ -31,7 +31,7 @@ namespace Micasa
         private static CancellationTokenSource PictureScannerCancellationSource = new();
         private static CancellationToken PictureScannerCancellationToken = PictureScannerCancellationSource.Token;
         private static readonly string _AppData = Environment.ExpandEnvironmentVariables(@"%APPDATA%");
-        private static PictureWatcher _ActiveWatchers = new();
+        private static readonly PictureWatcher _ActiveWatchers = new();
         private static CancellationTokenSource PictureProcessorCancellationSource = new();
         private static CancellationToken PictureProcessorCancellationToken = PictureProcessorCancellationSource.Token;
 
