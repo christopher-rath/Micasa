@@ -111,7 +111,7 @@ namespace Micasa
             {
                 tbRebuildConfirm.Text = "";
 
-                using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
+                using (LiteDatabase db = new(Database.ConnectionString(Database.DBFilename)))
                 {
                     using (new WaitCursorIndicator(this))
                     {
@@ -129,19 +129,19 @@ namespace Micasa
             }
 	    }
 	
-        private void rbAppModeLegacy_Checked(object sender, RoutedEventArgs e)
+        private void RbAppModeLegacy_Checked(object sender, RoutedEventArgs e)
         {
             cbUpdPhotoFiles.IsEnabled = false;
             cbUpdPhotoFiles.Foreground = Brushes.Gray;
         }
 
-        private void rbAppModeMigrate_Checked(object sender, RoutedEventArgs e)
+        private void RbAppModeMigrate_Checked(object sender, RoutedEventArgs e)
         {
             cbUpdPhotoFiles.IsEnabled = true;
             cbUpdPhotoFiles.Foreground = Brushes.Black;
         }
 
-        private void rbAppModeNative_Checked(object sender, RoutedEventArgs e)
+        private void RbAppModeNative_Checked(object sender, RoutedEventArgs e)
         {
             cbUpdPhotoFiles.IsEnabled = true;
             cbUpdPhotoFiles.Foreground = Brushes.Black;
