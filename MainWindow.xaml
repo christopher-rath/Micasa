@@ -94,17 +94,17 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="19" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+            <RowDefinition Height="23" />
+        </Grid.RowDefinitions>  
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" DockPanel.Dock="Top" Background="White"
-              BorderThickness="0,0,0,1" BorderBrush="DarkGray" >
+              BorderThickness="0,0,0,1" BorderBrush="DarkGray" VerticalAlignment="Top" >
             <MenuItem Header="_File">
                 <MenuItem Command="{x:Static local:MainWindow.NewAlbumCmd}" Header="New Album..." />
                 <Separator />
@@ -254,10 +254,11 @@
                 <MenuItem Command="{x:Static local:MainWindow.AboutCmd}" Header="_About Micasa" />
             </MenuItem>
         </Menu>
-        <TextBlock Grid.Row="1" Grid.Column="0" Height="100">Watch the Debug window for a trace of what Micasa is doing as it scans the file system.</TextBlock>
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Background="#FFF0F0F0" BorderThickness="0,1,0,0" BorderBrush="DarkGray">
-            <StatusBarItem>
-                <TextBox x:Name="tbStatusMsg" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" IsReadOnly="True" 
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="4,0,4,0" MinHeight="100">Watch the Debug window for a trace of what Micasa is doing as it scans the file system.</TextBlock>
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Background="#FFF0F0F0" BorderThickness="0,1,0,0" BorderBrush="DarkGray"
+                   VerticalAlignment="Bottom" >
+            <StatusBarItem Margin="0,0,0,0" >
+                <TextBox x:Name="tbStatusMsg" HorizontalAlignment="Stretch" IsReadOnly="True" 
                          BorderThickness="0,0,0,0" BorderBrush="#FFF0F0F0" Background="#FFF0F0F0" />
             </StatusBarItem>
         </StatusBar>
