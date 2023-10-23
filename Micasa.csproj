@@ -40,21 +40,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Micasa_Icon.ico" />
-    <None Remove="Properties\Release_Notes.rtf" />
-    <None Remove="Resources\Blank.png" />
-    <None Remove="Resources\Computer.png" />
-    <None Remove="Resources\Desktop.png" />
-    <None Remove="Resources\DocumentsFolder.png" />
-    <None Remove="Resources\Exclude.png" />
-    <None Remove="Resources\FolderClosed.png" />
-    <None Remove="Resources\HardDrive.png" />
-    <None Remove="Resources\ImageGroup.png" />
-    <None Remove="Resources\OneTime.png" />
-    <None Remove="Resources\Watched.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="LiteDB" Version="5.0.17" />
   </ItemGroup>
 
