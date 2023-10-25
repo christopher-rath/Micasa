@@ -63,17 +63,13 @@ namespace Micasa
             }
             else
             {
-                switch (WatchedLists.FolderDisposition(pathStr))
+                return WatchedLists.FolderDisposition(pathStr) switch
                 {
-                    case WatchType.Watched:
-                        return watchedBitmap;
-                    case WatchType.Onetime:
-                        return oneTimeBitmap;
-                    case WatchType.Excluded:
-                        return excludeBitmap;
-                    default:
-                        return blankBitmap;
-                }
+                    WatchType.Watched => watchedBitmap,
+                    WatchType.Onetime => oneTimeBitmap,
+                    WatchType.Excluded => excludeBitmap,
+                    _ => blankBitmap,
+                };
             }
         }
 

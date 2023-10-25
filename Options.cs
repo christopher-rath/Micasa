@@ -39,8 +39,8 @@ namespace Micasa
         public static readonly string iniFileNm = HomeFolder + Path.DirectorySeparatorChar + Constants.sAppIniFileNm;
         private AppMode _MyAppMode = AppMode.Migrate;
         private bool _UpdPhotoFiles = false;
-        private IniFile iniFile = new(iniFileNm);
-        private AppMode defaultAppMode = AppMode.Migrate;
+        private readonly IniFile iniFile = new(iniFileNm);
+        private readonly AppMode defaultAppMode = AppMode.Migrate;
 #pragma warning disable CA2211
         // The single instance of Options.
         public static Options Instance = new();
