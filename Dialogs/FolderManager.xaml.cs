@@ -21,8 +21,8 @@ namespace Micasa
     /// </summary>
     public partial class FolderManagerWindow : Window
     {
-        private object dummyNode = null;
-        private Dictionary<string, WatchType> _SavedFolderList = new();
+        private readonly object dummyNode = null;
+        private readonly Dictionary<string, WatchType> _SavedFolderList = new();
         private TreeViewItem SelectedItem = null;
         private string SelectedFolderSaved = null;
         // Allow changing of how the rbMonitor radio button list is displayed, without
@@ -46,11 +46,13 @@ namespace Micasa
             MainWindow.Stopscanners();
             MainWindow.StopWatchers();
 
-           // Load special folders before loading the filesystem.
-           anItem = new TreeViewItem();
-            anItem.Header = WatchedLists.ThisPCStr;
-            anItem.Tag = WatchedLists.ThisPCStr + WatchedLists.ComputerPath;
-            anItem.FontWeight = FontWeights.Bold;
+            // Load special folders before loading the filesystem.
+            anItem = new TreeViewItem
+            {
+                Header = WatchedLists.ThisPCStr,
+                Tag = WatchedLists.ThisPCStr + WatchedLists.ComputerPath,
+                FontWeight = FontWeights.Bold
+            };
             anItem.Items.Add(dummyNode);
             anItem.Expanded += new RoutedEventHandler(Folder_Expanded);
             //anItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
@@ -105,7 +107,7 @@ namespace Micasa
         }
 
         // --- Commented out for the time-being.  I no longer need
-        // --- to have all child items be deleted when the now is
+        // --- to have all child items be deleted when the node is
         // --- collapsed.
         //void folder_Collapsed(object sender, RoutedEventArgs e)
         //{
@@ -140,10 +142,12 @@ namespace Micasa
                                 || !((theFAs & FileAttributes.System) == FileAttributes.System))
                             & !s.IsSpecialDir() & isThisPC_OKtoList(item, s))
                         {
-                            TreeViewItem subitem = new();
-                            subitem.Header = s.Substring(s.LastIndexOf(System.IO.Path.DirectorySeparatorChar) + 1);
-                            subitem.Tag = s;
-                            subitem.FontWeight = FontWeights.Normal;
+                            TreeViewItem subitem = new()
+                            {
+                                Header = s[(s.LastIndexOf(System.IO.Path.DirectorySeparatorChar) + 1)..],
+                                Tag = s,
+                                FontWeight = FontWeights.Normal
+                            };
                             subitem.Items.Add(dummyNode);
                             if (isThisPC_Item(item))
                             {
