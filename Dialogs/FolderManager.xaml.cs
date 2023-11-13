@@ -80,12 +80,9 @@ namespace Micasa
                 anItem.IsExpanded = true;
             }
 
-            // TODO: change these fields from Text to lists that will support having a
-            // user click on an entry and causing Micasa to open the folder list to 
-            // that location.
-            tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
-            tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
-            tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
+            lbWatchedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.WatchedFolders);
+            lbOneTimeFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.OnetimeFolders);
+            lbExcludedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.ExcludedFolders);
 
             // Since no folder is selected, disable the buttons.  They get enabled when a 
             // folder is selected.
@@ -105,6 +102,23 @@ namespace Micasa
                 _SavedFolderList.Add(item.Key, item.Value);
             }
         }
+
+        #region Folder Manager Listboxes
+        public class FolderItem
+        {
+            public string Foldername { get; set; }
+        }
+
+        static List<FolderItem> PopulateFolderListbox(string[] TheFolders)
+        {
+            List<FolderItem> FoldersList = new();
+            foreach (string item in TheFolders)
+            {
+                FoldersList.Add(new FolderItem() { Foldername = item });
+            }
+            return FoldersList;
+        }
+        #endregion
 
         // --- Commented out for the time-being.  I no longer need
         // --- to have all child items be deleted when the node is
@@ -260,9 +274,9 @@ namespace Micasa
             {
                 WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
                 WatchedLists.Instance.FolderList.Add(SelectedFolderSaved, WatchType.Onetime);
-                tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
-                tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
-                tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
+                lbWatchedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.WatchedFolders);
+                lbOneTimeFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.OnetimeFolders);
+                lbExcludedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.ExcludedFolders);
                 ReplaceItemWithClone(SelectedItem);
                 foldersItem.Focus();
             }
@@ -276,9 +290,9 @@ namespace Micasa
             {
                 WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
                 WatchedLists.Instance.FolderList.Add(SelectedFolderSaved, WatchType.Excluded);
-                tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
-                tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
-                tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
+                lbWatchedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.WatchedFolders);
+                lbOneTimeFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.OnetimeFolders);
+                lbExcludedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.ExcludedFolders);
                 ReplaceItemWithClone(SelectedItem);
                 foldersItem.Focus();
             }
@@ -292,9 +306,9 @@ namespace Micasa
             {
                 WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
                 WatchedLists.Instance.FolderList.Add(SelectedFolderSaved, WatchType.Watched);
-                tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
-                tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
-                tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
+                lbWatchedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.WatchedFolders);
+                lbOneTimeFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.OnetimeFolders);
+                lbExcludedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.ExcludedFolders);
                 ReplaceItemWithClone(SelectedItem);
                 foldersItem.Focus();
             }
@@ -337,9 +351,9 @@ namespace Micasa
             if (SelectedFolderSaved != null)
             {
                 WatchedLists.Instance.FolderList.Remove(SelectedFolderSaved);
-                tbWatchedFolders.Text = string.Join("\n", WatchedLists.Instance.WatchedFolders);
-                tbOneTimeFolders.Text = string.Join("\n", WatchedLists.Instance.OnetimeFolders);
-                tbExcludeFolders.Text = string.Join("\n", WatchedLists.Instance.ExcludedFolders);
+                lbWatchedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.WatchedFolders);
+                lbOneTimeFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.OnetimeFolders);
+                lbExcludedFolders.ItemsSource = PopulateFolderListbox(WatchedLists.Instance.ExcludedFolders);
                 ReplaceItemWithClone(SelectedItem);
                 foldersItem.Focus();
             }

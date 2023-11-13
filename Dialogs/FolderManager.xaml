@@ -14,7 +14,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Micasa"
         mc:Ignorable="d"
-        Title="Folder_Manager" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="Folder_Manager" Height="550" Width="900" Loaded="Window_Loaded">
 
     <!-- This Grid creates 2 columns, each of which contains a Grid -->
     <!-- of its own.                                                -->
@@ -135,20 +135,35 @@
                 <Label Margin="0,0,0,0">Watched Folders:</Label>
                 <Image Source="Resources/Watched.png" Width="12" Height="12" Margin="0,0,0,-5" />
             </WrapPanel>
-            <TextBox Grid.Row="3" Grid.Column="0" x:Name="tbWatchedFolders" Margin="5,0,10,0" IsReadOnly="True" Height="Auto" HorizontalAlignment="Stretch"
-                         VerticalScrollBarVisibility="Auto" />
+            <ListBox Grid.Row="3" Grid.Column="0" x:Name="lbWatchedFolders" Margin="5,0,10,0" Height="Auto" HorizontalAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Foldername}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
             <WrapPanel Grid.Row="4" Grid.Column="0">
                 <Label Margin="0,5,0,0">Scan Once Folders:</Label>
                 <Image Source="Resources/OneTime.png" Width="12" Height="12" Margin="0,0,0,-5" />
             </WrapPanel>
-            <TextBox Grid.Row="5" Grid.Column="0" x:Name="tbOneTimeFolders" Margin="5,0,10,0" IsReadOnly="True" Height="Auto" HorizontalAlignment="Stretch"
-                         VerticalScrollBarVisibility="Auto" />
+            <ListBox Grid.Row="5" Grid.Column="0" x:Name="lbOneTimeFolders" Margin="5,0,10,0" Height="Auto" HorizontalAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Foldername}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
             <WrapPanel Grid.Row="6" Grid.Column="0">
                 <Label Margin="0,5,0,0">Explicitly Excluded Folders:</Label>
                 <Image Source="Resources/Exclude.png" Width="12" Height="12" Margin="0,0,0,-5" />
             </WrapPanel>
-            <TextBox Grid.Row="7" Grid.Column="0" x:Name="tbExcludeFolders" Margin="5,0,10,0" IsReadOnly="True" Height="Auto" HorizontalAlignment="Stretch"
-                         VerticalScrollBarVisibility="Auto" />
+            <ListBox Grid.Row="7" Grid.Column="0" x:Name="lbExcludedFolders" Margin="5,0,10,0" Height="Auto" HorizontalAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Foldername}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
             <Button x:Name="OK" Content="OK" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" Margin="0,10,95,3" VerticalAlignment="Bottom" Width="75" Height="19.96" Click="OK_Click" IsDefault="True" />
             <Button x:Name="Cancel" Content="Cancel" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" Margin="0,10,10,3" VerticalAlignment="Bottom" Width="75" Height="19.96" Click="Cancel_Click" IsCancel="True" />
         </Grid>
