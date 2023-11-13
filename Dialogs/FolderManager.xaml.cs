@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.IO;
 using StringExtensions;
+using System.Diagnostics;
 
 namespace Micasa
 {
@@ -103,7 +104,7 @@ namespace Micasa
             }
         }
 
-        #region Folder Manager Listboxes
+#region Folder Manager Listboxes
         public class FolderItem
         {
             public string Foldername { get; set; }
@@ -118,7 +119,17 @@ namespace Micasa
             }
             return FoldersList;
         }
-        #endregion
+
+        private void FolderListItemSelected(object sender, RoutedEventArgs e)
+        {
+            string str = ((e.Source as ListBoxItem).Content as FolderItem).Foldername;
+
+            if (str != null)
+            {
+                Debug.WriteLine(str + " folder was selected.");
+            }
+        }
+#endregion
 
         // --- Commented out for the time-being.  I no longer need
         // --- to have all child items be deleted when the node is
