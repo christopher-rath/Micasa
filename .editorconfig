@@ -1,7 +1,16 @@
 ﻿[*.cs]
-
 # CA1805: Do not initialize unnecessarily
 dotnet_diagnostic.CA1805.severity = none
+end_of_line = lf
+
+[*.xaml]
 # Use Unix EOL.
 end_of_line = lf
 
+[*]
+# Use Unix EOL.
+end_of_line = lf
+
+[*.*]
+# Use Unix EOL.
+end_of_line = lf
