@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.IO;
 using StringExtensions;
 using System.Diagnostics;
+using Path = System.IO.Path;
 
 namespace Micasa
 {
@@ -104,7 +105,7 @@ namespace Micasa
             }
         }
 
-#region Folder Manager Listboxes
+        #region Folder Manager Listboxes
         public class FolderItem
         {
             public string Foldername { get; set; }
@@ -122,14 +123,62 @@ namespace Micasa
 
         private void FolderListItemSelected(object sender, RoutedEventArgs e)
         {
-            string str = ((e.Source as ListBoxItem).Content as FolderItem).Foldername;
+            string thePath = ((e.Source as ListBoxItem).Content as FolderItem).Foldername;
 
-            if (str != null)
+            if (thePath != null)
             {
-                Debug.WriteLine(str + " folder was selected.");
+                bool firstScan = true;
+                string aFolder = "";
+                string[] folders = thePath.Split(Path.DirectorySeparatorChar);
+                TreeViewItem nodeToScan = null;
+
+                Debug.WriteLine("Folder Manager dialog: " + thePath + " folder was selected.");
+
+                foreach (string folder in folders)
+                {
+                    aFolder = folder;
+                    if (firstScan)
+                    {
+                        firstScan = false;
+                        // The scan of the level 1 nodes is different than all the others.
+                        if (aFolder.EndsWith(@":", StringComparison.InvariantCulture))
+                        {
+                            aFolder += @"\";
+                        }
+                        foreach (TreeViewItem node in foldersItem.Items)
+                        {
+                            if (string.Equals((string)node.Header, aFolder, StringComparison.Ordinal))
+                            {
+                                node.IsExpanded = true;
+                                node.IsSelected = true;
+                                // Remember which node we found.
+                                nodeToScan = node;
+                                // Once we've found the netry there is no point in looking further.
+                                break;
+                            }
+                        }
+                    } 
+                    else
+                    {
+                        // This is a second or subsequent scan.
+                        foreach (TreeViewItem node in nodeToScan.Items)
+                        {
+                            if (string.Equals((string)node.Header, aFolder, StringComparison.Ordinal))
+                            {
+                                node.IsExpanded = true;
+                                node.IsSelected = true;
+                                node.BringIntoView();
+                                // Remember which node we found.
+                                nodeToScan = node;
+                                // Once we've found the netry there is no point in looking further.
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
-#endregion
+        #endregion
 
         // --- Commented out for the time-being.  I no longer need
         // --- to have all child items be deleted when the node is
