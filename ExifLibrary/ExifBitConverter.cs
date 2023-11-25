@@ -58,13 +58,15 @@ namespace ExifLibrary
             return sb.ToString();
         }
 
+        private static readonly char[] separator = new char[] { ':', ' ' };
+
         /// <summary>
         /// Returns a DateTime object converted from the given byte array.
         /// </summary>
         public static DateTime ToDateTime(byte[] data, bool hastime)
         {
             string str = ToAscii(data, Encoding.ASCII);
-            string[] parts = str.Split(new char[] { ':', ' ' });
+            string[] parts = str.Split(separator);
             try
             {
                 if (hastime && parts.Length == 6)

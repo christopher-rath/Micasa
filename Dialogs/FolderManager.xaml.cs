@@ -141,7 +141,7 @@ namespace Micasa
                     {
                         firstScan = false;
                         // The scan of the level 1 nodes is different than all the others.
-                        if (aFolder.EndsWith(@":", StringComparison.InvariantCulture))
+                        if (aFolder.EndsWith(':'))
                         {
                             aFolder += @"\";
                         }

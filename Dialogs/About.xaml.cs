@@ -24,7 +24,7 @@ namespace Micasa
         public About()
         {
             string aboutStr;
-            string aboutStrFlPath = @"Properties" + System.IO.Path.DirectorySeparatorChar + @"About_Micasa.rtf";
+            var aboutStrFlPath = @"Properties" + Path.DirectorySeparatorChar + @"About_Micasa.rtf";
 
             InitializeComponent();
 
