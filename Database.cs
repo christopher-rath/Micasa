@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Media.Imaging;
 using LiteDB;
+using Windows.Networking.Vpn;
 
 namespace Micasa
 {
@@ -93,7 +94,7 @@ namespace Micasa
                 }
                 catch (IOException)
                 {
-                    throw;                    
+                    throw;
                 }
             }
         }
@@ -264,6 +265,16 @@ namespace Micasa
                 }
             }
             return caption;
+        }
+
+        string[] GetFolders(ILiteCollection<FoldersTbl> Col)
+        {
+            var results = Col.Query()
+                .OrderBy(x => x.Pathname)
+                .Select(x => x.Pathname)
+                .ToArray();
+
+            return results;
         }
     }
 
