@@ -37,6 +37,8 @@ namespace Micasa
                 aboutStr = @"Unexpected error (" + e.Message + @") reading About string from Properties file,\par{\tab{" + aboutStrFlPath + @"}}";
             }
 
+            // Note: URLs in the about text do not render in the About dialog as clickable links.
+            // This is a known issue: https://github.com/dotnet/winforms/issues/3632
             aboutStr = aboutStr.Replace(Constants.sVersionToRepl, Constants.sMcVersion);
             aboutStr = aboutStr.Replace(Constants.sPlatformToRepl, Constants.sMcPlatform);
             rtbAboutText.SetRtf(aboutStr.Replace(Constants.sCopyrightToRepl, Constants.sMcCopyright));
