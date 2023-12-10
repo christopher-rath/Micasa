@@ -267,7 +267,7 @@ namespace Micasa
             return caption;
         }
 
-        string[] GetFolders(ILiteCollection<FoldersTbl> Col)
+        public string[] GetFolders(ILiteCollection<FoldersTbl> Col)
         {
             var results = Col.Query()
                 .OrderBy(x => x.Pathname)
