@@ -492,7 +492,7 @@ namespace ExifLibrary
             {
                 var block = Blocks[i];
                 var nextBlock = (i == Blocks.Count - 1 ? null : Blocks[i + 1]);
-                var extension = block as GIFCommentExtension;
+                GIFCommentExtension extension = block as GIFCommentExtension;
                 if (extension == null) continue;
                 using (var memStream = new MemoryStream())
                 {
@@ -535,7 +535,7 @@ namespace ExifLibrary
                         int index = insertBefore == null ? -1 : Blocks.IndexOf(insertBefore);
                         if (index == -1)
                         {
-                            index = Blocks[Blocks.Count - 1].Separator == GIFSeparator.Terminator ? Blocks.Count - 1 : Blocks.Count;
+                            index = Blocks[^1].Separator == GIFSeparator.Terminator ? Blocks.Count - 1 : Blocks.Count;
                         }
 
                         Blocks.Insert(index, block);
