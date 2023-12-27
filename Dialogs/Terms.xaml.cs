@@ -7,13 +7,12 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
+using RichTextBoxExtensions;
 using System.IO;
 using System.Windows;
 
 namespace Micasa
 {
-    using RichtextboxExtensions;
-
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>

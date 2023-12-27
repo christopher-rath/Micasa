@@ -7,7 +7,7 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
-using RichtextboxExtensions;
+using RichTextBoxExtensions;
 using System;
 using System.IO;
 using System.Windows;

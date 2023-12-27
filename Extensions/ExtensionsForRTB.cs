@@ -7,22 +7,57 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
+using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media.Animation;
 
-namespace RichtextboxExtensions
+namespace RichTextBoxExtensions
 {
     /// <summary>
-    /// Extensions to the WPF Richtextbox control; with a view to extending its functionality along the
+    /// Extensions to the WPF RichTextBox control; with a view to extending its functionality along the
     /// lines of the Windows Forms rich text control.
     /// </summary>
     
-    public static class RTBExtensions
+    public static class RichTextBoxExtensions
     {
         /// <summary>
-        /// This extension provides the ability to use a WPF Richtextbox control in a WinForm-esque style:
+        /// Scan the content of a RichTextBox control and make any https URLs
+        /// clickable.  The initial version of this method was written by Bing Chat,
+        /// and then tidied up by me and Intellicode.
+        /// </summary>
+        /// <param name="self"></param>
+        public static void MakeUrlsClickable(this RichTextBox self)
+        {
+            TextPointer pointer = self.Document.ContentStart;
+            while (pointer != null)
+            {
+                if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                {
+                    string textRun = pointer.GetTextInRun(LogicalDirection.Forward);
+                    MatchCollection matches = Regex.Matches(textRun, @"(https?://[^\s]+)");
+                    foreach (Match match in matches.Cast<Match>())
+                    {
+                        TextPointer start = pointer.GetPositionAtOffset(match.Index);
+                        TextPointer end = start.GetPositionAtOffset(match.Length);
+                        Hyperlink hyperlink = new(start, end)
+                        {
+                            NavigateUri = new Uri(match.Value)
+                        };
+                    }
+                }
+                pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
+            }
+        }
+
+        /// <summary>
+        /// This extension provides the ability to use a WPF RichTextBox control in a WinForm-esque style:
         ///     <code>richTextBox1.SetRtf(rtf);</code>
         /// </summary>
         /// <param name="rtbCtrl">the Richtextcontrol</param>

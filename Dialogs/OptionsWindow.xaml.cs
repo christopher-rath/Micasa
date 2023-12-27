@@ -8,7 +8,7 @@
 // Warranty: None, see the license.
 #endregion
 using LiteDB;
-using RichtextboxExtensions;
+using RichTextBoxExtensions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
