@@ -11,6 +11,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -31,6 +32,28 @@ namespace RichTextBoxExtensions
         /// Scan the content of a RichTextBox control and make any https URLs
         /// clickable.  The initial version of this method was written by Bing Chat,
         /// and then tidied up by me and Intellicode.
+        /// 
+        /// To use this method: 
+        ///     (1) Add the following Setter to the RichTextBox control:
+        ///         <RichTextBox.Resources>
+        ///             <Style TargetType = "Hyperlink" >
+        ///                 <Setter Property="Cursor" Value="Hand" />
+        ///                 <EventSetter Event = "MouseLeftButtonDown" Handler="Hyperlink_MouseLeftButtonDown" />
+        ///             </Style>
+        ///         <RichTextBox.Resources>
+        ///     (2) Add the following codebehind:
+        ///         private void Hyperlink_MouseLeftButtonDown(object sender, MouseEventArgs e)
+        ///         {
+        ///             var hyperlink = (Hyperlink)sender;
+        ///             Process.Start(new ProcessStartInfo(hyperlink.NavigateUri.ToString())
+        ///             {
+        ///                 UseShellExecute = true,
+        ///             });
+        ///         e.Handled = true;
+        ///         }
+        ///         
+        /// The genisis of the codebehind and Setter code was found here:
+        ///     https://stackoverflow.com/questions/762271/clicking-hyperlinks-in-a-richtextbox-without-holding-down-ctrl-wpf
         /// </summary>
         /// <param name="self"></param>
         public static void MakeUrlsClickable(this RichTextBox self)

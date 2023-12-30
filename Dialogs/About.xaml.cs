@@ -49,6 +49,13 @@ namespace Micasa
             rtbAboutText.MakeUrlsClickable();
         }
 
+        /// <summary>
+        /// Codebehind in support of the <Setter> contained in the RishTextBox control.  This codebehind
+        /// and the <Setter> are needed to support the MakeUrlsClickable() extension to the WPF RichTextBox
+        /// control.  See "ExtensionsForRTB.cs" for more info.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Hyperlink_MouseLeftButtonDown(object sender, MouseEventArgs e)
         {
             var hyperlink = (Hyperlink)sender;
