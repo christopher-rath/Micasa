@@ -6,7 +6,7 @@ available&mdash;for purchase or free&mdash;I eventually decided to code a partia
 
 ## About Micasa
 
-Copyright (c) 2021&ndash;2023 Christopher Rath, All rights reserved.<BR>
+Copyright (c) 2021&ndash;2024 Christopher Rath, All rights reserved.<BR>
 Written by Christopher Rath <christopher@rath.ca><BR>
 Archived at https://github.com/christopher-rath/Micasa
 

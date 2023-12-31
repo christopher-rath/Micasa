@@ -12,7 +12,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Product>Micasa — Your Photo Home</Product>
     <Description>Micasa is a photo library application loosely based on Google Picasa.</Description>
-    <Copyright>(c)2023 Christopher Rath</Copyright>
+    <Copyright>(c)2021-2024 Christopher Rath</Copyright>
     <StartupObject>Micasa.App</StartupObject>
     <Nullable>disable</Nullable>
     <SignAssembly>False</SignAssembly>
