@@ -34,6 +34,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -71,6 +72,10 @@
                     </Style>
                 </TreeView.Resources>
             </TreeView>
+            <Label Grid.Row="3" Grid.Column="0" Margin="0,3,0,-3" Background="LightYellow">
+                <TextBlock TextWrapping="Wrap" FontStyle="Italic" 
+                           Text="NOTE: Micasa cannot handle removable or read-only media, and so USB and CD-ROM drive letters are inactive in the Folder List." />
+            </Label>
         </Grid>
 
         <!-- This Grid holds the scan type selector, the scan list field, -->
