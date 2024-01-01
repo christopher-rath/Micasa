@@ -109,19 +109,19 @@
                 <StackPanel Grid.Row="0" Grid.Column="0" Margin="10,0,0,0" HorizontalAlignment="Stretch">
                     <RadioButton Name="rbMonitor" GroupName="FolderMgr" Margin="10,0,0,0" IsEnabled="False" Checked="rbMonitor_Checked">
                         <WrapPanel>
-                            <Image Source="Resources/Watched.png" Width="16" Height="16" Margin="0,0,5,0" />
+                            <Image Source="../Resources/Watched.png" Width="16" Height="16" Margin="0,0,5,0" />
                             <TextBlock Text="Scan Always" Foreground="#FF00539C" />
                         </WrapPanel>
                     </RadioButton>
                     <RadioButton Name="rbOneTime" GroupName="FolderMgr" Margin="10,3,0,0" IsEnabled="False" Checked="rbOneTime_Checked">
                         <WrapPanel>
-                            <Image Source="Resources/OneTime.png" Width="16" Height="16" Margin="0,0,5,0" />
+                            <Image Source="../Resources/OneTime.png" Width="16" Height="16" Margin="0,0,5,0" />
                             <TextBlock Text="Scan Once" Foreground="Green" />
                         </WrapPanel>
                     </RadioButton>
                     <RadioButton Name="rbExclude" GroupName="FolderMgr" Margin="10,3,0,0" IsEnabled="False" Checked="rbExclude_Checked">
                         <WrapPanel>
-                            <Image Source="Resources/Exclude.png" Width="16" Height="16" Margin="0,0,5,0" />
+                            <Image Source="../Resources/Exclude.png" Width="16" Height="16" Margin="0,0,5,0" />
                             <TextBlock Text="Remove from Micasa" />
                         </WrapPanel>
                     </RadioButton>
