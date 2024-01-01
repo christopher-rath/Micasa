@@ -47,7 +47,7 @@ namespace Micasa
             aboutStr = aboutStr.Replace(Constants.sPlatformToRepl, Constants.sMcPlatform);
             rtbAboutText.SetRtf(aboutStr.Replace(Constants.sCopyrightToRepl, Constants.sMcCopyright));
             rtbAboutText.MakeUrlsClickable();
-            rtbAboutText.EmailToMailto(@"christopher@rath.ca");
+            rtbAboutText.EmailToMailto(Constants.sAuthorEmail);
         }
 
         /// <summary>

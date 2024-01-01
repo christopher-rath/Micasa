@@ -1088,5 +1088,6 @@ namespace Micasa
         public const string sPlatformToRepl = @"[@Platform String@]";
         public const string sCopyrightToRepl = @"[@Copyright Date@]";
         public const string sAppIniFileNm = @".Micasa.ini";
+        public const string sAuthorEmail = @"christopher@rath.ca";
     }
 }
