@@ -33,6 +33,13 @@ namespace RichTextBoxExtensions
         /// clickable.  The initial version of this method was written by Bing Chat,
         /// and then tidied up by me and Intellicode.
         /// 
+        /// CAVEATS:
+        ///  * A limitation of this method is that the regex uses whitespace to delimit 
+        ///    the end of each URL.
+        ///  * This method only recognises http://, https://, and mailto: URLs.
+        ///  * Where HYPERLINK fields have already been encoded in the RFP, this method
+        ///    may fail.
+        /// 
         /// To use this method: 
         ///     (1) Add the following Setter to the RichTextBox control:
         ///         <RichTextBox.Resources>
@@ -64,15 +71,25 @@ namespace RichTextBoxExtensions
                 if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
                 {
                     string textRun = pointer.GetTextInRun(LogicalDirection.Forward);
-                    MatchCollection matches = Regex.Matches(textRun, @"(https?://[^\s]+)");
+                    MatchCollection matches = Regex.Matches(textRun, @"(https?://[^\s]+|mailto:[^\s]+)");
                     foreach (Match match in matches.Cast<Match>())
                     {
                         TextPointer start = pointer.GetPositionAtOffset(match.Index);
                         TextPointer end = start.GetPositionAtOffset(match.Length);
-                        Hyperlink hyperlink = new(start, end)
+                        try
                         {
-                            NavigateUri = new Uri(match.Value)
-                        };
+                            Hyperlink hyperlink = new(start, end)
+                            {
+                                NavigateUri = new Uri(match.Value)
+                            };
+                        }
+                        catch (Exception ex)
+                        {
+                            // Continue execution but post a debug message.  In testing, this
+                            // exception occured when we tried to insert a new Hyperlink into a 
+                            // HYPERLINK field that was in the RTF we're parsing.
+                            Debug.WriteLine(@"In MakeUrlsClickable(): " + ex.Message + "\n while handling URL " + match.Value);
+                        }
                     }
                 }
                 pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
