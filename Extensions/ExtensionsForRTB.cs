@@ -53,7 +53,7 @@ namespace RichTextBoxExtensions
                             // Continue execution but post a debug message.  In testing, this
                             // exception occured when we tried to insert a new Hyperlink into a 
                             // HYPERLINK field that was in the RTF we're parsing.
-                            Debug.WriteLine(@"In EmailToMailto(): " + ex.Message + "\n while handling URL " + match.Value);
+                            Debug.WriteLine($"In EmailToMailto(): {ex.Message}\n while handling email {match.Value}");
                         }
                     }
                 }
@@ -121,7 +121,7 @@ namespace RichTextBoxExtensions
                             // Continue execution but post a debug message.  In testing, this
                             // exception occured when we tried to insert a new Hyperlink into a 
                             // HYPERLINK field that was in the RTF we're parsing.
-                            Debug.WriteLine(@"In MakeUrlsClickable(): " + ex.Message + "\n while handling URL " + match.Value);
+                            Debug.WriteLine($"In MakeUrlsClickable(): {ex.Message}\n while handling URL {match.Value}");
                         }
                     }
                 }
