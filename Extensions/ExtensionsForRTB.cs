@@ -28,6 +28,13 @@ namespace RichTextBoxExtensions
     
     public static class RichTextBoxExtensions
     {
+        /// <summary>
+        /// Scan the content of a RichTextControl and convert the email address passed to it to
+        /// a clickable mailto: link.  This method uses a case-invariant match to find the email
+        /// address(es) to convert.
+        /// </summary>
+        /// <param name="self">No need to pass this; the system does it automatically.</param>
+        /// <param name="email">The email address to convert to a mailto:</param>
         public static void EmailToMailto(this RichTextBox self, string email)
         {
             TextPointer pointer = self.Document.ContentStart;
@@ -95,7 +102,7 @@ namespace RichTextBoxExtensions
         /// The genisis of the codebehind and Setter code was found here:
         ///     https://stackoverflow.com/questions/762271/clicking-hyperlinks-in-a-richtextbox-without-holding-down-ctrl-wpf
         /// </summary>
-        /// <param name="self"></param>
+        /// <param name="self">No need to pass this; the system does it automatically.</param>
         public static void MakeUrlsClickable(this RichTextBox self)
         {
             TextPointer pointer = self.Document.ContentStart;
