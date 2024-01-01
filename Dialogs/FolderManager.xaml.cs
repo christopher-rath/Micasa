@@ -62,18 +62,30 @@ namespace Micasa
             myCompItem = (TreeViewItem)foldersItem.Items[0];
 
             // Now load the file system items...
-            foreach (string s in Directory.GetLogicalDrives())
+            foreach (var d in System.IO.DriveInfo.GetDrives())
             {
+                var s = d.Name;
+
                 anItem = new TreeViewItem
                 {
                     Header = s,
                     Tag = s,
                     FontWeight = FontWeights.Bold
                 };
-                anItem.Items.Add(dummyNode);
-                anItem.Expanded += new RoutedEventHandler(Folder_Expanded);
-                //anItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
-                foldersItem.Items.Add(anItem);
+                // Skip over unknown drives and drives with no root directory -- we aren't able to handle them.
+                if (d.DriveType != DriveType.Unknown && d.DriveType != DriveType.NoRootDirectory)
+                {
+                    if ((d.DriveType == DriveType.Removable) || (d.DriveType == DriveType.CDRom))
+                    {
+                        // At the moment, Micasa can't handle removable and CD-ROM drives; so disable the entry.
+                        anItem.IsEnabled = false;
+                        anItem.FontWeight = FontWeights.Normal;
+                    }
+                    anItem.Items.Add(dummyNode);
+                    anItem.Expanded += new RoutedEventHandler(Folder_Expanded);
+                    //anItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
+                    foldersItem.Items.Add(anItem);
+                }
             }
             myCompItem.IsExpanded = true;
             foreach (var item in myCompItem.Items)
@@ -153,7 +165,7 @@ namespace Micasa
                                 node.IsSelected = true;
                                 // Remember which node we found.
                                 nodeToScan = node;
-                                // Once we've found the netry there is no point in looking further.
+                                // Once we've found the entry there is no point in looking further.
                                 break;
                             }
                         }
@@ -170,7 +182,7 @@ namespace Micasa
                                 node.BringIntoView();
                                 // Remember which node we found.
                                 nodeToScan = node;
-                                // Once we've found the netry there is no point in looking further.
+                                // Once we've found the entry there is no point in looking further.
                                 break;
                             }
                         }
