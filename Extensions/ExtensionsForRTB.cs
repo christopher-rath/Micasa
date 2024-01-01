@@ -49,7 +49,7 @@ namespace RichTextBoxExtensions
         ///             {
         ///                 UseShellExecute = true,
         ///             });
-        ///         e.Handled = true;
+        ///             e.Handled = true;
         ///         }
         ///         
         /// The genisis of the codebehind and Setter code was found here:
