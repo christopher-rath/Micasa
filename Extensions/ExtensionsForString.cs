@@ -63,7 +63,7 @@ namespace StringExtensions
 
             if (s.StartsWith(p, System.StringComparison.Ordinal))
             {
-                rtnVal = s.Substring(p.Length);
+                rtnVal = s[p.Length..];
             }
             return rtnVal;
         }
