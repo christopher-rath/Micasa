@@ -28,6 +28,39 @@ namespace RichTextBoxExtensions
     
     public static class RichTextBoxExtensions
     {
+        public static void EmailToMailto(this RichTextBox self, string email)
+        {
+            TextPointer pointer = self.Document.ContentStart;
+            while (pointer != null)
+            {
+                if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
+                {
+                    string textRun = pointer.GetTextInRun(LogicalDirection.Forward);
+                    MatchCollection matches = Regex.Matches(textRun, @"(?i)" + email);
+                    foreach (Match match in matches.Cast<Match>())
+                    {
+                        TextPointer start = pointer.GetPositionAtOffset(match.Index);
+                        TextPointer end = start.GetPositionAtOffset(match.Length);
+                        try
+                        {
+                            Hyperlink hyperlink = new(start, end)
+                            {
+                                NavigateUri = new Uri(@"mailto:" + match.Value)
+                            };
+                        }
+                        catch (Exception ex)
+                        {
+                            // Continue execution but post a debug message.  In testing, this
+                            // exception occured when we tried to insert a new Hyperlink into a 
+                            // HYPERLINK field that was in the RTF we're parsing.
+                            Debug.WriteLine(@"In EmailToMailto(): " + ex.Message + "\n while handling URL " + match.Value);
+                        }
+                    }
+                }
+                pointer = pointer.GetNextContextPosition(LogicalDirection.Forward);
+            }
+        }
+
         /// <summary>
         /// Scan the content of a RichTextBox control and make any https URLs
         /// clickable.  The initial version of this method was written by Bing Chat,
