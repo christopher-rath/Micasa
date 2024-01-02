@@ -74,7 +74,7 @@
             </TreeView>
             <Label Grid.Row="3" Grid.Column="0" Margin="0,3,0,-3" Background="LightYellow">
                 <TextBlock TextWrapping="Wrap" FontStyle="Italic" 
-                           Text="NOTE: Micasa cannot handle removable or read-only media, and so USB and CD-ROM drive letters are inactive in the Folder List." />
+                           Text="NOTE: Micasa cannot handle removable media, so USB, CD-ROM, &amp; floppy disc drive letters are inactive in the Folder List." />
             </Label>
         </Grid>
 
