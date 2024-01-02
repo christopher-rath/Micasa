@@ -11,14 +11,11 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Media.Animation;
-using static System.Net.WebRequestMethods;
 
 namespace RichTextBoxExtensions
 {
