@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
+using static System.Net.WebRequestMethods;
 
 namespace RichTextBoxExtensions
 {
@@ -25,7 +26,7 @@ namespace RichTextBoxExtensions
     /// Extensions to the WPF RichTextBox control; with a view to extending its functionality along the
     /// lines of the Windows Forms rich text control.
     /// </summary>
-    
+
     public static class RichTextBoxExtensions
     {
         /// <summary>
@@ -74,11 +75,11 @@ namespace RichTextBoxExtensions
         /// and then tidied up by me and Intellicode.
         /// 
         /// CAVEATS:
+        ///  * This method only recognises http:, https:, ftp:, and mailto: URLs.
         ///  * A limitation of this method is that the regex uses whitespace to delimit 
-        ///    the end of each URL.
-        ///  * This method only recognises http://, https://, and mailto: URLs.
-        ///  * Where HYPERLINK fields have already been encoded in the RFP, this method
-        ///    may fail.
+        ///    the end of mailto URLs.
+        ///  * Where HYPERLINK fields have already been encoded in the RTF, this method
+        ///    may silently fail (although a debug message is output).
         /// 
         /// To use this method: 
         ///     (1) Add the following Setter to the RichTextBox control:
@@ -105,13 +106,32 @@ namespace RichTextBoxExtensions
         /// <param name="self">No need to pass this; the system does it automatically.</param>
         public static void MakeUrlsClickable(this RichTextBox self)
         {
-            TextPointer pointer = self.Document.ContentStart;
+            // RegexURL string from: https://urlregex.com/index.html
+            const string RegexURL = @"(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)?";
+            const string MailtoURL = @"mailto:[^\s]+";
+
+            // Find http, https, & ftp URLs.
+            MakeHyperlinks(self.Document, RegexURL);
+            // Find mailto URLs.
+            MakeHyperlinks(self.Document, MailtoURL);
+        }
+
+        /// <summary>
+        /// Used by MakeUrlsClickable() to actually do the work of finding URls and making
+        /// them clickable.  This code was moved out of MakeUrlsClickable() so that mailto:
+        /// URLs could also be found and converted.
+        /// </summary>
+        /// <param name="doc">The RichTextBox control's content (i.e., FlowDocument).</param>
+        /// <param name="regexStr">The regex to use to find URLs.</param>
+        private static void MakeHyperlinks(FlowDocument doc, string regexStr)
+        {
+            TextPointer pointer = doc.ContentStart;
             while (pointer != null)
             {
                 if (pointer.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
                 {
                     string textRun = pointer.GetTextInRun(LogicalDirection.Forward);
-                    MatchCollection matches = Regex.Matches(textRun, @"(https?://[^\s]+|mailto:[^\s]+)");
+                    MatchCollection matches = Regex.Matches(textRun, regexStr);
                     foreach (Match match in matches.Cast<Match>())
                     {
                         TextPointer start = pointer.GetPositionAtOffset(match.Index);
@@ -128,7 +148,7 @@ namespace RichTextBoxExtensions
                             // Continue execution but post a debug message.  In testing, this
                             // exception occured when we tried to insert a new Hyperlink into a 
                             // HYPERLINK field that was in the RTF we're parsing.
-                            Debug.WriteLine($"In MakeUrlsClickable(): {ex.Message}\n while handling URL {match.Value}");
+                            Debug.WriteLine($"In MakeHyperlinks(): {ex.Message}\n while handling URL {match.Value}");
                         }
                     }
                 }
