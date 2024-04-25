@@ -64,8 +64,8 @@ namespace Micasa
             cbOpFileTypePsd.IsChecked = Options.Instance.FileTypePsd;
             cbOpFileTypeNef.IsChecked = Options.Instance.FileTypeNef;
             cbOpFileTypeMov.IsChecked = Options.Instance.FileTypeMov;
-	    // Datgabase Tab
-	    rtbRebuildInstr.SetRtf(Constants.sMcRebuildInstrRTF);
+	        // Datgabase Tab
+	        rtbRebuildInstr.SetRtf(Constants.sMcRebuildInstrRTF);
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)
