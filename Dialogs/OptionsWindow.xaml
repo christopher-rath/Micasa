@@ -52,7 +52,7 @@
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,10,5">
                         <TextBlock x:Name="tbUpdOptions" HorizontalAlignment="Left" Margin="10,10,0,5" Text="Update Options" 
                                    FontWeight="Bold" />
-                        <CheckBox x:Name="cbUpdPhotoFiles" Content="Write metadata to photo files (in addition to .Micasa file)." HorizontalAlignment="Left" Margin="25,0,0,5" VerticalAlignment="Top" Foreground="Gray" />
+                        <CheckBox x:Name="cbUpdPhotoFiles" Content="Write metadata to photo files (in addition to sidecar files)." HorizontalAlignment="Left" Margin="25,0,0,5" VerticalAlignment="Top" Foreground="Gray" />
                     </StackPanel>
                 </Grid>
             </TabItem>
