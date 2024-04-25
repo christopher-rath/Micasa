@@ -161,7 +161,7 @@
                                   VerticalScrollBarVisibility="Auto" Focusable="False" AllowDrop="False" AutoWordSelection="False" FontSize="10" >
                         <FlowDocument>
                             <Paragraph>
-                                <Run Text="To rebuild the Micasa local database, type 'YES' (no quotes) in the text box and press [Rebuild]. Caution: the rebuild CANNOT BE STOPPED once it has been started!"/>
+                                <Run Text="PLACEHOLDER: To rebuild the Micasa local database, type 'YES' (no quotes) in the text box and press [Rebuild]. Caution: the rebuild CANNOT BE STOPPED once it has been started!"/>
                             </Paragraph>
                         </FlowDocument>
                     </RichTextBox>

@@ -1075,8 +1075,8 @@ namespace Micasa
         public static readonly DateTime UnixEpoch = new(1970, 1, 1);
 
         // Micassa Options Panel -- Database Rebuild
-        public const string sMcRebuildInstrRTF = @"{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}{\colortbl ;\red0\green0\blue0;\red255\green0\blue0;}{\*\generator Riched20 10.0.19041}\viewkind4\uc1 \pard\sa200\sl276\slmult1\cf1\f0\fs20\lang9 To rebuild the Micasa local database, type 'YES' (no quotes) in the text box and press [Rebuild].\line\cf2\b Caution:\cf1\b0  the rebuild \b cannot be stopped\b0  once it has been started!\par}";
         public const string sMcRebuildConfirm = @"YES";
+        public const string sMcRebuildInstrRTF = @"{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Segoe UI;}}{\colortbl ;\red0\green0\blue0;\red255\green0\blue0;}{\*\generator Riched20 10.0.19041}\viewkind4\uc1 \pard\sa200\sl276\slmult1\cf1\f0\fs20\lang9 To rebuild the Micasa local database, type '" + sMcRebuildConfirm + @"' (no quotes) in the text box and press [Rebuild].\line\cf2\b Caution:\cf1\b0  the rebuild \b cannot be stopped\b0  once it has been started!\par}";
 
         // Micasa About panel.  This section is at the end of the file to make it 
         // easy to find, to update the version information.
