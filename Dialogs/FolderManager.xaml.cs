@@ -73,11 +73,11 @@ namespace Micasa
                     FontWeight = FontWeights.Bold
                 };
                 // Skip over unknown drives and drives with no root directory -- we aren't able to handle them.
-                if (d.DriveType != DriveType.Unknown && d.DriveType != DriveType.NoRootDirectory)
+                if ((d.DriveType != DriveType.Unknown) && (d.DriveType != DriveType.NoRootDirectory))
                 {
-                    if ((d.DriveType == DriveType.Removable) || (d.DriveType == DriveType.CDRom))
+                    if ((d.DriveType == DriveType.Removable) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network))
                     {
-                        // At the moment, Micasa can't handle removable and CD-ROM drives; so disable the entry.
+                        // At the moment, Micasa can't handle Removable, CD-ROM, or Network drives; so disable the entry.
                         anItem.IsEnabled = false;
                         anItem.FontWeight = FontWeights.Normal;
                     }
