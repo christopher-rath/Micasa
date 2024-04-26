@@ -76,8 +76,7 @@ namespace ExifLibrary
         /// <param name="stream">A stream to save image data to.</param>
         public void Save(Stream stream)
         {
-            var memStream = stream as MemoryStream;
-            if (memStream != null)
+            if (stream is MemoryStream memStream)
             {
                 SaveInternal(memStream);
             }
@@ -162,8 +161,7 @@ namespace ExifLibrary
         /// <returns>The <see cref="ImageFile"/> created from the stream.</returns>
         protected static ImageFile FromStream(Stream stream, Encoding encoding)
         {
-            var memStream = stream as MemoryStream;
-            if (memStream != null)
+            if (stream is MemoryStream memStream)
             {
                 return FromStreamInternal(memStream, encoding);
             }
