@@ -3,8 +3,6 @@ using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Converts between exif data types and array of bytes.
     /// </summary>
@@ -52,7 +50,7 @@ namespace ExifLibrary
         /// </summary>
         public static string ToString(byte[] data)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (byte b in data)
                 sb.Append(b);
             return sb.ToString();

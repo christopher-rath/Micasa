@@ -2,7 +2,6 @@
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     /// <summary>
     /// An endian-aware converter for converting between base data types 
     /// and an array of bytes.

@@ -3,9 +3,7 @@ using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable IDE0090 // Use 'new(...)'
+#pragma warning disable CA1305 // Specify IFormatProvider -- We are parsing a known metadata type and the region lookup is not needed.
     /// <summary>
     /// Represents an enumerated value.
     /// </summary>
@@ -236,7 +234,7 @@ namespace ExifLibrary
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (var b in Value)
             {
                 sb.Append(b).Append('.');
@@ -258,7 +256,7 @@ namespace ExifLibrary
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendFormat("({0:d}, {1:d})", mValue[0], mValue[1]);
             return sb.ToString();
         }
@@ -287,7 +285,7 @@ namespace ExifLibrary
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendFormat("({0:d}, {1:d}) {2:d}", mValue[0], mValue[1], mValue[2]);
             return sb.ToString();
         }
@@ -312,12 +310,13 @@ namespace ExifLibrary
     /// </summary>
     public class ExifRectangularSubjectArea : ExifPointSubjectArea
     {
+#pragma warning disable CA1305 // Specify IFormatProvider -- We are parsing a known metadata type and the region lookup is not needed.
         public ushort Width { get { return mValue[2]; } set { mValue[2] = value; } }
         public ushort Height { get { return mValue[3]; } set { mValue[3] = value; } }
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendFormat("({0:d}, {1:d}) ({2:d} x {3:d})", mValue[0], mValue[1], mValue[2], mValue[3]);
             return sb.ToString();
         }
@@ -363,7 +362,7 @@ namespace ExifLibrary
         }
 
         public GPSLatitudeLongitude(ExifTag tag, float d, float m, float s)
-            : base(tag, new MathEx.UFraction32[] { new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s) })
+            : base(tag, new MathEx.UFraction32[] { new(d), new(m), new(s) })
         {
             ;
         }
@@ -391,7 +390,7 @@ namespace ExifLibrary
         }
 
         public GPSTimeStamp(ExifTag tag, float h, float m, float s)
-            : base(tag, new MathEx.UFraction32[] { new MathEx.UFraction32(h), new MathEx.UFraction32(m), new MathEx.UFraction32(s) })
+            : base(tag, new MathEx.UFraction32[] { new(h), new(m), new(s) })
         {
             ;
         }
@@ -432,6 +431,7 @@ namespace ExifLibrary
     /// </summary>
     public class LensSpecification : ExifURationalArray
     {
+#pragma warning disable CA1305 // Specify IFormatProvider -- We are parsing a known metadata type and the region lookup is not needed.
         protected new MathEx.UFraction32[] Value { get { return mValue; } set { mValue = value; } }
         public MathEx.UFraction32 MinFocalLength { get { return mValue[0]; } set { mValue[0] = value; } }
         public MathEx.UFraction32 MaxFocalLength { get { return mValue[1]; } set { mValue[1] = value; } }
@@ -450,8 +450,7 @@ namespace ExifLibrary
         }
 
         public LensSpecification(ExifTag tag, float minFocal, float maxFocal, float minFocalF, float maxFocalF)
-            : base(tag, new MathEx.UFraction32[] { new MathEx.UFraction32(minFocal), new MathEx.UFraction32(maxFocal),
-                new MathEx.UFraction32(minFocalF), new MathEx.UFraction32(maxFocalF) })
+            : base(tag, new MathEx.UFraction32[] { new(minFocal), new(maxFocal), new(minFocalF), new(maxFocalF) })
         {
             ;
         }

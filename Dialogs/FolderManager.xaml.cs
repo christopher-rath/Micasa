@@ -226,7 +226,7 @@ namespace Micasa
                                 || !((theFAs & FileAttributes.Hidden) == FileAttributes.Hidden))
                             & ((((theFAs & FileAttributes.System) == FileAttributes.System) & showSystem)
                                 || !((theFAs & FileAttributes.System) == FileAttributes.System))
-                            & !s.IsSpecialDir() & isThisPC_OKtoList(item, s))
+                            & !s.IsSpecialDir() & IsThisPC_OKtoList(item, s))
                         {
                             TreeViewItem subitem = new()
                             {
@@ -235,7 +235,7 @@ namespace Micasa
                                 FontWeight = FontWeights.Normal
                             };
                             subitem.Items.Add(dummyNode);
-                            if (isThisPC_Item(item))
+                            if (IsThisPC_Item(item))
                             {
                                 subitem.Expanded += new RoutedEventHandler(Folder_ExpandedThisPC);
                                 //subitem.Collapsed += new RoutedEventHandler(folder_Collapsed);
@@ -320,7 +320,7 @@ namespace Micasa
                     break;
             }
             blindSet = false;
-            if (isThisPC_Item(item))
+            if (IsThisPC_Item(item))
             {
                 rbOneTime.IsEnabled = false;
                 rbExclude.IsEnabled = false;
@@ -431,15 +431,13 @@ namespace Micasa
             }
         }
 
-#pragma warning disable IDE1006 // Naming Styles
-        private bool isThisPC_OKtoList(TreeViewItem item, string path)
-#pragma warning restore IDE1006 // Naming Styles
+        private static bool IsThisPC_OKtoList(TreeViewItem item, string path)
         {
             bool rtnVal = true;
 
             // We only have to do checks if the TreeViewItem that is enumerating the directories
             // is a ThisPC item.
-            if (isThisPC_Item(item))
+            if (IsThisPC_Item(item))
             {
                 if (!(path.Equals(WatchedLists.DesktopPath, StringComparison.Ordinal)
                       || path.Equals(WatchedLists.DocumentsPath, StringComparison.Ordinal)
@@ -453,11 +451,7 @@ namespace Micasa
             return rtnVal;
         }
 
-#pragma warning disable CA1822 // Mark members as static
-#pragma warning disable IDE1006 // Naming Styles
-        private bool isThisPC_Item(TreeViewItem item)
-#pragma warning restore IDE1006 // Naming Styles
-#pragma warning restore CA1822 // Mark members as static
+        private static bool IsThisPC_Item(TreeViewItem item)
         {
             bool rtnVal = false;
 
@@ -496,7 +490,7 @@ namespace Micasa
                 newItem.Tag = SelectedItem.Tag;
                 newItem.FontWeight = SelectedItem.FontWeight;
                 newItem.Items.Add(dummyNode);
-                if (isThisPC_Item(destItem)) 
+                if (IsThisPC_Item(destItem)) 
                 {
                     newItem.Expanded += new RoutedEventHandler(Folder_ExpandedThisPC);
                     //newItem.Collapsed += new RoutedEventHandler(folder_Collapsed);

@@ -2,7 +2,6 @@
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1707 // Identifiers should not contain underscores
     /// <summary>
     /// Represents a general indication of the kind of data contained in this subfile.
     /// </summary>
@@ -145,7 +144,7 @@ namespace ExifLibrary
         /// <summary>
         /// Pixar LogL color space.
         /// </summary>
-        Pixar_LOGL = 32844,
+        PixarLOGL = 32844,
         /// <summary>
         /// Pixar LogLUV color space.
         /// </summary>
