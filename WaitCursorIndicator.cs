@@ -1,10 +1,10 @@
 ﻿#region Copyright
-// Micasa -- Your Photo Home -- A lightweight photo organiser & editor.
-// Author: Christopher Rath <christopher@rath.ca>
-// Archived at: http://rath.ca/
-// Copyright 2021-2024 © Christopher Rath
-// Distributed under the GNU Lesser General Public License v2.1
-//     (see the About–→Terms menu item for the license text).
+// WaitCursorIndicagtor -- Display the busy cursor while a task is running, and then restore the original 
+//    mouse cursor when the task completes.
+// Author: Sergey Alexandrovich Kryukov (https://www.sakryukov.org/)
+// Archived at: https://www.codeproject.com/Tips/137802/Hourglass-Mouse-Cursor-Always-Changes-Back-to-its
+// Copyright 2010 © Sergey Alexandrovich Kryukov
+// License: The Code Project Open License (CPOL) 1.02 (https://www.codeproject.com/info/cpol10.aspx)
 // Warranty: None, see the license.
 #endregion
 
@@ -19,10 +19,6 @@ namespace Micasa
     /// <summary>
     /// Display the busy cursor while a task is running, and then restore the original 
     /// mouse cursor when the task completes.
-    /// 
-    /// Author: Sergey Alexandrovich Kryukov (https://www.sakryukov.org/).
-    /// URL: https://www.codeproject.com/Tips/137802/Hourglass-Mouse-Cursor-Always-Changes-Back-to-its
-    /// License: The Code Project Open License (CPOL) 1.02 (https://www.codeproject.com/info/cpol10.aspx).
     /// </summary>
     sealed public class WaitCursorIndicator : IDisposable
     {
