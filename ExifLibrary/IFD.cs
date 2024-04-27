@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region Copyright
+// ExifLibrary - a .Net Standard library for editing Exif metadata contained in image files.
+// Author: Özgür Özçıtak
+// Based-on Version: 2.1.4
+// Updates by: Christopher Rath <christopher@rath.ca>
+// Archived at: https://oozcitak.github.io/exiflibrary/
+// Copyright (c) 2013 Özgür Özçıtak
+// Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
+// Warranty: None, see the license.
+#endregion
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1036 // Override methods on comparable types
-#pragma warning disable CA1051 // Do not declare visible instance fields
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1507 // Use nameof to express symbol names
-#pragma warning disable CA1707 // Identifiers should not contain underscores
-#pragma warning disable CA1710 // Identifiers should have correct suffix
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-#pragma warning disable CA1715 // Identifiers should have correct prefix
-#pragma warning disable CA1720 // Identifier contains type name
-#pragma warning disable CA1725 // Parameter names should match base declaration
-#pragma warning disable CA1805 // Do not initialize unnecessarily
-#pragma warning disable CA1822 // Mark members as static
-#pragma warning disable CA1825 // Avoid zero-length array allocations
-#pragma warning disable CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
-#pragma warning disable CA2251 // Use 'string.Equals'
-#pragma warning disable IDE0090 // Use 'new(...)'
-#pragma warning disable IDE1006 // Naming Styles
     /// <summary>
     /// Represents the IFD section containing tags.
     /// </summary>

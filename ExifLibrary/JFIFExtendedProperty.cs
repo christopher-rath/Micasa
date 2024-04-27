@@ -1,6 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region Copyright
+// ExifLibrary - a .Net Standard library for editing Exif metadata contained in image files.
+// Author: Özgür Özçıtak
+// Based-on Version: 2.1.4
+// Updates by: Christopher Rath <christopher@rath.ca>
+// Archived at: https://oozcitak.github.io/exiflibrary/
+// Copyright (c) 2013 Özgür Özçıtak
+// Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
+// Warranty: None, see the license.
+#endregion
+using System;
 
 namespace ExifLibrary
 {
