@@ -54,7 +54,7 @@ namespace ExifLibrary
             if (length < 32768)
             {
                 byte[] b = new byte[length];
-                int r = stream.Read(b, 0, (int)length);
+                //int r = stream.Read(b, 0, (int)length);
                 return b;
             }
             else
@@ -66,7 +66,7 @@ namespace ExifLibrary
                     while (length > 0 && (r = stream.Read(b, 0, (int)Math.Min(length, b.Length))) > 0)
                     {
                         mem.Write(b, 0, r);
-                        length = length - r;
+                        length -= r;
                     }
 
                     return mem.ToArray();
@@ -96,7 +96,7 @@ namespace ExifLibrary
                         if ((c & 1) != 0)
                             c = 0xedb88320L ^ (c >> 1);
                         else
-                            c = c >> 1;
+                            c >>= 1;
                     }
                     table[n] = c;
                 }

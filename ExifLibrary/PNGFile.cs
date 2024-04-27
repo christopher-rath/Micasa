@@ -101,7 +101,7 @@ namespace ExifLibrary
         protected override void SaveInternal(MemoryStream stream)
         {
             // Add end chunk if it does not exist
-            if (Chunks[Chunks.Count - 1].Type != "IEND")
+            if (Chunks[^1].Type != "IEND")
             {
                 Chunks.Add(new PNGChunk("IEND", new byte[0]));
             }

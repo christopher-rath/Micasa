@@ -31,7 +31,7 @@ namespace ExifLibrary
         private long exifIFDFieldOffset, gpsIFDFieldOffset, interopIFDFieldOffset, firstIFDFieldOffset;
         private long thumbOffsetLocation, thumbSizeLocation;
         private uint thumbOffsetValue, thumbSizeValue;
-        private bool makerNoteProcessed;
+        private readonly bool makerNoteProcessed;
         #endregion
 
         #region Properties
@@ -899,7 +899,7 @@ namespace ExifLibrary
                 // TIFF header
                 // Byte order
                 long tiffoffset = ms.Position;
-                ms.Write((ByteOrder == BitConverterEx.ByteOrder.LittleEndian ? new byte[] { 0x49, 0x49 } : new byte[] { 0x4D, 0x4D }), 0, 2);
+                ms.Write(ByteOrder == BitConverterEx.ByteOrder.LittleEndian ? "II"u8.ToArray() : "MM"u8.ToArray(), 0, 2);
                 // TIFF ID
                 ms.Write(bceExif.GetBytes((ushort)42), 0, 2);
                 // Offset to 0th IFD
