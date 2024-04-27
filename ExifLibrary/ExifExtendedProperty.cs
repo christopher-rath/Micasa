@@ -19,11 +19,13 @@ namespace ExifLibrary
     /// </summary>
     public class ExifEnumProperty<T> : ExifProperty where T : Enum
     {
+#pragma warning disable CA1051 // Do not declare visible instance fields
         protected T mValue;
         protected bool mIsBitField;
         protected override object _Value { get { return Value; } set { Value = (T)value; } }
         public new T Value { get { return mValue; } set { mValue = value; } }
         public bool IsBitField { get { return mIsBitField; } }
+#pragma warning restore CA1051 // Do not declare visible instance fields
 
         static public implicit operator T(ExifEnumProperty<T> obj) { return (T)obj.mValue; }
 
@@ -86,6 +88,7 @@ namespace ExifLibrary
     /// </summary>
     public class ExifEncodedString : ExifProperty
     {
+#pragma warning disable CA1051 // Do not declare visible instance fields
         protected string mValue;
         private Encoding mEncoding;
         protected override object _Value { get { return Value; } set { Value = (string)value; } }
@@ -93,6 +96,7 @@ namespace ExifLibrary
         public Encoding Encoding { get { return mEncoding; } set { mEncoding = value; } }
 
         static public implicit operator string(ExifEncodedString obj) { return obj.mValue; }
+#pragma warning restore CA1051 // Do not declare visible instance fields
 
         public override string ToString() { return mValue; }
 
@@ -136,11 +140,13 @@ namespace ExifLibrary
     /// </summary>
     public class ExifDateTime : ExifProperty
     {
+#pragma warning disable CA1051 // Do not declare visible instance fields
         protected DateTime mValue;
         protected override object _Value { get { return Value; } set { Value = (DateTime)value; } }
         public new DateTime Value { get { return mValue; } set { mValue = value; } }
 
         static public implicit operator DateTime(ExifDateTime obj) { return obj.mValue; }
+#pragma warning restore CA1051 // Do not declare visible instance fields
 
         public override string ToString() { return mValue.ToString("yyyy.MM.dd HH:mm:ss"); }
 
@@ -165,11 +171,13 @@ namespace ExifLibrary
     /// </summary>
     public class ExifDate : ExifProperty
     {
+#pragma warning disable CA1051 // Do not declare visible instance fields
         protected DateTime mValue;
         protected override object _Value { get { return Value; } set { Value = (DateTime)value; } }
         public new DateTime Value { get { return mValue; } set { mValue = value; } }
 
         static public implicit operator DateTime(ExifDate obj) { return obj.mValue; }
+#pragma warning restore CA1051 // Do not declare visible instance fields
 
         public override string ToString() { return mValue.ToString("yyyy.MM.dd"); }
 
@@ -194,9 +202,11 @@ namespace ExifLibrary
     /// </summary>
     public class ExifVersion : ExifProperty
     {
+#pragma warning disable CA1051 // Do not declare visible instance fields
         protected string mValue;
         protected override object _Value { get { return Value; } set { Value = (string)value; } }
         public new string Value { get { return mValue; } set { mValue = value[..4]; } }
+#pragma warning restore CA1051 // Do not declare visible instance fields
 
         public ExifVersion(ExifTag tag, string value)
             : base(tag)
@@ -412,9 +422,11 @@ namespace ExifLibrary
     /// </summary>
     public class WindowsByteString : ExifProperty
     {
+#pragma warning disable CA1051 // Do not declare visible instance fields
         protected string mValue;
         protected override object _Value { get { return Value; } set { Value = (string)value; } }
         public new string Value { get { return mValue; } set { mValue = value; } }
+#pragma warning restore CA1051 // Do not declare visible instance fields
 
         static public implicit operator string(WindowsByteString obj) { return obj.mValue; }
 
