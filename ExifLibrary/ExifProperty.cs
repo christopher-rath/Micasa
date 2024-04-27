@@ -48,10 +48,7 @@ namespace ExifLibrary
                 else
                     return mName;
             }
-            set
-            {
-                mName = value;
-            }
+            set => mName = value;
         }
         protected abstract object _Value { get; set; }
         /// <summary>
