@@ -20,8 +20,8 @@ Libraries and other code not authored by Christopher Rath but included in Micasa
 * ExifLibrary (http://oozcitak.github.io/exiflibrary/) – Copyright (c) 2013 Ozgur Ozcitak.  
   Used under the terms of The MIT License (https://opensource.org/licenses/MIT).
 * WaitCursorIndicator Class (https://www.codeproject.com/Tips/137802/Hourglass-Mouse-Cursor-Always-Changes-Back-to-its) 
-  – Published by Sergey Alexandrovich Kryukov (https://www.sakryukov.org/) under The Code 
-* Project Open License (CPOL) 1.02 (https://www.codeproject.com/info/cpol10.aspx).
+  &ndash; Published by Sergey Alexandrovich Kryukov (https://www.sakryukov.org/) under The Code 
+  Project Open License (CPOL) 1.02 (https://www.codeproject.com/info/cpol10.aspx).
 
 Warranty: This application is distributed in the hope that it will be useful, but WITHOUT 
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
@@ -68,12 +68,11 @@ Picasa application.  Key features to include:
   drives, etc., and remember that setting)
 * do not process touch-up work; rather, store a log of the actions and apply it each time 
   the photo is displayed
-	- however, provide the user with an option to apply the log
-	- when the log is applied, a checkpoint image is stored to allow recovery back to the 
-	  checkpoint by restoration of the saved image
-    - when a log is first applied to a photo by Micasa, move the original file to a backup 
-	  folder (modeled after Picasa) and put a copy in the original location—we’ll refer to 
-	  these as checkpoint images, and they’ll have to be versioned
+	- however, provide the user with an option to apply the action log to the photo
+    - when a log is first applied to a photo by Micasa, move the original file to a  
+	  .micasaoriginals folder and a copy is placed in the original location; subsequent 
+	  edits do not result in the saving of additional checkpoint images (only the original
+	  image is recoverable)
 * allow the creation of Albums
 * allow photos to be “starred”; but, allow “numbered stars” so that multiple lists can be 
   simultaneously kept—these are an Album sub-type
@@ -84,13 +83,13 @@ Picasa application.  Key features to include:
 	  detects a conflicting change, it should prompt and allow the user to create a “forked” 
 	  copy of the picture or discard their own edit — it should never allow another user’s 
 	  change to be over-written
-* when photos in read-only stores are modified, including through placement in album, use 
+* when photos in read-only stores are modified, including through placement in albums, use 
   a special local .micasa file and local modified photo folder
 	- the user should be able to specify the location of the “local”, writable folder where 
 	  the photos and .micasa file(s) will be stored
 	- this upholds the principle that the canonical store for all information is always a 
 	  text file
-	- the PhotoStore object should manage this read-only finesse
+	- a PhotoStore object should manage this read-only finesse
 * photo stores must eventually include:
 	- regular folders; absolute or relative references
 	- URLs
@@ -101,5 +100,5 @@ Picasa application.  Key features to include:
 
 My work on Micasa so far has been to create the framework for the actual processing and 
 presentation of photos in the UI.  <em><strong>If you do decide to pull and compile Micasa, 
-watch the debug window for a trace of what Micasa is doing as it scans the file system.
-</strong></em>
+watch the debug window for a trace of what Micasa is doing as it scans the file 
+system.</strong></em>
