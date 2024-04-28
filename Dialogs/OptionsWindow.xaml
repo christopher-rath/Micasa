@@ -19,19 +19,20 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="400" />
-            <RowDefinition />
+            <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TabControl x:Name="OptionsTabs" HorizontalAlignment="Left" Width="800" 
-                    Height="400" Margin="5,5,5,5" VerticalAlignment="Top">
+        <TabControl x:Name="OptionsTabs" HorizontalAlignment="Center" Width="800" 
+                    Height="400" Margin="5,5,5,-5" VerticalAlignment="Top" Grid.Row="0">
             <TabItem Header="General">
-                <Grid Background="#FFE5E5E5" Margin="0,-2,0.4,2">
+                <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="54*" />
+                        <RowDefinition Height="55*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -40,8 +41,8 @@
                     <!-- Reminder: Margin="left,top,right,bottom" -->
 
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="5,0,10,5">
-                        <TextBlock x:Name="tbApOptions" HorizontalAlignment="Left" Margin="10,10,0,5" Text="Application Mode" 
-                                   FontWeight="Bold" />
+                        <TextBlock x:Name="tbApOptions" HorizontalAlignment="Left" Margin="10,10,0,5" 
+				   Text="Application Mode" FontWeight="Bold" />
                         <RadioButton GroupName="AppMode" Name="rbAppModeLegacy" Content="Legacy: only use .picasa sidecar files." 
                                      Margin="25,0,0,5" Checked="RbAppModeLegacy_Checked" />
                         <RadioButton GroupName="AppMode" Name="rbAppModeMigrate" Content="Migrate: migrate .picasa entries to .Micasa file." 
@@ -52,7 +53,8 @@
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,10,5">
                         <TextBlock x:Name="tbUpdOptions" HorizontalAlignment="Left" Margin="10,10,0,5" Text="Update Options" 
                                    FontWeight="Bold" />
-                        <CheckBox x:Name="cbUpdPhotoFiles" Content="Write metadata to photo files (in addition to sidecar files)." HorizontalAlignment="Left" Margin="25,0,0,5" VerticalAlignment="Top" Foreground="Gray" />
+                        <CheckBox x:Name="cbUpdPhotoFiles" Content="Write metadata to photo files (in addition to sidecar files)." 
+				  HorizontalAlignment="Left" Margin="25,0,0,5" VerticalAlignment="Top" Foreground="Gray" />
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -98,7 +100,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Info">
-                <Grid Background="#FFE5E5E5" Margin="0,-2,0.4,2">
+                <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -112,7 +114,7 @@
                         <ColumnDefinition Width="200" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBlock x:Name="tbFiles" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="15,10,0,0" Text="Micasa File Locations" FontWeight="Bold" />
 
                     <Label x:Name="lblIniLoc" Grid.Row="1" Grid.Column="0" Content="Options File Location: " HorizontalAlignment="Right"
@@ -141,8 +143,8 @@
                              VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Database" Height="22" Margin="-2,0,-2,0" VerticalAlignment="Bottom">
-                <Grid Background="#FFE5E5E5" Margin="0,-2,0.4,2">
+            <TabItem Header="Database"> <!-- Height="22" VerticalAlignment="Bottom"> -->
+                <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -172,7 +174,8 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button x:Name="OK" Content="OK" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,95,8" VerticalAlignment="Bottom" Width="75" Click="OK_Click" IsDefault="True" />
-        <Button x:Name="Cancel" Content="Cancel" Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,10.6,8" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" IsCancel="True" />
+
+        <Button x:Name="OK" Content="OK" Grid.Row="1" HorizontalAlignment="Right" Margin="0,15,95,8" VerticalAlignment="Bottom" Width="75" Click="OK_Click" IsDefault="True" Grid.RowSpan="2" />
+        <Button x:Name="Cancel" Content="Cancel" Grid.Row="1" HorizontalAlignment="Right" Margin="0,15,11,8" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" IsCancel="True" Grid.RowSpan="2" />
     </Grid>
 </Window>
