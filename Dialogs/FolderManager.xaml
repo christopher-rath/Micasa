@@ -17,7 +17,8 @@
         Title="Folder_Manager" Height="550" Width="900" Loaded="Window_Loaded">
 
     <!-- This Grid creates 2 columns, each of which contains a Grid -->
-    <!-- of its own.                                                -->
+    <!-- of its own: one for the Folder List and the other for the  -->
+    <!-- textboxes that display the selected folders.               -->
     <!-- Reminder: Margin="left,top,right,bottom"                   -->
     <Grid Margin="5">
         <Grid.RowDefinitions>
