@@ -49,7 +49,7 @@ namespace Micasa
                                              + " may NOT contain a double quote character(s).");
             }
 
-            return @"Filename=""" + fn + @"""; Connection=shared";
+            return @"Filename=""" + fn + @"""; Connection=shared; auto-rebuild=true";
         }
 
         /// <summary>
