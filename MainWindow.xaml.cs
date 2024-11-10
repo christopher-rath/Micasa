@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Threading;
 using System.ComponentModel;
+using System.Windows.Controls;
 
 namespace Micasa
 {
@@ -34,6 +35,8 @@ namespace Micasa
         private static readonly PictureWatcher _ActiveWatchers = new();
         private static CancellationTokenSource PictureProcessorCancellationSource = new();
         private static CancellationToken PictureProcessorCancellationToken = PictureProcessorCancellationSource.Token;
+        private TreeViewItem SelectedItem = null;
+        private string SelectedFolderSaved = null;
 
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -256,6 +259,18 @@ namespace Micasa
             PictureProcessorCancellationSource.Cancel();
         }
         #endregion Thread_Code
+
+        #region MainWindowFolderList
+        private void DbFoldersItem_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            TreeView tree = (TreeView)sender;
+            TreeViewItem item = ((TreeViewItem)tree.SelectedItem);
+            string path = ((string)item.Tag);
+
+            SelectedItem = item;
+            SelectedFolderSaved = path;
+        }
+        #endregion MainWindowFolderList
 
         #region Utility_Functions
         /// <summary>
