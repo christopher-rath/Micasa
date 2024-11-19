@@ -13,7 +13,6 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Media.Imaging;
 using LiteDB;
-using Windows.Networking.Vpn;
 
 namespace Micasa
 {
@@ -72,10 +71,10 @@ namespace Micasa
         ///         value => value.ToString("o", CultureInfo.InvariantCulture),
         ///         bson => DateTimeOffset.ParseExact(bson, "o", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind));
         ///         
-        //      using (var db = new LiteDatabase("instance.db", mapper))
-        //      {
-        //       ...
-        //      }
+        ///     using (var db = new LiteDatabase("instance.db", mapper))
+        ///     {
+        ///      ...
+        ///     }
         /// 
         /// For the moment, I'm using a private DateTimeEquals() function that manually
         /// compares two DateTime objects down to millisecond precision and no further.
