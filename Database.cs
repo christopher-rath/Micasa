@@ -27,7 +27,7 @@ namespace Micasa
         {
             get
             {
-                string[] dbElements = { MainWindow.AppData, Constants.sMcAppDataFolder, Constants.sMcMicasaDBFileNm };
+                string[] dbElements = [MainWindow.AppData, Constants.sMcAppDataFolder, Constants.sMcMicasaDBFileNm];
                 return Path.Combine(dbElements);
             }
         }
@@ -126,8 +126,8 @@ namespace Micasa
                 Pathname = Path.GetDirectoryName(f),
                 FQFilename = f,
                 ModificationDate = File.GetLastWriteTime(f),
-                Faces = new string[] { "" },
-                Albums = new string[] { "" }
+                Faces = [""],
+                Albums = [""]
             };
             var results = pCol.FindOne(x => x.FQFilename.Equals(f, StringComparison.Ordinal));
             // Some code to use as an example in the event that I need the EXIF data.

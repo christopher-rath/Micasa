@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace Micasa
 {
-    sealed class DeletedScanner
+    internal sealed class DeletedScanner
     {
         /// <summary>
         /// In parallel with a scan for new pictures, we also need to scan for 
@@ -62,10 +62,10 @@ namespace Micasa
                 ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
 
                 if (!myCancelToken.IsCancellationRequested)
-	            {
-		            // The actions to be taken.  Until there is work to be done this
-		            // scanner simply falls through and stops running.
-		        }
+                {
+                    // The actions to be taken.  Until there is work to be done this
+                    // scanner simply falls through and stops running.
+                }
             }
         }
     }

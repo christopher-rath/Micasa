@@ -24,12 +24,12 @@ namespace Micasa
     public partial class FolderManagerWindow : Window
     {
         private readonly object dummyNode = null;
-        private readonly Dictionary<string, WatchType> _SavedFolderList = new();
+        private readonly Dictionary<string, WatchType> _SavedFolderList = [];
         private TreeViewItem SelectedItem = null;
         private string SelectedFolderSaved = null;
         // Allow changing of how the rbMonitor radio button list is displayed, without
         // triggering the code that updates the folder lists.
-        private bool blindSet = false;   
+        private bool blindSet = false;
 
         public FolderManagerWindow()
         {
@@ -73,9 +73,9 @@ namespace Micasa
                     FontWeight = FontWeights.Bold
                 };
                 // Skip over unknown drives and drives with no root directory -- we aren't able to handle them.
-                if ((d.DriveType != DriveType.Unknown) && (d.DriveType != DriveType.NoRootDirectory))
+                if (d.DriveType is not DriveType.Unknown and not DriveType.NoRootDirectory)
                 {
-                    if ((d.DriveType == DriveType.Removable) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network))
+                    if (d.DriveType is DriveType.Removable or DriveType.CDRom or DriveType.Network)
                     {
                         // At the moment, Micasa can't handle Removable, CD-ROM, or Network drives; so disable the entry.
                         anItem.IsEnabled = false;
@@ -203,7 +203,7 @@ namespace Micasa
         //    item.Items.Add(dummyNode);
         //}
 
-        void Folder_Expanded(object sender, RoutedEventArgs e)
+        private void Folder_Expanded(object sender, RoutedEventArgs e)
         {
             bool showHidden = false;
             bool showSystem = false;
@@ -253,7 +253,7 @@ namespace Micasa
             }
         }
 
-        void Folder_ExpandedThisPC(object sender, RoutedEventArgs e)
+        private void Folder_ExpandedThisPC(object sender, RoutedEventArgs e)
         {
             TreeViewItem item = (TreeViewItem)sender;
             if (item.Items.Count == 1 && item.Items[0] == dummyNode)
@@ -265,7 +265,7 @@ namespace Micasa
         private void FoldersItem_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeView tree = (TreeView)sender;
-            TreeViewItem item = ((TreeViewItem)tree.SelectedItem);
+            TreeViewItem item = (TreeViewItem)tree.SelectedItem;
             string path = ((string)item.Tag).RmPrefix(WatchedLists.ThisPCStr);
 
             SelectedItem = item;

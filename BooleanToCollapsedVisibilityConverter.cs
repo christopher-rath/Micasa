@@ -31,13 +31,11 @@ namespace Micasa
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             //reverse conversion (false=>Visible, true=>collapsed) on any given parameter
-            bool input = (null == parameter) ? (bool)value : !((bool)value);
-            return (input) ? Visibility.Visible : Visibility.Collapsed;
+            bool input = (null == parameter) ? (bool)value : !(bool)value;
+            return input ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotSupportedException("Cannot convert back");
-        }
+            => throw new NotSupportedException("Cannot convert back");
     }
 }
