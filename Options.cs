@@ -302,7 +302,7 @@ namespace Micasa
                 }
                 if (_FileTypeWebp) { theList.Add(@"*" + Constants.sMcFT_Webp); }
 
-                return theList.ToArray();
+                return [.. theList];
             }
         }
     }

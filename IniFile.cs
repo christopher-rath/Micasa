@@ -42,7 +42,7 @@ namespace Micasa
     /// https://www.codeproject.com/Articles/1990/INI-Class-using-C
     /// </remarks>
     public class IniFile
-    {        
+    {
         private const string defaultCommentDelimiter = ";";
         private const string strFalse = "False";
         private const string strTrue = "True";
@@ -205,7 +205,7 @@ namespace Micasa
         /// <summary>The initialization file path.</summary>
         public string TheFile
         {
-            get { return theFile; }
+            get => theFile;
             set
             {
                 theFile = null;
@@ -259,7 +259,7 @@ namespace Micasa
             {
                 rtnVal = defaultValue;
             }
-            
+
             return rtnVal;
         }
 
@@ -287,7 +287,7 @@ namespace Micasa
             {
                 tempDT = defaultValue;
             }
-            
+
             return tempDT;
         }
 

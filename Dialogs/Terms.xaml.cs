@@ -22,7 +22,7 @@ namespace Micasa
         {
             string licenseStr;
             string termsStrFlPath = @"Properties" + System.IO.Path.DirectorySeparatorChar + @"GNU_LGPL.rtf";
-            
+
             InitializeComponent();
 
             try

@@ -19,9 +19,11 @@ namespace Micasa
     internal sealed class MainStatusBar
     {
         private string TheStatusBarMsg { get; set; }
-#pragma warning disable CA2211 // Intellicode says this surpession is unnecessary; but, if it's 
-                               // removed then Intellicode will suggest other changes that break
-                               // the singleton pattern I'm using here.
+#pragma warning disable CA2211 
+        // Intellicode says this surpession is unnecessary; but, if it's 
+        // removed then Intellicode will suggest other changes that break
+        // the singleton pattern I'm using here.
+
         // The single instance of MainStatusBar.
         public static MainStatusBar Instance = new();
 #pragma warning restore CA2211
@@ -36,7 +38,7 @@ namespace Micasa
         /// the text in _StatusBarMsg and posts the text to the widget.
         /// </summary>
         public string StatusBarMsg
-        { 
+        {
             get => TheStatusBarMsg;
 
             set
@@ -47,6 +49,6 @@ namespace Micasa
                     MainWindow.Instance.tbStatusMsg.Text = TheStatusBarMsg;
                 }));
             }
-        } 
+        }
     }
 }

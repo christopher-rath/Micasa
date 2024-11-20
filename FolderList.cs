@@ -13,7 +13,7 @@ using LiteDB;
 
 namespace Micasa
 {
-    sealed class FolderList : IDisposable
+    internal sealed partial class FolderList : IDisposable
     {
         private readonly FolderListTypes _theListType;
         private readonly LiteDatabase _db = new(Database.ConnectionString(Database.DBFilename));
@@ -57,13 +57,11 @@ namespace Micasa
             }
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        public void Dispose() => throw new NotImplementedException();
     }
 
-    [Flags] public enum FolderListTypes
+    [Flags]
+    public enum FolderListTypes
     {
         ScanForDelete,
         ScanForAdd,

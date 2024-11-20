@@ -35,7 +35,7 @@ namespace Micasa
                 releaseNotesStr = @"Unexpected error (" + e.Message + @") reading Release Notes string from Properties file,\par{\tab{" + releaseNotesStrFlPath + @"}}";
             }
             rtbAboutText.SetRtf(releaseNotesStr);
-	}
+        }
 
         private void OK_Click(object sender, RoutedEventArgs e) => Close();
     }
