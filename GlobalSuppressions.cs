@@ -55,3 +55,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~P:Micasa.IniFile.TheFile")]
 [assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:Micasa.IniFile.GetBool(System.String,System.String,System.Boolean)~System.Boolean")]
 [assembly: SuppressMessage("Style", "IDE0032:Use auto property", Justification = "<Pending>", Scope = "member", Target = "~F:Micasa.Options.defaultAppMode")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Intellicode erroneously thinks this is unnecessary.", Scope = "type", Target = "~T:Micasa.MainWindow")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Intellicode erroneously thinks this is unnecessary.", Scope = "type", Target = "~T:Micasa.Constants")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Intellicode erroneously thinks this is unnecessary.", Scope = "member", Target = "~M:Micasa.Options.#ctor")]
+[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Intellicode erroneously thinks this is unnecessary.", Scope = "type", Target = "~T:Micasa.Options")]

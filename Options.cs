@@ -76,10 +76,7 @@ namespace Micasa
         }
 
         #region GetterSetters
-        public AppMode DefaultAppMode
-        {
-            get => defaultAppMode;
-        }
+        public AppMode DefaultAppMode => defaultAppMode;
         public bool FileTypeAvi
         {
             get => _FileTypeAvi;
@@ -232,35 +229,21 @@ namespace Micasa
             try
             {
                 Extension = Path.GetExtension(filename).ToLower(invC);
-                switch (Extension)
+                return Extension switch
                 {
-                    case Constants.sMcFT_Avi:
-                        return FileTypeAvi;
-                    case Constants.sMcFT_Bmp:
-                        return FileTypeBmp;
-                    case Constants.sMcFT_Gif:
-                        return FileTypeGif;
-                    case Constants.sMcFT_Jpg:
-                    case Constants.sMcFT_JpgA:
-                        return FileTypeJpg;
-                    case Constants.sMcFT_Mov:
-                        return FileTypeMov;
-                    case Constants.sMcFT_Nef:
-                        return FileTypeNef;
-                    case Constants.sMcFT_Png:
-                        return FileTypePng;
-                    case Constants.sMcFT_Psd:
-                        return FileTypePsd;
-                    case Constants.sMcFT_Tga:
-                        return FileTypeTga;
-                    case Constants.sMcFT_Tif:
-                    case Constants.sMcFT_TifA:
-                        return FileTypeTif;
-                    case Constants.sMcFT_Webp:
-                        return FileTypeWebp;
-                    default:
-                        return false;
-                }
+                    Constants.sMcFT_Avi => FileTypeAvi,
+                    Constants.sMcFT_Bmp => FileTypeBmp,
+                    Constants.sMcFT_Gif => FileTypeGif,
+                    Constants.sMcFT_Jpg or Constants.sMcFT_JpgA => FileTypeJpg,
+                    Constants.sMcFT_Mov => FileTypeMov,
+                    Constants.sMcFT_Nef => FileTypeNef,
+                    Constants.sMcFT_Png => FileTypePng,
+                    Constants.sMcFT_Psd => FileTypePsd,
+                    Constants.sMcFT_Tga => FileTypeTga,
+                    Constants.sMcFT_Tif or Constants.sMcFT_TifA => FileTypeTif,
+                    Constants.sMcFT_Webp => FileTypeWebp,
+                    _ => false,
+                };
             }
             catch
             {
@@ -281,8 +264,8 @@ namespace Micasa
         {
             get
             {
-                List<string> theList = new();
-                if (_FileTypeAvi) { theList.Add(@"*"+Constants.sMcFT_Avi); }
+                List<string> theList = [];
+                if (_FileTypeAvi) { theList.Add(@"*" + Constants.sMcFT_Avi); }
                 if (_FileTypeBmp) { theList.Add(@"*" + Constants.sMcFT_Bmp); }
                 if (_FileTypeGif) { theList.Add(@"*" + Constants.sMcFT_Gif); }
                 if (_FileTypeJpg)

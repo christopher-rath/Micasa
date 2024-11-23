@@ -344,7 +344,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TabControl x:Name="MainWindowTabs" Grid.Column="0">
+            <TabControl x:Name="MainWindowTabs" Grid.Column="0" MinHeight="200" >
                 <TabItem Header="Fol_ders">
                     <TreeView x:Name="dbFoldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="DbFoldersItem_SelectedItemChanged" Width="Auto" >
                         <TreeView.Resources>
