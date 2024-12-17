@@ -880,7 +880,7 @@ namespace Micasa
         // easy to find, to update the version information.
         public const string sMcMainSection = @"Main";
         public const string sMcVersion = @"0.08"; // --> Also update in "AssemblyInfo.cs" <--
-        public const string sMcPlatform = @"Windows 10";
+        public const string sMcPlatform = @"Windows 11";
         public const string sMcCopyright = @"2021{\'96}2025"; // "{\'96}" is an RTF en dash character.
         public const string sVersionToRepl = @"[@Version String@]";
         public const string sPlatformToRepl = @"[@Platform String@]";
