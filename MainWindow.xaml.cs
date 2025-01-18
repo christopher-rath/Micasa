@@ -145,7 +145,6 @@ namespace Micasa
             try
             {
                 Database.CreateDB();
-                StartScanners();
             }
             catch (ArgumentException e)
             {
@@ -157,6 +156,18 @@ namespace Micasa
             {
                 string msg = @"Unexpected IOException error opening the Micasa database (" + e.Message + @").";
                 MessageBox.Show(msg, "Database Open Error", MessageBoxButton.OK, MessageBoxImage.Error,
+                                MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+                this.Close();
+            }
+
+            try
+            {
+                StartScanners();
+            }
+            catch (Exception e)
+            {
+                string msg = $"ERROR: unexpected error starting scanners: {e.Message}\n\nUnable to continue.";
+                MessageBox.Show(msg, "StartScanners Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
