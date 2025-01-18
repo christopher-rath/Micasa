@@ -101,6 +101,12 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <!--
+        The menu bar has almost been completely built-out to match Picasa's menu bar.
+        Where a menu item isn't yet implemented (and so the associated CanExecute method
+        in the code-behind returns false(), then the menu item's visibility is set to
+        Collapsed.  This ensures that only the active/available menu items are visible.
+        -->
         <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" DockPanel.Dock="Top" Background="White"
               BorderThickness="0,0,0,1" BorderBrush="DarkGray" VerticalAlignment="Top" >
             <MenuItem Header="_File">

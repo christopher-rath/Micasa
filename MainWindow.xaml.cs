@@ -129,6 +129,7 @@ namespace Micasa
                 this.tbStatusMsg.Text = "Open the Folder Manager (Tools→Folder Manager) and configure folders to be watched by Micasa.";
             }
 
+            // Ensure that the Micasa data folder exists (where its database and other data is stored).
             try
             {
                 Directory.CreateDirectory(AppData + System.IO.Path.DirectorySeparatorChar + Constants.sMcAppDataFolder);
@@ -142,6 +143,7 @@ namespace Micasa
                 this.Close();
             }
 
+            // Open (or create if it doesn't exist) the Micasa database.
             try
             {
                 Database.CreateDB();
@@ -160,6 +162,7 @@ namespace Micasa
                 this.Close();
             }
 
+            // Start the new/uppated/deleted picture scanner.
             try
             {
                 StartScanners();
@@ -172,6 +175,7 @@ namespace Micasa
                 this.Close();
             }
 
+            // Start the FileSystemWatchers (watch for changes to watched folders).
             try
             {
                 StartWatchers();
@@ -204,7 +208,9 @@ namespace Micasa
         #region Thread_Code
 
         /// <summary>
-        /// Start the scanners.
+        /// Start the new/uppated/deleted picture scanners.  This is done using
+        /// two separate scanners: one for new/updated pictures and one for deleted
+        /// pictures.  The two scanners are started in separate threads.
         /// </summary>
         public static void StartScanners()
         {
@@ -220,7 +226,7 @@ namespace Micasa
         }
 
         /// <summary>
-        /// Stop the scanners.
+        /// Stop the two scanners.
         /// </summary>
         public static void Stopscanners()
         {
@@ -229,8 +235,8 @@ namespace Micasa
         }
 
         /// <summary>
-        /// Start the watchers; one for each folder in the WatchedFolders list.
-        /// Then start the associated processor.
+        /// Start the watchers; one watcher for each folder in the WatchedFolders list.
+        /// Then start the associated changed-folder processor in its own thread.
         /// </summary>
         public static void StartWatchers()
         {
@@ -282,7 +288,8 @@ namespace Micasa
         #region Utility_Functions
         /// <summary>
         /// Determine if a directory is writable by the curent process by creating and then deleting
-        /// a file in that directory.
+        /// a file in that directory.  Note: unfortunately, Windows and .NET do not provide any better
+        /// way to test for directory writability.
         /// </summary>
         /// <param name="dirPath">The directory to test.</param>
         /// <param name="throwIfFails">If the file creation fails, throw the error (true/false).</param>
@@ -311,6 +318,13 @@ namespace Micasa
         #endregion Utility_Functions
 
         #region UICode
+        /// <summary>
+        /// The code in this UICode-region is the implementation of the menu bar commands.
+        /// The menu items in MainWindow.xaml file are almost completely built-out to match
+        /// Picasa's menus; but where a menu item is not yet implemented, it has been 
+        /// disabled using the the CanExecute method.
+        /// </summary>
+
         // AboutCmd
         private void AboutCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
 
@@ -815,6 +829,15 @@ namespace Micasa
     [Flags]
     public enum AppMode
     {
+        /// <summary>
+        /// The global application mode:
+        ///  * Legacy: only use Picasa sidecar files.
+        ///  * Migrate: migrate data contained in Picasa sidecar files into the Micasa 
+        ///    database and Micasa sidecar files.  Don't update/maintain the Picasa
+        ///    sidecar files.
+        ///  * Native: only use Micasa sidecar files (that is, ignore any Picasa 
+        ///    sidecar files).
+        /// </summary>
         Legacy,
         Migrate,
         Native
@@ -823,6 +846,7 @@ namespace Micasa
     public static class Constants
     {
         public const string sMcAppName = @"Micasa";
+
 #pragma warning disable CA1707 // Identifiers should not contain underscores
         // Main Micasa .INI file -- Section: File Types
         public const string sMcFT_Section = @"File Types";
