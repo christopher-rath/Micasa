@@ -25,10 +25,8 @@ namespace Micasa
     public partial class MainWindow : Window
     {
         public static MainWindow Instance { get; private set; }
-        private static readonly DeletedScanner _DeletedScanner = new();
         private static CancellationTokenSource DeletedScannerCancellationSource = new();
         private static CancellationToken DeletedScannerCancellationToken = DeletedScannerCancellationSource.Token;
-        private static readonly PictureScanner _PictureScanner = new();
         private static CancellationTokenSource PictureScannerCancellationSource = new();
         private static CancellationToken PictureScannerCancellationToken = PictureScannerCancellationSource.Token;
         private static readonly PictureWatcher _ActiveWatchers = new();
