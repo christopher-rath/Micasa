@@ -12,7 +12,6 @@ using System;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1305 // Specify IFormatProvider
     public static class ExifTagFactory
     {
         #region Static Methods
@@ -46,7 +45,7 @@ namespace ExifLibrary
         /// </summary>
         public static string GetTagName(ExifTag tag)
         {
-            string name = Enum.GetName(typeof(ExifTag), tag);
+            string name = Enum.GetName(tag);
             if (name == null)
                 return "Unknown";
             else
@@ -67,10 +66,10 @@ namespace ExifLibrary
         /// </summary>
         public static string GetTagLongName(ExifTag tag)
         {
-            string ifdname = Enum.GetName(typeof(IFD), GetTagIFD(tag));
-            string name = Enum.GetName(typeof(ExifTag), tag);
+            string ifdname = Enum.GetName(GetTagIFD(tag));
+            string name = Enum.GetName(tag);
             name ??= "Unknown";
-            string tagidname = GetTagID(tag).ToString();
+            string tagidname = GetTagID(tag).ToString(System.Globalization.CultureInfo.InvariantCulture);
             return ifdname + ": " + name + " (" + tagidname + ")";
         }
         #endregion
