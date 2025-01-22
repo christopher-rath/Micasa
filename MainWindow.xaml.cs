@@ -844,18 +844,18 @@ namespace Micasa
         #endregion UICode
     }
 
+    /// <summary>
+    /// The global application mode:
+    ///  * Legacy: only use Picasa sidecar files.
+    ///  * Migrate: migrate data contained in Picasa sidecar files into the Micasa 
+    ///    database and Micasa sidecar files.  Don't update/maintain the Picasa
+    ///    sidecar files.
+    ///  * Native: only use Micasa sidecar files (that is, ignore any Picasa 
+    ///    sidecar files).
+    /// </summary>
     [Flags]
     public enum AppMode
     {
-        /// <summary>
-        /// The global application mode:
-        ///  * Legacy: only use Picasa sidecar files.
-        ///  * Migrate: migrate data contained in Picasa sidecar files into the Micasa 
-        ///    database and Micasa sidecar files.  Don't update/maintain the Picasa
-        ///    sidecar files.
-        ///  * Native: only use Micasa sidecar files (that is, ignore any Picasa 
-        ///    sidecar files).
-        /// </summary>
         Legacy,
         Migrate,
         Native

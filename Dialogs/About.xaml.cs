@@ -17,12 +17,12 @@ using System.Windows.Input;
 
 namespace Micasa
 {
-    /// <summary>
-    /// Fetch the contents of the About_Micasa.rtf file and display them in 
-    /// About.xaml.
-    /// </summary>
     public partial class About : Window
     {
+        /// <summary>
+        /// Fetch the contents of the About_Micasa.rtf file and display them in 
+        /// About.xaml.
+        /// </summary>
         public About()
         {
             string aboutStr;
@@ -51,8 +51,8 @@ namespace Micasa
         }
 
         /// <summary>
-        /// Codebehind in support of the <Setter> contained in the RishTextBox control.  This codebehind
-        /// and the <Setter> are needed to support the MakeUrlsClickable() extension to the WPF RichTextBox
+        /// Codebehind in support of the &lt;Setter&gt; contained in the RishTextBox control.  This codebehind
+        /// and the &lt;Setter&gt; are needed to support the MakeUrlsClickable() extension to the WPF RichTextBox
         /// control.  See "ExtensionsForRTB.cs" for more info.
         /// </summary>
         /// <param name="sender"></param>
