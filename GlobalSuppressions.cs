@@ -59,3 +59,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Intellicode erroneously thinks this is unnecessary.", Scope = "type", Target = "~T:Micasa.Constants")]
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Intellicode erroneously thinks this is unnecessary.", Scope = "member", Target = "~M:Micasa.Options.#ctor")]
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Intellicode erroneously thinks this is unnecessary.", Scope = "type", Target = "~T:Micasa.Options")]
+[assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "<Pending>", Scope = "namespace", Target = "~N:ExifLibrary")]
