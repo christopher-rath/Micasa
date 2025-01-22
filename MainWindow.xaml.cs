@@ -192,15 +192,35 @@ namespace Micasa
         #endregion GetterSetters
 
         #region Event_Handlers
+        /// <summary>
+        /// Once the MainWindow has been loaded, populate the three tabs (Folders, Albums,
+        /// and People); start a separate thread for populating each tab.
+        /// 
+        /// To Do: retrieve the tab and tab-item that was active when Micasa was last active,
+        /// and make that tab and tab-item active for this session.  This likely cannot be
+        /// done until after the three tabs have been completely populated.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// The actions to take as the application shuts down:
+        ///  * Stop the scanners.
+        ///  * Stop the watchers.
+        ///  
+        /// To Do: save the active tab and tab-item so that it can be restored when the
+        /// application next starts.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Stopscanners();
             _ActiveWatchers.StopWatchers();
         }
-
-        //private void Window_ContentRendered(object sender, EventArgs e)
-        //{
-        //}
         #endregion Event_Handlers
 
         #region Thread_Code
