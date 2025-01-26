@@ -266,6 +266,19 @@ namespace Micasa
             return caption;
         }
 
+        /// <summary>
+        /// Get the list of folders from the Folders table in the database.
+        /// 
+        /// TO DO: Replace this method per this comment:
+        ///     This method is of limited use since it returns the full list of folders as an 
+        ///     array of strings.  For Micasa's initial implementation, handling all of the 
+        ///     folders in a single array is acceptable.  However, as the number of folders
+        ///     increases and the number of photos in each folder increases, this method will
+        ///     need to be replaced with a more sophisticated method that retrieves the folders
+        ///     one at a time.
+        /// </summary>
+        /// <param name="Col">The collection (database) from which to retreive the list of folders.</param>
+        /// <returns>The list of folders as an array of strings (string[]).</returns>
         public static string[] GetFolders(ILiteCollection<FoldersTbl> Col)
         {
             var results = Col.Query()
