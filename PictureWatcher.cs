@@ -27,7 +27,7 @@ namespace Micasa
     {
         // Each folder to be monitored has an active FileSystemWatcher.  We maintain
         // the set in this list.
-        private readonly List<FileSystemWatcher> _activeWatchers = new();
+        private readonly List<FileSystemWatcher> _activeWatchers = [];
         public struct PhotoToQueue
         {
             public PhotoToQueue(

@@ -60,8 +60,8 @@ namespace ExifLibrary
         protected internal JPEGFile(Encoding encoding)
         {
             Format = ImageFileFormat.JPEG;
-            Sections = new List<JPEGSection>();
-            TrailingData = new byte[0];
+            Sections = [];
+            TrailingData = [];
             Encoding = encoding;
         }
 
@@ -74,8 +74,8 @@ namespace ExifLibrary
         protected internal JPEGFile(MemoryStream stream, Encoding encoding, bool readTrailingData = false)
         {
             Format = ImageFileFormat.JPEG;
-            Sections = new List<JPEGSection>();
-            TrailingData = new byte[0];
+            Sections = [];
+            TrailingData = [];
             Encoding = encoding;
 
             stream.Seek(0, SeekOrigin.Begin);
@@ -97,7 +97,7 @@ namespace ExifLibrary
 
                 JPEGMarker marker = (JPEGMarker)markerbytes[1];
 
-                byte[] header = new byte[0];
+                byte[] header = [];
                 // SOI, EOI and RST markers do not contain any header
                 if (marker != JPEGMarker.SOI && marker != JPEGMarker.EOI && !(marker >= JPEGMarker.RST0 && marker <= JPEGMarker.RST7))
                 {
@@ -116,7 +116,7 @@ namespace ExifLibrary
                 // Start of Scan (SOS) sections and RST sections are immediately
                 // followed by entropy coded data. For that, we need to read until
                 // the next section marker once we reach a SOS or RST.
-                byte[] entropydata = new byte[0];
+                byte[] entropydata = [];
                 if (marker == JPEGMarker.SOS || (marker >= JPEGMarker.RST0 && marker <= JPEGMarker.RST7))
                 {
                     long position = stream.Position;
@@ -239,7 +239,7 @@ namespace ExifLibrary
                     continue;
 
                 // Write section marker
-                stream.Write(new byte[] { 0xFF, (byte)section.Marker }, 0, 2);
+                stream.Write([0xFF, (byte)section.Marker], 0, 2);
 
                 // SOI, EOI and RST markers do not contain any header
                 if (section.Marker != JPEGMarker.SOI && section.Marker != JPEGMarker.EOI && !(section.Marker >= JPEGMarker.RST0 && section.Marker <= JPEGMarker.RST7))
@@ -313,7 +313,7 @@ namespace ExifLibrary
         private bool WriteJFIFApp0()
         {
             // Which IFD sections do we have?
-            Dictionary<ExifTag, ExifProperty> ifdjfefExisting = new Dictionary<ExifTag, ExifProperty>();
+            Dictionary<ExifTag, ExifProperty> ifdjfefExisting = [];
             foreach (ExifProperty prop in Properties)
             {
                 if (prop.IFD == IFD.JFIF)
@@ -334,7 +334,7 @@ namespace ExifLibrary
             }
 
             // Check and insert missing tags
-            List<ExifProperty> ifdjfef = new List<ExifProperty>();
+            List<ExifProperty> ifdjfef = [];
 
             // Version
             if (ifdjfefExisting.TryGetValue(ExifTag.JFIFVersion, out ExifProperty version))
@@ -407,7 +407,7 @@ namespace ExifLibrary
             else
             {
                 Errors.Add(new ImageError(Severity.Info, "Adding missing JFIF thumbnail tag."));
-                ifdjfef.Add(new JFIFThumbnailProperty(ExifTag.JFIFThumbnail, new JFIFThumbnail(JFIFThumbnail.ImageFormat.JPEG, new byte[0])));
+                ifdjfef.Add(new JFIFThumbnailProperty(ExifTag.JFIFThumbnail, new JFIFThumbnail(JFIFThumbnail.ImageFormat.JPEG, [])));
             }
 
             // Create a memory stream to write the APP0 section to
@@ -490,7 +490,7 @@ namespace ExifLibrary
         private bool WriteJFXXApp0()
         {
             // Which IFD sections do we have?
-            List<ExifProperty> ifdjfef = new List<ExifProperty>();
+            List<ExifProperty> ifdjfef = [];
             foreach (ExifProperty prop in Properties)
             {
                 if (prop.IFD == IFD.JFXX)
@@ -557,7 +557,7 @@ namespace ExifLibrary
             }
 
             byte[] header = exifApp1.Header;
-            SortedList<int, IFD> ifdqueue = new SortedList<int, IFD>();
+            SortedList<int, IFD> ifdqueue = [];
             makerNoteOffset = 0;
 
             // TIFF header
@@ -834,11 +834,11 @@ namespace ExifLibrary
             }
 
             // Which IFD sections do we have?
-            Dictionary<ExifTag, ExifProperty> ifdzeroth = new Dictionary<ExifTag, ExifProperty>();
-            Dictionary<ExifTag, ExifProperty> ifdexif = new Dictionary<ExifTag, ExifProperty>();
-            Dictionary<ExifTag, ExifProperty> ifdgps = new Dictionary<ExifTag, ExifProperty>();
-            Dictionary<ExifTag, ExifProperty> ifdinterop = new Dictionary<ExifTag, ExifProperty>();
-            Dictionary<ExifTag, ExifProperty> ifdfirst = new Dictionary<ExifTag, ExifProperty>();
+            Dictionary<ExifTag, ExifProperty> ifdzeroth = [];
+            Dictionary<ExifTag, ExifProperty> ifdexif = [];
+            Dictionary<ExifTag, ExifProperty> ifdgps = [];
+            Dictionary<ExifTag, ExifProperty> ifdinterop = [];
+            Dictionary<ExifTag, ExifProperty> ifdfirst = [];
 
             foreach (ExifProperty prop in Properties)
             {
@@ -882,7 +882,7 @@ namespace ExifLibrary
             if (ifdzeroth.Count == 0 && ifdgps.Count == 0 && ifdinterop.Count == 0 && ifdfirst.Count == 0 && Thumbnail == null)
             {
                 // Nothing to write to App1 section
-                exifApp1.Header = new byte[0];
+                exifApp1.Header = [];
                 return false;
             }
 
@@ -1069,7 +1069,7 @@ namespace ExifLibrary
             // We will write zeros for now. This will be filled after we write all IFDs
             if (ifdtype == IFD.Zeroth)
                 firstIFDFieldOffset = stream.Position;
-            stream.Write(new byte[] { 0, 0, 0, 0 }, 0, 4);
+            stream.Write([0, 0, 0, 0], 0, 4);
 
             // Seek to end of IFD
             stream.Seek(absolutedataoffset, SeekOrigin.Begin);

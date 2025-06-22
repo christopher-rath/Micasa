@@ -16,10 +16,8 @@ namespace Micasa
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class BooleanToCollapsedVisibilityConverter : IValueConverter
     {
-#pragma warning disable CA2211 // Non-constant fields should not be visible
         // The single instance of BooleanToCollapsedVisibilityConverter.
         public static BooleanToCollapsedVisibilityConverter Instance = new();
-#pragma warning restore CA2211 // Non-constant fields should not be visible
 
         /// <summary>
         /// This BooleanToCollapsedVisibilityConverter class uses private constructor to implement  

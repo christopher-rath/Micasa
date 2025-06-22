@@ -13,19 +13,16 @@ using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1305 // Specify IFormatProvider -- We are parsing a known metadata type and the region lookup is not needed.
     /// <summary>
     /// Represents an enumerated value.
     /// </summary>
     public class ExifEnumProperty<T> : ExifProperty where T : Enum
     {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-        protected T mValue;
-        protected bool mIsBitField;
+        private T mValue; // Changed from protected to private
+        private readonly bool mIsBitField; // Changed from protected to private
         protected override object _Value { get { return Value; } set { Value = (T)value; } }
         public new T Value { get { return mValue; } set { mValue = value; } }
         public bool IsBitField { get { return mIsBitField; } }
-#pragma warning restore CA1051 // Do not declare visible instance fields
 
         static public implicit operator T(ExifEnumProperty<T> obj) { return (T)obj.mValue; }
 
@@ -88,15 +85,13 @@ namespace ExifLibrary
     /// </summary>
     public class ExifEncodedString : ExifProperty
     {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-        protected string mValue;
-        private Encoding mEncoding;
+        private string mValue; // Changed from protected to private
+        private Encoding mEncoding; // Changed from protected to private
         protected override object _Value { get { return Value; } set { Value = (string)value; } }
         public new string Value { get { return mValue; } set { mValue = value; } }
         public Encoding Encoding { get { return mEncoding; } set { mEncoding = value; } }
 
         static public implicit operator string(ExifEncodedString obj) { return obj.mValue; }
-#pragma warning restore CA1051 // Do not declare visible instance fields
 
         public override string ToString() { return mValue; }
 
@@ -140,13 +135,11 @@ namespace ExifLibrary
     /// </summary>
     public class ExifDateTime : ExifProperty
     {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-        protected DateTime mValue;
+        private DateTime mValue; // Changed from protected to private
         protected override object _Value { get { return Value; } set { Value = (DateTime)value; } }
         public new DateTime Value { get { return mValue; } set { mValue = value; } }
 
         static public implicit operator DateTime(ExifDateTime obj) { return obj.mValue; }
-#pragma warning restore CA1051 // Do not declare visible instance fields
 
         public override string ToString() { return mValue.ToString("yyyy.MM.dd HH:mm:ss"); }
 
@@ -171,13 +164,11 @@ namespace ExifLibrary
     /// </summary>
     public class ExifDate : ExifProperty
     {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-        protected DateTime mValue;
+        private DateTime mValue; // Changed from protected to private
         protected override object _Value { get { return Value; } set { Value = (DateTime)value; } }
         public new DateTime Value { get { return mValue; } set { mValue = value; } }
 
         static public implicit operator DateTime(ExifDate obj) { return obj.mValue; }
-#pragma warning restore CA1051 // Do not declare visible instance fields
 
         public override string ToString() { return mValue.ToString("yyyy.MM.dd"); }
 
@@ -202,11 +193,9 @@ namespace ExifLibrary
     /// </summary>
     public class ExifVersion : ExifProperty
     {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-        protected string mValue;
+        private string mValue; // Changed from protected to private
         protected override object _Value { get { return Value; } set { Value = (string)value; } }
         public new string Value { get { return mValue; } set { mValue = value[..4]; } }
-#pragma warning restore CA1051 // Do not declare visible instance fields
 
         public ExifVersion(ExifTag tag, string value)
             : base(tag)
@@ -288,7 +277,7 @@ namespace ExifLibrary
         }
 
         public ExifPointSubjectArea(ExifTag tag, ushort x, ushort y)
-            : base(tag, new ushort[] { x, y })
+            : base(tag, [x, y])
         {
             ;
         }
@@ -317,7 +306,7 @@ namespace ExifLibrary
         }
 
         public ExifCircularSubjectArea(ExifTag tag, ushort x, ushort y, ushort d)
-            : base(tag, new ushort[] { x, y, d })
+            : base(tag, [x, y, d])
         {
             ;
         }
@@ -348,7 +337,7 @@ namespace ExifLibrary
         }
 
         public ExifRectangularSubjectArea(ExifTag tag, ushort x, ushort y, ushort w, ushort h)
-            : base(tag, new ushort[] { x, y, w, h })
+            : base(tag, [x, y, w, h])
         {
             ;
         }
@@ -382,7 +371,7 @@ namespace ExifLibrary
         }
 
         public GPSLatitudeLongitude(ExifTag tag, float d, float m, float s)
-            : base(tag, new MathEx.UFraction32[] { new(d), new(m), new(s) })
+            : base(tag, [new(d), new(m), new(s)])
         {
             ;
         }
@@ -410,7 +399,7 @@ namespace ExifLibrary
         }
 
         public GPSTimeStamp(ExifTag tag, float h, float m, float s)
-            : base(tag, new MathEx.UFraction32[] { new(h), new(m), new(s) })
+            : base(tag, [new(h), new(m), new(s)])
         {
             ;
         }
@@ -472,7 +461,7 @@ namespace ExifLibrary
         }
 
         public LensSpecification(ExifTag tag, float minFocal, float maxFocal, float minFocalF, float maxFocalF)
-            : base(tag, new MathEx.UFraction32[] { new(minFocal), new(maxFocal), new(minFocalF), new(maxFocalF) })
+            : base(tag, [new(minFocal), new(maxFocal), new(minFocalF), new(maxFocalF)])
         {
             ;
         }

@@ -29,9 +29,9 @@ namespace ExifLibrary
         protected ImageFile()
         {
             Format = ImageFileFormat.Unknown;
-            Properties = new ExifPropertyCollection<ExifProperty>();
+            Properties = [];
             Encoding = Encoding.UTF8;
-            Errors = new List<ImageError>();
+            Errors = [];
         }
         #endregion
 

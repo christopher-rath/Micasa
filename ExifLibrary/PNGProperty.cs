@@ -108,7 +108,7 @@ namespace ExifLibrary
             {
                 Encoding latin1 = Encoding.GetEncoding(28591);
                 byte[] keyword = latin1.GetBytes(Keyword);
-                byte[] value = new byte[0];
+                byte[] value = [];
                 if (Compressed)
                     value = Utility.CompressString(mValue, Encoding.UTF8);
                 else

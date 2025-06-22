@@ -163,7 +163,7 @@ namespace ExifLibrary
         public GIFImageDescriptor() : base(0x2C)
         {
             LCT = new byte[0, 3];
-            ImageData = new byte[0][] { };
+            ImageData = [];
         }
         #endregion
     }
@@ -194,7 +194,7 @@ namespace ExifLibrary
         public GIFExtensionBlock(byte label) : base(0x21)
         {
             Label = (GIFExtensionLabel)label;
-            Data = new byte[0][] { };
+            Data = [];
 #pragma warning restore CA1825 // Avoid zero-length array allocations
         }
         #endregion

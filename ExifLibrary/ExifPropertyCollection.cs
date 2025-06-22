@@ -29,8 +29,8 @@ namespace ExifLibrary
         #region Constructor
         internal ExifPropertyCollection()
         {
-            items = new List<T>();
-            lookup = new Dictionary<ExifTag, List<T>>();
+            items = [];
+            lookup = [];
         }
         #endregion
 
@@ -162,8 +162,8 @@ namespace ExifLibrary
         public void Add(ExifTag key, object value)
         {
             Type type = value.GetType();
-            Type etype = typeof(ExifEnumProperty<>).MakeGenericType(new Type[] { type });
-            object prop = Activator.CreateInstance(etype, new object[] { key, value });
+            Type etype = typeof(ExifEnumProperty<>).MakeGenericType([type]);
+            object prop = Activator.CreateInstance(etype, [key, value]);
             AddItem((ExifProperty)prop);
         }
         /// <summary>
@@ -184,7 +184,7 @@ namespace ExifLibrary
         /// <param name="s">Angular seconds (or clock seconds for a timestamp).</param>
         public void Add(ExifTag key, float d, float m, float s)
         {
-            AddItem(new ExifURationalArray(key, new MathEx.UFraction32[] { new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s) }));
+            AddItem(new ExifURationalArray(key, [new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s)]));
         }
         /// <summary>
         /// Adds an <see cref="ExifLibrary.ExifProperty"/> with the specified key.
@@ -342,8 +342,8 @@ namespace ExifLibrary
         public void Set(ExifTag key, object value)
         {
             Type type = value.GetType();
-            Type etype = typeof(ExifEnumProperty<>).MakeGenericType(new Type[] { type });
-            object prop = Activator.CreateInstance(etype, new object[] { key, value });
+            Type etype = typeof(ExifEnumProperty<>).MakeGenericType([type]);
+            object prop = Activator.CreateInstance(etype, [key, value]);
             SetItem((ExifProperty)prop);
         }
         /// <summary>
@@ -368,7 +368,7 @@ namespace ExifLibrary
         /// <param name="s">Angular seconds (or clock seconds for a timestamp).</param>
         public void Set(ExifTag key, float d, float m, float s)
         {
-            SetItem(new ExifURationalArray(key, new MathEx.UFraction32[] { new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s) }));
+            SetItem(new ExifURationalArray(key, [new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s)]));
         }
         /// <summary>
         /// Sets an <see cref="ExifLibrary.ExifProperty"/> with the specified key.
@@ -472,7 +472,7 @@ namespace ExifLibrary
         /// <param name="ifd">The IFD section to remove.</param>
         public void Remove(IFD ifd)
         {
-            List<T> toRemove = new List<T>();
+            List<T> toRemove = [];
             foreach (T item in items)
             {
                 if (item.IFD == ifd)
@@ -534,7 +534,7 @@ namespace ExifLibrary
             }
             else
             {
-                lookup[item.Tag] = new List<T>() { item };
+                lookup[item.Tag] = [item];
             }
         }
 
@@ -569,7 +569,7 @@ namespace ExifLibrary
             }
             else
             {
-                lookup[item.Tag] = new List<T>() { genericItem };
+                lookup[item.Tag] = [genericItem];
             }
         }
         /// <summary>
@@ -599,7 +599,7 @@ namespace ExifLibrary
             {
                 return lookupitems as List<ExifProperty>;
             }
-            return new List<ExifProperty>();
+            return [];
         }
         /// <summary>
         /// Sets an item in the collection.
@@ -618,7 +618,7 @@ namespace ExifLibrary
             }
             var genericItem = item as T;
             items.Add(genericItem);
-            lookup[item.Tag] = new List<T>() { genericItem };
+            lookup[item.Tag] = [genericItem];
         }
         #endregion
     }

@@ -198,7 +198,7 @@ namespace ExifLibrary
         /// <returns>Sub arrays splitted at the separator.</returns>
         public static List<byte[]> SplitByteArray(byte[] data, byte seperator)
         {
-            List<byte[]> output = new List<byte[]>();
+            List<byte[]> output = [];
             int lastSepIndex = -1;
             int sepIndex = -1;
             for (int i = 0; i < data.Length; i++)

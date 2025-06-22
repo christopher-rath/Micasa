@@ -8,6 +8,8 @@
 // Warranty: None, see the license.
 #endregion
 using LiteDB;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace Micasa
@@ -56,17 +58,42 @@ namespace Micasa
             // Pause for 10 seconds to allow the picture scanner time to get itself fully 
             // up and running.
             Thread.Sleep(10000);
+
+            Debug.WriteLine("DeletedScanner: starting scanner.");
+            // Open the database.
             using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
             {
                 ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
                 ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
 
-                if (!myCancelToken.IsCancellationRequested)
+                // Iterate through the photos in the PhotoCol table, newest to oldest
+                // ModificationDate date, and check if the file exists.  If the file
+                // does not exist then delete the record from the table.
+
+                var query = PhotoCol.Query()
+                    .OrderByDescending(x => x.ModificationDate)
+                    .ToEnumerable();
+
+                foreach (var photo in query.ToList())
                 {
-                    // The actions to be taken.  Until there is work to be done this
-                    // scanner simply falls through and stops running.
+                    if (myCancelToken.IsCancellationRequested)
+                    {
+                        // Stop the scan if the cancellation token has been set.
+                        break;
+                    }
+                    else
+                    {
+                        Debug.WriteLine("DeletedScanner: checking for file: " + photo.FQFilename);
+                        if (!System.IO.File.Exists(photo.FQFilename))
+                        {
+                            // The file does not exist, so delete the record from the table.
+                            Debug.WriteLine("DeletedScanner: Deleting record for file: " + photo.FQFilename);
+                            PhotoCol.Delete(photo.Id);
+                        }
+                    }
                 }
             }
+            Debug.WriteLine("DeletedScanner: scanner complete.");
         }
     }
 }

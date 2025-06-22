@@ -56,7 +56,7 @@ namespace ExifLibrary
         /// </summary>
         /// <param name="marker">The marker byte representing the section.</param>
         public JPEGSection(JPEGMarker marker)
-            : this(marker, new byte[0], new byte[0])
+            : this(marker, [], [])
         {
             ;
         }

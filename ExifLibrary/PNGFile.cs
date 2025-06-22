@@ -41,7 +41,7 @@ namespace ExifLibrary
         protected internal PNGFile(MemoryStream stream, System.Text.Encoding encoding)
         {
             Format = ImageFileFormat.PNG;
-            Chunks = new List<PNGChunk>();
+            Chunks = [];
             Encoding = encoding;
             BitConverterEx conv = BitConverterEx.BigEndian;
 
@@ -103,7 +103,7 @@ namespace ExifLibrary
             // Add end chunk if it does not exist
             if (Chunks[^1].Type != "IEND")
             {
-                Chunks.Add(new PNGChunk("IEND", new byte[0]));
+                Chunks.Add(new PNGChunk("IEND", []));
             }
 
             // Save metadata

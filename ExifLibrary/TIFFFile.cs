@@ -112,7 +112,7 @@ namespace ExifLibrary
         protected internal TIFFFile(MemoryStream stream, System.Text.Encoding encoding)
         {
             Format = ImageFileFormat.TIFF;
-            IFDs = new List<ImageFileDirectory>();
+            IFDs = [];
             Encoding = encoding;
 
             // Read the entire stream

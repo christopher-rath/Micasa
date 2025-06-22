@@ -36,7 +36,7 @@ namespace Micasa
         // return an empty string.
         public static readonly string ComputerPath = System.IO.Path.GetDirectoryName(DesktopPath);
         public static readonly string ThisPCStr = " > This PC > ";
-        private Dictionary<string, WatchType> _FolderList = new();
+        private Dictionary<string, WatchType> _FolderList = [];
         private bool _WriteLocked = false;
 #pragma warning disable CA2211 // Non-constant fields should not be visible
         // The single instance of WatchedLists (Singleton design pattern).
@@ -51,7 +51,7 @@ namespace Micasa
         /// </summary>
         private WatchedLists()
         { 
-            string[] emptyFile = { "" };
+            string[] emptyFile = [""];
             StreamReader reader;
 
             // We'll initalise each file so that the code that follows doesn't need to worry
@@ -186,7 +186,7 @@ namespace Micasa
         {
             get
             {
-                List<string> theList = new();
+                List<string> theList = [];
 
                 foreach (var item in FolderList)
                 {
@@ -195,7 +195,7 @@ namespace Micasa
                         theList.Add(item.Key);
                     }
                 }
-                return theList.ToArray();
+                return [.. theList];
             }
         }
 
@@ -206,7 +206,7 @@ namespace Micasa
         {
             get
             {
-                List<string> theList = new();
+                List<string> theList = [];
 
                 foreach (var item in FolderList)
                 {
@@ -215,7 +215,7 @@ namespace Micasa
                         theList.Add(item.Key);
                     }
                 }
-                return theList.ToArray();
+                return [.. theList];
             }
         }
 
@@ -226,7 +226,7 @@ namespace Micasa
         {
             get
             {
-                List<string> theList = new();
+                List<string> theList = [];
 
                 foreach (var item in FolderList)
                 {
@@ -235,7 +235,7 @@ namespace Micasa
                         theList.Add(item.Key);
                     }
                 }
-                return theList.ToArray();
+                return [.. theList];
             }
         }
 

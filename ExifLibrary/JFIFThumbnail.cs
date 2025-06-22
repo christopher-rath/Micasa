@@ -44,8 +44,8 @@ namespace ExifLibrary
         #region Constructors
         protected JFIFThumbnail()
         {
-            Palette = new byte[0];
-            PixelData = new byte[0];
+            Palette = [];
+            PixelData = [];
         }
 
         public JFIFThumbnail(ImageFormat format, byte[] data)

@@ -94,7 +94,7 @@ namespace ExifLibrary
         {
             get
             {
-                return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.BYTE, 1, new byte[] { mValue });
+                return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.BYTE, 1, [mValue]);
             }
         }
     }
@@ -162,7 +162,7 @@ namespace ExifLibrary
         {
             get
             {
-                return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.SBYTE, 1, new byte[] { (byte)mValue });
+                return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.SBYTE, 1, [(byte)mValue]);
             }
         }
     }
@@ -395,7 +395,7 @@ namespace ExifLibrary
 
         public uint[] ToArray()
         {
-            return new uint[] { mValue.Numerator, mValue.Denominator };
+            return [mValue.Numerator, mValue.Denominator];
         }
 
         public ExifURational(ExifTag tag, uint numerator, uint denominator)
@@ -592,7 +592,7 @@ namespace ExifLibrary
 
         public int[] ToArray()
         {
-            return new int[] { mValue.Numerator, mValue.Denominator };
+            return [mValue.Numerator, mValue.Denominator];
         }
 
         public ExifSRational(ExifTag tag, int numerator, int denominator)

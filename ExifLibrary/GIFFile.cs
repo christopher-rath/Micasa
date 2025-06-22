@@ -90,7 +90,7 @@ namespace ExifLibrary
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
             Format = ImageFileFormat.GIF;
 
-            Blocks = new List<GIFBlock>();
+            Blocks = [];
 
             var conv = BitConverterEx.LittleEndian;
             stream.Seek(0, SeekOrigin.Begin);
@@ -479,7 +479,7 @@ namespace ExifLibrary
         /// <param name="stream">A stream that contains image data.</param>
         protected byte[][] ReadDataBlock(MemoryStream stream)
         {
-            List<byte[]> data = new List<byte[]>();
+            List<byte[]> data = [];
             while (true)
             {
                 int val = stream.ReadByte();
@@ -487,7 +487,7 @@ namespace ExifLibrary
                 byte count = (byte)val;
                 data.Add(Utility.GetStreamBytes(stream, count));
             }
-            return data.ToArray();
+            return [.. data];
         }
         /// <summary>
         /// Writes data sub-blocks.

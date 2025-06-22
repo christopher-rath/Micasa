@@ -37,8 +37,8 @@ namespace ExifLibrary
         /// </summary>
         public ImageFileDirectory()
         {
-            Fields = new List<ImageFileDirectoryEntry>();
-            Strips = new List<TIFFStrip>();
+            Fields = [];
+            Strips = [];
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace ExifLibrary
             ImageFileDirectory ifd = new ImageFileDirectory();
             BitConverterEx conv = new BitConverterEx(byteOrder, BitConverterEx.SystemByteOrder);
 
-            List<uint> stripOffsets = new List<uint>();
-            List<uint> stripLengths = new List<uint>();
+            List<uint> stripOffsets = [];
+            List<uint> stripLengths = [];
 
             // Count
             ushort fieldcount = conv.ToUInt16(data, offset);

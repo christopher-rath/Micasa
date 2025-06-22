@@ -106,6 +106,7 @@ namespace Micasa
                     try
                     {
                         // Create IniFile objects for the .Micasa and .Picasa files in this folder.
+                        // TO DO: We only create a .Picasa file if we're in Legacy mode.
                         bool PicasaIniExists = File.Exists(wPath + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
                         IniFile DotPicasa = new(wPath + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
                         IniFile DotMicasa = new(wPath + Path.DirectorySeparatorChar + Constants.sMcDotMicasa);
@@ -162,10 +163,10 @@ namespace Micasa
                 {
                     // Create IniFile objects for the .Micasa and .Picasa files in this folder.
                     bool PicasaIniExists = File.Exists(d + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
-                    IniFile DotPicasa = new(d + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
-                    IniFile DotMicasa = new(d + Path.DirectorySeparatorChar + Constants.sMcDotMicasa);
+                    IniFile DotPicasa = new(d + Path.DirectorySeparatorChar + Constants.sMcDotPicasa); // TODO: shouldn't create these until after 
+                    IniFile DotMicasa = new(d + Path.DirectorySeparatorChar + Constants.sMcDotMicasa); //       folder disposition established.
 
-                    Debug.WriteLine("Folder disposition: " + d + " ==> " + WatchedLists.FolderDisposition(d));
+                    Debug.WriteLine( "Folder disposition: " + d + " ==> " + WatchedLists.FolderDisposition(d));
                     if (WatchedLists.FolderDisposition(d) == WatchType.Watched)
                     {
                         foreach (string f in Directory.GetFiles(d))
