@@ -3,6 +3,7 @@
 dotnet_diagnostic.IDE0007.severity = none
 dotnet_diagnostic.IDE0008.severity = none
 dotnet_diagnostic.IDE0079.severity = none
+dotnet_diagnostic.IDE0290.severity = none
 dotnet_diagnostic.CA1805.severity = none
 end_of_line = lf
 
