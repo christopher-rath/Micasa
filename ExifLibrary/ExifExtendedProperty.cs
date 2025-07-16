@@ -141,7 +141,10 @@ namespace ExifLibrary
 
         static public implicit operator DateTime(ExifDateTime obj) { return obj.mValue; }
 
-        public override string ToString() { return mValue.ToString("yyyy.MM.dd HH:mm:ss"); }
+        public override string ToString()
+        {
+            return mValue.ToString("yyyy.MM.dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+        }
 
         public ExifDateTime(ExifTag tag, DateTime value)
             : base(tag)
@@ -170,7 +173,10 @@ namespace ExifLibrary
 
         static public implicit operator DateTime(ExifDate obj) { return obj.mValue; }
 
-        public override string ToString() { return mValue.ToString("yyyy.MM.dd"); }
+        public override string ToString()
+        {
+            return mValue.ToString("yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture);
+        }
 
         public ExifDate(ExifTag tag, DateTime value)
             : base(tag)
@@ -223,7 +229,7 @@ namespace ExifLibrary
                 {
                     byte[] data = new byte[4];
                     for (int i = 0; i < 4; i++)
-                        data[i] = byte.Parse(mValue[0].ToString());
+                        data[i] = byte.Parse(mValue[0].ToString(), System.Globalization.CultureInfo.InvariantCulture);
                     return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.UNDEFINED, 4, data);
                 }
             }
@@ -266,7 +272,7 @@ namespace ExifLibrary
         public override string ToString()
         {
             StringBuilder sb = new();
-            sb.AppendFormat("({0:d}, {1:d})", mValue[0], mValue[1]);
+            sb.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "({0:d}, {1:d})", mValue[0], mValue[1]);
             return sb.ToString();
         }
 
@@ -295,7 +301,7 @@ namespace ExifLibrary
         public override string ToString()
         {
             StringBuilder sb = new();
-            sb.AppendFormat("({0:d}, {1:d}) {2:d}", mValue[0], mValue[1], mValue[2]);
+            sb.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "({0:d}, {1:d}) {2:d}", mValue[0], mValue[1], mValue[2]);
             return sb.ToString();
         }
 
