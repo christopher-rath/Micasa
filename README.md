@@ -54,8 +54,8 @@ riff on Picasa.
 
 Micasa is intended to be a photo catalogue and touch-up programme modelled after Google’s 
 Picasa application.  Key features to include:
-* information about the pictures will be stored in .micasa files; modelled after Picasa’s 
-  .picasa files (ASCII files)
+* information about the pictures will be stored in .micasa files (.ini structured files);  
+  modelled after Picasa’s .picasa files (ASCII files)
     - timestamp .micasa updates (inside the file, just below each heading)
 * two levels of .micasa files
 	- with no file prefix the .micasa files applies to all photos in the folder
