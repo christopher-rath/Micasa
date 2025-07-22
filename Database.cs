@@ -322,6 +322,15 @@ namespace Micasa
     /// This DB table is used to track all photos contained in Micasa Watched or One Tine 
     /// folder.
     /// </summary>
+    /// <param name="Id">Unique ID number assigned by LiteDB.</param>
+    /// <param name="Picture">The filename of the picture file (including suffix).</param>
+    /// <param name="Caption">The caption of the photo.</param> 
+    /// <param name="FileType">The type of picture file (JPG, PNG, etc.); generally, the filename suffix.</param> 
+    /// <param name="FQFilename">The fully qualified filename of the picture file; the full path and filename.</param> 
+    /// <param name="Pathname">The full pathname; where the picture file is stored.</param> 
+    /// <param name="ModificationDate">The file's modification date.</param> 
+    /// <param name="Faces">A JSON object containing the faces in the photo and their locations.</param> 
+    /// <param name="Albums">The list of albums in which this photo is included (JSON object).</param> 
     public class PhotosTbl
     {
         public int Id { get; set; }
