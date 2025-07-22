@@ -136,7 +136,7 @@ namespace Micasa
             {
                 string msg = "ERROR: unable to create Micasa roaming folder (" + AppData + System.IO.Path.DirectorySeparatorChar
                             + Constants.sMcAppDataFolder + ").\n\nUnable to continue.";
-                MessageBox.Show(msg, "Roaming Folder Creation Error", MessageBoxButton.OK, MessageBoxImage.Error,
+                MessageBox.Show(msg, "Micasa: Roaming Folder Creation Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
@@ -148,14 +148,14 @@ namespace Micasa
             }
             catch (ArgumentException e)
             {
-                MessageBox.Show(e.Message, "Unexpected ArgumentException Error", MessageBoxButton.OK, MessageBoxImage.Error,
+                MessageBox.Show(e.Message, "Micasa: Unexpected ArgumentException Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
             catch (IOException e)
             {
-                string msg = @"Unexpected IOException error opening the Micasa database (" + e.Message + @").";
-                MessageBox.Show(msg, "Database Open Error", MessageBoxButton.OK, MessageBoxImage.Error,
+                string msg = @"Micasa: Unexpected IOException error opening the Micasa database (" + e.Message + @").";
+                MessageBox.Show(msg, "Micasa: Database Open Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
@@ -168,7 +168,7 @@ namespace Micasa
             catch (Exception e)
             {
                 string msg = $"ERROR: unexpected error starting scanners: {e.Message}\n\nUnable to continue.";
-                MessageBox.Show(msg, "StartScanners Error", MessageBoxButton.OK, MessageBoxImage.Error,
+                MessageBox.Show(msg, "Micasa: StartScanners Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
@@ -181,7 +181,7 @@ namespace Micasa
             catch (Exception e)
             {
                 string msg = $"ERROR: unexpected error setting up FileSystemWatchers for watched folders: {e.Message}\n\nUnable to continue.";
-                MessageBox.Show(msg, "FileSystemWatcher Creation Error", MessageBoxButton.OK, MessageBoxImage.Error,
+                MessageBox.Show(msg, "Micasa: FileSystemWatcher Creation Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
