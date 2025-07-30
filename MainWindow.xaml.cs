@@ -160,7 +160,7 @@ namespace Micasa
                 this.Close();
             }
 
-            // Start the new/uppated/deleted picture scanner.
+            // Start the new/updated/deleted picture scanner.
             try
             {
                 StartScanners();
