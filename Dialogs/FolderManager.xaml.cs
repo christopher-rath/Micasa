@@ -48,7 +48,8 @@ namespace Micasa
             MainWindow.Stopscanners();
             MainWindow.StopWatchers();
 
-            // Load special folders before loading the filesystem.
+            // Load special folders (ThisPC & children) before loading the filesystem (drives).
+            // ThisPC will be the first entry in the TreeView.
             anItem = new TreeViewItem
             {
                 Header = WatchedLists.ThisPCStr,
@@ -59,7 +60,7 @@ namespace Micasa
             anItem.Expanded += new RoutedEventHandler(Folder_Expanded);
             //anItem.Collapsed += new RoutedEventHandler(folder_Collapsed);
             foldersItem.Items.Add(anItem);
-            myCompItem = (TreeViewItem)foldersItem.Items[0];
+            myCompItem = (TreeViewItem)foldersItem.Items[0]; // Remember the first entry in the TreeView item.
 
             // Now load the file system items...
             foreach (var d in System.IO.DriveInfo.GetDrives())
@@ -87,6 +88,7 @@ namespace Micasa
                     foldersItem.Items.Add(anItem);
                 }
             }
+            // Expand the ThisPC item and all its children.
             myCompItem.IsExpanded = true;
             foreach (var item in myCompItem.Items)
             {
