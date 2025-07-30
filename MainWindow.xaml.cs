@@ -226,7 +226,7 @@ namespace Micasa
         #region Thread_Code
 
         /// <summary>
-        /// Start the new/uppated/deleted picture scanners.  This is done using
+        /// Start the new/updated/deleted picture scanners.  This is done using
         /// two separate scanners: one for new/updated pictures and one for deleted
         /// pictures.  The two scanners are started in separate threads.
         /// </summary>
