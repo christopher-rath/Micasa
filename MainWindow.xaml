@@ -13,7 +13,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Micasa"
-    Title="Micasa" SizeToContent="WidthAndHeight" MinHeight="100" MinWidth="550" Closing="Window_Closing">
+        Title="Micasa" SizeToContent="WidthAndHeight" MinHeight="100" MinWidth="550" 
+        Closing="Window_Closing" Loaded="Window_Loaded">
 
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:MainWindow.AboutCmd}" CanExecute="AboutCmdCanExecute" Executed="AboutCmdExecuted" />
