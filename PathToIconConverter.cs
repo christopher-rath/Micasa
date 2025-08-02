@@ -50,10 +50,11 @@ namespace Micasa
         public object Convert(object path, Type targetType, object parameter, CultureInfo culture)
 #pragma warning restore CA1725 // Parameter names should match base declaration
         {
-            string pathStr = (path as string);
+            string pathStr = (path as string) ??
+                throw new ArgumentNullException(nameof(path), "PathToIconConverter: path cannot be null");
 
             pathStr = pathStr.RmPrefix(WatchedLists.ThisPCStr);
-            if (pathStr.EndsWith(@":\", StringComparison.Ordinal))
+            if (pathStr.EndsWith(@":\", StringComparison.Ordinal) || pathStr.EndsWith(':'))
             {
                 return driveBitmap;
             }
