@@ -351,7 +351,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TabControl x:Name="MainWindowTabs" Grid.Column="0" MinHeight="200" >
+            <TabControl x:Name="MainWindowTabs" Grid.Column="0" MinHeight="200" MinWidth="160">
                 <TabItem Header="Fol_ders">
                     <TreeView x:Name="dbFoldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="DbFoldersItem_SelectedItemChanged" Width="Auto" >
                         <TreeView.Resources>
@@ -360,14 +360,6 @@
                                     <Setter.Value>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <Image Name="watchStatus" MaxWidth="16" MaxHeight="16" Stretch="Uniform" 
-                                                   Source="{Binding 
-                                                     RelativeSource={RelativeSource 
-                                                                     Mode=FindAncestor, 
-                                                                     AncestorType={x:Type TreeViewItem}}, 
-                                                     Path=Tag, 
-                                                     Converter={x:Static local:WatchListToIconConverter.Instance}}"       
-                                        />
                                                 <Image Name="folderImg"  MaxWidth="20" MaxHeight="20" Stretch="Uniform"
                                                    Source="{Binding 
                                                      RelativeSource={RelativeSource 
