@@ -8,13 +8,18 @@
 // Warranty: None, see the license.
 #endregion
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
-using System.Threading;
-using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Shapes;
+using LiteDB;
+using static Micasa.FolderManagerWindow;
 
 namespace Micasa
 {
@@ -32,8 +37,12 @@ namespace Micasa
         private static readonly PictureWatcher _ActiveWatchers = new();
         private static CancellationTokenSource PictureProcessorCancellationSource = new();
         private static CancellationToken PictureProcessorCancellationToken = PictureProcessorCancellationSource.Token;
+        private static CancellationTokenSource FolderTabCancellationSource = new();
+        private static CancellationToken FolderTabCancellationToken = FolderTabCancellationSource.Token;
         private TreeViewItem SelectedItem = null;
         private string SelectedFolderSaved = null;
+        // Change the declaration of dummyNode from instance to static
+        private static readonly object dummyNode = null;
 
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -204,6 +213,9 @@ namespace Micasa
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            FolderTabCancellationSource = new CancellationTokenSource();
+            FolderTabCancellationToken = FolderTabCancellationSource.Token;
+            Task.Run(() => StartFolderTab(FolderTabCancellationToken), FolderTabCancellationToken);
         }
 
         /// <summary>
@@ -220,6 +232,7 @@ namespace Micasa
         {
             Stopscanners();
             _ActiveWatchers.StopWatchers();
+            StopMainWindowTabs();
         }
         #endregion Event_Handlers
 
@@ -292,6 +305,54 @@ namespace Micasa
         #endregion Thread_Code
 
         #region MainWindowFolderList
+        public static void StartFolderTab(object token)
+        {
+            CancellationToken myCancelToken = (CancellationToken)token;
+
+            // Populate the Folders tab with the folders that contain photos that
+            // Micasa has discovered.
+            // For each Pathname in the FoldersCol database table, create a TreeViewItem.
+            Debug.WriteLine("StartFolderTab: populating TreeView.");
+            // Open the database.
+            using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
+            {
+                ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
+                ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
+
+                //TreeViewItem anItem = null;
+                // Iterate through the Pathname entries in FolderCol database table, ascending alphanumeric order.
+                var query = FolderCol.Query()
+                    .OrderBy(x => x.Pathname)
+                    .ToEnumerable();
+
+                foreach (var folderRow in query.ToList())
+                {
+                    if (myCancelToken.IsCancellationRequested)
+                    {
+                        // Stop populating the tab if the cancellation token has been set.
+                        break;
+                    }
+                    else
+                    {
+                        Debug.WriteLine("StartFolderTab: adding to TreeView: " + folderRow.Pathname);
+
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            AddPathToTree(Instance.dbFoldersItem, folderRow.Pathname);
+                        });
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Public method to call to stop the threads that populate the MainWindow tabs.
+        /// </summary>
+        public static void StopMainWindowTabs()
+        {
+            FolderTabCancellationSource.Cancel();
+        }
+
         private void DbFoldersItem_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeView tree = (TreeView)sender;
@@ -305,6 +366,43 @@ namespace Micasa
 
         #region Utility_Functions
         /// <summary>
+        /// Adds a hierarchical path to the specified <see cref="TreeView"/> control, creating any missing nodes.
+        /// </summary>
+        /// <remarks>
+        /// This method splits the <paramref name="path"/> into individual folder names
+        /// using the directory separator character. It then iteratively traverses or creates <see cref="TreeViewItem"/>
+        /// nodes to represent each folder in the hierarchy. If a folder node already exists, it is reused; otherwise, a
+        /// new node is created.
+        /// </remarks>
+        /// <param name="treeView">The <see cref="TreeView"/> control to which the path will be added.</param>
+        /// <param name="path">The file system path to add, represented as a string with directory separators.</param>
+        static void AddPathToTree(TreeView treeView, string path)
+        {
+            string[] folders = path.Split(System.IO.Path.DirectorySeparatorChar);
+            ItemCollection currentItems = treeView.Items;
+            foreach (string folder in folders)
+            {
+                TreeViewItem existingItem = null;
+                foreach (TreeViewItem item in currentItems)
+                {
+                    if ((string)item.Header == folder)
+                    {
+                        existingItem = item;
+                        break;
+                    }
+                }
+                if (existingItem == null)
+                {
+                    existingItem = new TreeViewItem { Header = folder, 
+                                                      Tag = folder, 
+                                                      FontWeight = FontWeights.Regular };
+                    currentItems.Add(existingItem);
+                }
+                currentItems = existingItem.Items;
+            }
+        }
+        
+        /// <summary>
         /// Determine if a directory is writable by the curent process by creating and then deleting
         /// a file in that directory.  Note: unfortunately, Windows and .NET do not provide any better
         /// way to test for directory writability.
@@ -316,7 +414,7 @@ namespace Micasa
         {
             try
             {
-                using (FileStream fs = File.Create(Path.Combine(dirPath, Path.GetRandomFileName()),
+                using (FileStream fs = File.Create(System.IO.Path.Combine(dirPath, System.IO.Path.GetRandomFileName()),
                                                    1, FileOptions.DeleteOnClose))
                 { }
                 return true;
