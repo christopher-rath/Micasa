@@ -14,6 +14,11 @@ using System.Windows.Media.Imaging;
 
 namespace Micasa
 {
+    /// <summary>
+    /// This IValueConverter is called by the TreeView in the FolderManager dialog to
+    /// determine what icon to display beside each folder in the list (that is, the
+    /// folder's watch status).
+    /// </summary>
     [ValueConversion(typeof(string), typeof(BitmapImage))]
     public class WatchListToIconConverter : IValueConverter
     {
@@ -23,7 +28,6 @@ namespace Micasa
         private static readonly BitmapImage excludeBitmap = new(new Uri("pack://application:,,,/Resources/Exclude.png"));
         private static readonly BitmapImage oneTimeBitmap = new(new Uri("pack://application:,,,/Resources/OneTime.png"));
         private static readonly BitmapImage watchedBitmap = new(new Uri("pack://application:,,,/Resources/Watched.png"));
-        private static readonly Random rnd = new();
 #pragma warning disable CA2211 // Non-constant fields should not be visible
         // The single instance of WatchListToIconConverter.
         public static WatchListToIconConverter Instance = new();
