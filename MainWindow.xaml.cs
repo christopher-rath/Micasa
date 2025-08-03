@@ -439,6 +439,10 @@ namespace Micasa
         /// The menu items in MainWindow.xaml file are almost completely built-out to match
         /// Picasa's menus; but where a menu item is not yet implemented, it has been 
         /// disabled using the the CanExecute method.
+        /// 
+        /// The XAML code is configured to use the BooleanToCollapsedVisibilityConverter to
+        /// determine whether or not to show the menu item.  If the menu item's CanExecute
+        /// method returns false, then the menu item is hidden (collapsed).
         /// </summary>
 
         // AboutCmd
