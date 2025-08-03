@@ -15,6 +15,10 @@ using StringExtensions;
 
 namespace Micasa
 {
+    /// <summary>
+    /// This IValueConverter is called by the TreeView lists in both the FolderManager dialog
+    /// and the MainWindow FolderTab to determine what icon to display beside each folder name.
+    /// </summary>
     [ValueConversion(typeof(string), typeof(BitmapImage))]
     public class PathToIconConverter : IValueConverter
     {

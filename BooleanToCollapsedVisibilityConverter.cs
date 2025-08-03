@@ -13,6 +13,13 @@ using System.Windows.Data;
 
 namespace Micasa
 {
+    /// <summary>
+    /// This IValueConverter is called by the UI to determine the visibility of 
+    /// an item in the menubar.  The XAML code is configured to call this method
+    /// to determine whether to show or hide the item based on the value returned
+    /// by the items CanExecute method.  Where the CanExecute method returns
+    /// false, the menu item is hidden.
+    /// </summary>
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class BooleanToCollapsedVisibilityConverter : IValueConverter
     {
