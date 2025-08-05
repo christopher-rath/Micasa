@@ -203,7 +203,7 @@ namespace Micasa
         //
         //    item.Items.Clear();
         //    item.Items.Add(dummyNode);
-        //}
+        //} 
 
         private void Folder_Expanded(object sender, RoutedEventArgs e)
         {
@@ -271,36 +271,6 @@ namespace Micasa
             string path = ((string)item.Tag).RmPrefix(WatchedLists.ThisPCStr);
 
             SelectedItem = item;
-            #region TreeWalkExample
-            // This code shows how to walk back up the tree structure to 
-            // assemble a full "path" from the root to the selected node;
-            // however, that is not necessary in Micasa becuase we assign
-            // the full path in the ListViewITem.Tag property.
-            //if (item != null)
-            //{
-            //    SelectedImagePath = "";
-            //    string temp1 = "";
-            //    string temp2 = "";
-
-            //    while (true)
-            //    {
-            //        temp1 = item.Header.ToString();
-            //        if (temp1.Contains(System.IO.Path.DirectorySeparatorChar))
-            //        {
-            //            temp2 = "";
-            //        }
-            //        SelectedImagePath = temp1 + temp2 + SelectedImagePath;
-            //        if (item.Parent.GetType().Equals(typeof(TreeView)))
-            //        {
-            //            break;
-            //        }
-            //        item = ((TreeViewItem)item.Parent);
-            //        temp2 = System.IO.Path.DirectorySeparatorChar;
-            //    }
-            //// Show user selected path
-            //MessageBox.Show(SelectedImagePath);
-            //}
-            #endregion
 
             SelectedFolderSaved = path;
             // Set blindSet = true so that as tha rbMonitor values are set for display
