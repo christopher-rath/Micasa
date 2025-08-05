@@ -64,3 +64,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "<Pending>", Scope = "namespace", Target = "~N:RichTextBoxExtensions")]
 [assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "<Pending>", Scope = "namespace", Target = "~N:StringExtensions")]
 [assembly: SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "<Pending>", Scope = "member", Target = "~F:Micasa.BooleanToCollapsedVisibilityConverter.Instance")]
+[assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Personal coding style preference is to use the robust using{} statement.", Scope = "member", Target = "~M:Micasa.MainWindow.StartFolderTab(System.Object)")]
+[assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Personal coding style preference is to use the robust using{} statement.", Scope = "member", Target = "~M:Micasa.MainWindow.DbFoldersItem_Selected(System.Object,System.Windows.RoutedEventArgs)")]

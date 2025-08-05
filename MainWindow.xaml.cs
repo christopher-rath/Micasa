@@ -8,6 +8,7 @@
 // Warranty: None, see the license.
 #endregion
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LiteDB;
 using static Micasa.FolderManagerWindow;
@@ -41,8 +43,6 @@ namespace Micasa
         private static CancellationToken FolderTabCancellationToken = FolderTabCancellationSource.Token;
         private TreeViewItem SelectedItem = null;
         private string SelectedFolderSaved = null;
-        // Change the declaration of dummyNode from instance to static
-        private static readonly object dummyNode = null;
 
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -310,16 +310,15 @@ namespace Micasa
             CancellationToken myCancelToken = (CancellationToken)token;
 
             // Populate the Folders tab with the folders that contain photos that
-            // Micasa has discovered.
-            // For each Pathname in the FoldersCol database table, create a TreeViewItem.
+            // Micasa has discovered; that is, for each Pathname in the FoldersCol
+            // database table, create a TreeViewItem.
             Debug.WriteLine("StartFolderTab: populating TreeView.");
             // Open the database.
             using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
             {
-                ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
+                //ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
                 ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
 
-                //TreeViewItem anItem = null;
                 // Iterate through the Pathname entries in FolderCol database table, ascending alphanumeric order.
                 var query = FolderCol.Query()
                     .OrderBy(x => x.Pathname)
@@ -362,6 +361,58 @@ namespace Micasa
             SelectedItem = item;
             SelectedFolderSaved = path;
         }
+
+        private void DbFoldersItem_Selected(object sender, RoutedEventArgs e)
+        {
+            // Walk back up the tree to assemble the full path of the selected folder.
+            if (e.OriginalSource is TreeViewItem item)
+            {
+                var stack = new Stack<string>();
+                TreeViewItem current = item;
+                while (current != null)
+                {
+                    if (current.Tag is string folder)
+                    {
+                        stack.Push(folder);
+                    }
+                    current = ItemsControl.ItemsControlFromItemContainer(current) as TreeViewItem;
+                }
+                string path = string.Join(System.IO.Path.DirectorySeparatorChar, stack);
+
+                //MessageBox.Show($"Item clicked: {path}");
+                Debug.WriteLine($"DbFoldersItem_Selected: Item clicked: {path}.");
+                Debug.WriteLine("DbFoldersItem_Selected: ...retrieving photos.");
+                // Open the database.
+                using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
+                {
+                    ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
+                    //ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
+
+                    // Iterate through the entries in PhotoCol database table, where the Pathname equals
+                    // the TreeView path, sorted in ascending alphanumeric order.
+                    var query = PhotoCol.Query()
+                        .Where(x => x.Pathname.Equals(path, StringComparison.Ordinal))
+                        .OrderBy(x => x.Picture)
+                        .ToEnumerable();
+
+                    // Clear the MainWindowPhotos Listbox.
+                    MainWindowPhotos.Items.Clear();
+
+                    foreach (var photoRow in query.ToList())
+                    {
+                        // Add the photo to the MainWindowPhotos Listbox as a ListboxItem.
+                        Debug.WriteLine($"DbFoldersItem_Selected: adding photo to PhotoList: {photoRow.Picture}");
+                        Uri uri = new Uri(photoRow.FQFilename);
+                        MainWindowPhotos.Items.Add(new BitmapImage(uri));
+                    }
+                }
+            } else
+            {
+                Debug.WriteLine("DbFoldersItem_Selected: e.OriginalSource is not a TreeViewItem.");
+                MessageBox.Show("DbFoldersItem_Selected: e.OriginalSource is not a TreeViewItem.");
+            }
+        }
+        
         #endregion MainWindowFolderList
 
         #region Utility_Functions
@@ -395,7 +446,8 @@ namespace Micasa
                 {
                     existingItem = new TreeViewItem { Header = folder, 
                                                       Tag = folder, 
-                                                      FontWeight = FontWeights.Regular };
+                                                      FontWeight = FontWeights.Regular,
+                                                      IsExpanded = true };
                     currentItems.Add(existingItem);
                 }
                 currentItems = existingItem.Items;
