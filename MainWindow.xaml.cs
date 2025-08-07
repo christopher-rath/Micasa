@@ -342,6 +342,7 @@ namespace Micasa
                         });
                     }
                 }
+                Application.Current.Dispatcher.Invoke(() => SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder));
             }
         }
 
@@ -457,6 +458,36 @@ namespace Micasa
             }
         }
         
+        public static void SelectAFolder(TreeView treeView, string path)
+        {
+            // Split the path into folders.
+            string[] folders = path.Split(System.IO.Path.DirectorySeparatorChar);
+            TreeViewItem node = null;
+            // Traverse the TreeView to find the item that matches the path.
+            foreach (string folder in folders)
+            {
+                if (node == null)
+                {
+                    node = treeView.Items.OfType<TreeViewItem>()
+                        .FirstOrDefault(item => (string)item.Header == folder);
+                }
+                else
+                {
+                    node.IsExpanded = true;
+                    node = node.Items.OfType<TreeViewItem>()
+                        .FirstOrDefault(item => (string)item.Header == folder);
+                }
+                if (node == null)
+                {
+                    break; // Folder not found, exit loop.
+                }
+            }
+            if (node != null)
+            {
+                node.IsSelected = true;
+            }
+        }   
+
         /// <summary>
         /// Determine if a directory is writable by the curent process by creating and then deleting
         /// a file in that directory.  Note: unfortunately, Windows and .NET do not provide any better
