@@ -39,6 +39,7 @@ namespace Micasa
         public static readonly string iniFileNm = HomeFolder + Path.DirectorySeparatorChar + Constants.sAppIniFileNm;
         private AppMode _MyAppMode = AppMode.Migrate;
         private bool _UpdPhotoFiles = false;
+        private string _LastSelectedFolder = string.Empty;
         private readonly IniFile iniFile = new(iniFileNm);
         private readonly AppMode defaultAppMode = AppMode.Migrate;
 #pragma warning disable CA2211
@@ -73,6 +74,7 @@ namespace Micasa
                 _MyAppMode = DefaultAppMode;
             }
             _UpdPhotoFiles = iniFile.GetBool(Constants.sMcScMicasa, Constants.sMcUpdPhotoFiles, _UpdPhotoFiles);
+            _LastSelectedFolder = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedFolder, _LastSelectedFolder);
         }
 
         #region GetterSetters
@@ -204,6 +206,16 @@ namespace Micasa
             {
                 _UpdPhotoFiles = value;
                 iniFile.SetBool(Constants.sMcScMicasa, Constants.sMcUpdPhotoFiles, _UpdPhotoFiles);
+            }
+        }
+
+        public string LastSelectedFolder
+        {
+            get => _LastSelectedFolder;
+            set
+            {
+                _LastSelectedFolder = value;
+                iniFile.SetString(Constants.sMcScMicasa, Constants.sMcLastSelectedFolder, _LastSelectedFolder);
             }
         }
         #endregion GetterSetters

@@ -52,6 +52,7 @@ namespace Micasa
             tbExcludeFoldersPath.Text = WatchedLists.excludeListFilename;
             tbOneTimeFoldersPath.Text = WatchedLists.oneTimeListFilename;
             tbDatabasePath.Text = Database.DBFilename;
+            tbLastSelectedFolder.Text = Options.Instance.LastSelectedFolder;
             // File Type Tab
             cbOpFileTypeAvi.IsChecked = Options.Instance.FileTypeAvi;
             cbOpFileTypeBmp.IsChecked = Options.Instance.FileTypeBmp;

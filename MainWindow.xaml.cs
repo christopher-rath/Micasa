@@ -21,6 +21,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LiteDB;
+using Windows.Security.Cryptography.Core;
 using static Micasa.FolderManagerWindow;
 
 namespace Micasa
@@ -382,6 +383,8 @@ namespace Micasa
                 //MessageBox.Show($"Item clicked: {path}");
                 Debug.WriteLine($"DbFoldersItem_Selected: Item clicked: {path}.");
                 Debug.WriteLine("DbFoldersItem_Selected: ...retrieving photos.");
+                // Save the last selected folder.
+                Options.Instance.LastSelectedFolder = path;
                 // Open the database.
                 using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
                 {
@@ -1037,6 +1040,9 @@ namespace Micasa
         public const string sMcFT_JpgA = @".jpeg";
         public const string sMcFT_TifA = @".tiff";
 #pragma warning restore CA1707 // Identifiers should not contain underscores
+
+        // Application Saved State
+        public const string sMcLastSelectedFolder = "LastSelectedFolder";
 
         // Application Options
         public const string sMcOpAppMode = @"AppMode";

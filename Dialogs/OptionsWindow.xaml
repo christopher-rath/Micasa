@@ -108,6 +108,7 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -137,9 +138,14 @@
                     <TextBox x:Name="tbExcludeFoldersPath" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
                              VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
 
-                    <Label x:Name="lblDataseLoc" Grid.Row="5" Grid.Column="0" Content="Database Location: " HorizontalAlignment="Right"
+                    <Label x:Name="lblDatabaseLoc" Grid.Row="5" Grid.Column="0" Content="Database Location: " HorizontalAlignment="Right"
                            Margin="0,0,0,0" VerticalAlignment="Top" />
                     <TextBox x:Name="tbDatabasePath" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                             VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+                    
+                    <Label x:Name="lblLastSelectedFolder" Grid.Row="6" Grid.Column="0" Content="Last Selected Photo: " HorizontalAlignment="Right"
+                           Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <TextBox x:Name="tbLastSelectedFolder" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
                              VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
                 </Grid>
             </TabItem>
