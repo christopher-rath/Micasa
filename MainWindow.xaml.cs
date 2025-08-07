@@ -342,7 +342,10 @@ namespace Micasa
                         });
                     }
                 }
-                Application.Current.Dispatcher.Invoke(() => SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder));
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder);
+                });
             }
         }
 
@@ -366,6 +369,8 @@ namespace Micasa
 
         private void DbFoldersItem_Selected(object sender, RoutedEventArgs e)
         {
+            Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = Cursors.Wait);
+
             // Walk back up the tree to assemble the full path of the selected folder.
             if (e.OriginalSource is TreeViewItem item)
             {
@@ -410,13 +415,15 @@ namespace Micasa
                         MainWindowPhotos.Items.Add(new BitmapImage(uri));
                     }
                 }
-            } else
+            }
+            else
             {
                 Debug.WriteLine("DbFoldersItem_Selected: e.OriginalSource is not a TreeViewItem.");
                 MessageBox.Show("DbFoldersItem_Selected: e.OriginalSource is not a TreeViewItem.");
             }
+            Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = null);
         }
-        
+
         #endregion MainWindowFolderList
 
         #region Utility_Functions
