@@ -167,11 +167,19 @@ namespace Micasa
                 WatchedParent = watchedPath,
                 CompletedScan = scanCompleted
             };
+            // Look in the DB to see if there is already a record for this folder.
             var results = fCol.FindOne(x => x.Pathname.Equals(pathname, StringComparison.Ordinal));
 
             if (results == null)
             {
+                // No record was found, so insert the new folder.
                 fCol.Insert(aFolder);
+
+                // We also trigger an update to the MainWindow's FolderListBox.
+                MainWindow.Instance.Dispatcher.Invoke(() =>
+                {
+                    MainWindow.AddPathToTree(MainWindow.Instance.dbFoldersItem, pathname);
+                });
             }
             else
             {

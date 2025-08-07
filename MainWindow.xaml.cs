@@ -427,7 +427,7 @@ namespace Micasa
         /// </remarks>
         /// <param name="treeView">The <see cref="TreeView"/> control to which the path will be added.</param>
         /// <param name="path">The file system path to add, represented as a string with directory separators.</param>
-        static void AddPathToTree(TreeView treeView, string path)
+        public static void AddPathToTree(TreeView treeView, string path)
         {
             string[] folders = path.Split(System.IO.Path.DirectorySeparatorChar);
             ItemCollection currentItems = treeView.Items;
