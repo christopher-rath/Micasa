@@ -18,5 +18,5 @@ using System.Windows;
                                               //(used if a resource is not found in the page,
                                               // app, or any theme specific resource dictionaries)
     ),
-    AssemblyVersion("0.11.*") // --> Also update in "MainWindow.xaml.cs" <--
+    AssemblyVersion("0.12.*") // --> Also update in "MainWindow.xaml.cs" <--
     ]
