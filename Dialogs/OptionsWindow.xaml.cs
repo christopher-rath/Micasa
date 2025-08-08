@@ -7,11 +7,12 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
-using LiteDB;
-using RichTextBoxExtensions;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
+using LiteDB;
+using RichTextBoxExtensions;
 
 namespace Micasa
 {
@@ -47,12 +48,15 @@ namespace Micasa
                     cbUpdPhotoFiles.IsEnabled = true;
                     break;
             }
+            // Info Tab
             tbOpHomeFolderPath.Text = Options.iniFileNm;
             tbWatchedFoldersPath.Text = WatchedLists.watchedListFilename;
             tbExcludeFoldersPath.Text = WatchedLists.excludeListFilename;
             tbOneTimeFoldersPath.Text = WatchedLists.oneTimeListFilename;
             tbDatabasePath.Text = Database.DBFilename;
+            tbLastSelectedLeftTab.Text = Options.Instance.LastSelectedLeftTab;
             tbLastSelectedFolder.Text = Options.Instance.LastSelectedFolder;
+            tbLastSelectedRightTab.Text = Options.Instance.LastSelectedRightTab;
             // File Type Tab
             cbOpFileTypeAvi.IsChecked = Options.Instance.FileTypeAvi;
             cbOpFileTypeBmp.IsChecked = Options.Instance.FileTypeBmp;
@@ -115,18 +119,17 @@ namespace Micasa
 
                 using (LiteDatabase db = new(Database.ConnectionString(Database.DBFilename)))
                 {
-                    using (new WaitCursorIndicator(this))
-                    {
-                        // Stop the picture scanner before we rebuild the DB.
-                        MainWindow.Stopscanners();
-                        // Small DBs rebuild so quickly that adding a short pause provides a
-                        // better user experience (i.e., it makes the busy cursor noticeably
-                        // visible).  It also give the scanners time to stop.
-                        Thread.Sleep(2000);
-                        db.Rebuild();
-                        // Restart the scanners now that the rebuild is done.
-                        MainWindow.StartScanners();
-                    }
+                    Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = Cursors.Wait);
+                    // Stop the picture scanner before we rebuild the DB.
+                    MainWindow.Stopscanners();
+                    // Small DBs rebuild so quickly that adding a short pause provides a
+                    // better user experience (i.e., it makes the busy cursor noticeably
+                    // visible).  It also give the scanners time to stop.
+                    Thread.Sleep(2000);
+                    db.Rebuild();
+                    // Restart the scanners now that the rebuild is done.
+                    MainWindow.StartScanners();
+                    Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = null);
                 }
             }
         }

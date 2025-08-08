@@ -39,7 +39,9 @@ namespace Micasa
         public static readonly string iniFileNm = HomeFolder + Path.DirectorySeparatorChar + Constants.sAppIniFileNm;
         private AppMode _MyAppMode = AppMode.Migrate;
         private bool _UpdPhotoFiles = false;
+        private string _LastSelectedLeftTab = string.Empty;
         private string _LastSelectedFolder = string.Empty;
+        private string _LastSelectedRightTab = string.Empty;
         private readonly IniFile iniFile = new(iniFileNm);
         private readonly AppMode defaultAppMode = AppMode.Migrate;
 #pragma warning disable CA2211
@@ -74,7 +76,9 @@ namespace Micasa
                 _MyAppMode = DefaultAppMode;
             }
             _UpdPhotoFiles = iniFile.GetBool(Constants.sMcScMicasa, Constants.sMcUpdPhotoFiles, _UpdPhotoFiles);
+            _LastSelectedLeftTab = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedLeftTab, _LastSelectedLeftTab);
             _LastSelectedFolder = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedFolder, _LastSelectedFolder);
+            _LastSelectedRightTab = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedRightTab, _LastSelectedRightTab);
         }
 
         #region GetterSetters
@@ -209,6 +213,16 @@ namespace Micasa
             }
         }
 
+        public string LastSelectedLeftTab
+        {
+            get => _LastSelectedLeftTab;
+            set
+            {
+                _LastSelectedLeftTab = value;
+                iniFile.SetString(Constants.sMcScMicasa, Constants.sMcLastSelectedLeftTab, _LastSelectedLeftTab);
+            }
+        }
+
         public string LastSelectedFolder
         {
             get => _LastSelectedFolder;
@@ -216,6 +230,16 @@ namespace Micasa
             {
                 _LastSelectedFolder = value;
                 iniFile.SetString(Constants.sMcScMicasa, Constants.sMcLastSelectedFolder, _LastSelectedFolder);
+            }
+        }
+
+        public string LastSelectedRightTab
+        {
+            get => _LastSelectedRightTab;
+            set
+            {
+                _LastSelectedRightTab = value;
+                iniFile.SetString(Constants.sMcScMicasa, Constants.sMcLastSelectedRightTab, _LastSelectedRightTab);
             }
         }
         #endregion GetterSetters

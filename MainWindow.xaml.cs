@@ -199,6 +199,60 @@ namespace Micasa
 
         #region GetterSetters
         public static string AppData { get; } = Environment.ExpandEnvironmentVariables(@"%APPDATA%");
+
+        /// <summary>
+        /// Return the name of the tab that is active in the left-hand side of the MainWindow.
+        /// </summary>
+        public static string ActiveLeftTab
+        {
+            get
+            {
+                if (Instance.MWFolderTab.IsSelected)
+                {
+                    return Instance.MWFolderTab.Name;
+                }
+                else if (Instance.MWAlbumsTab.IsSelected)
+                {
+                    return Instance.MWAlbumsTab.Name;
+                }
+                else if (Instance.MWLtPeopleTab.IsSelected)
+                {
+                    return Instance.MWLtPeopleTab.Name;
+                }
+                else
+                {
+                    // Default to the Folders tab.
+                    return Instance.MWFolderTab.Name;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return the name of the tab that is active in the left-hand side of the MainWindow.
+        /// </summary>
+        public static string ActiveRightTab
+        {
+            get
+            {
+                if (Instance.MWRtPeopleTab.IsSelected)
+                {
+                    return Instance.MWRtPeopleTab.Name;
+                }
+                else if (Instance.MWDetailsTab.IsSelected)
+                {
+                    return Instance.MWDetailsTab.Name;
+                }
+                else if (Instance.MWMapTab.IsSelected)
+                {
+                    return Instance.MWMapTab.Name;
+                }
+                else
+                {
+                    // Default to the Details tab.
+                    return Instance.MWDetailsTab.Name;
+                }
+            }
+        }
         #endregion GetterSetters
 
         #region Event_Handlers
@@ -233,7 +287,7 @@ namespace Micasa
         {
             Stopscanners();
             _ActiveWatchers.StopWatchers();
-            StopMainWindowTabs();
+            StopNavigationTabs();
         }
         #endregion Event_Handlers
 
@@ -345,6 +399,8 @@ namespace Micasa
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder);
+                    SelectATab(Instance.NavigationTabs, Options.Instance.LastSelectedLeftTab);
+                    SelectATab(Instance.InfoTabs, Options.Instance.LastSelectedRightTab);
                 });
             }
         }
@@ -352,7 +408,7 @@ namespace Micasa
         /// <summary>
         /// The Public method to call to stop the threads that populate the MainWindow tabs.
         /// </summary>
-        public static void StopMainWindowTabs()
+        public static void StopNavigationTabs()
         {
             FolderTabCancellationSource.Cancel();
         }
@@ -423,22 +479,21 @@ namespace Micasa
             }
             Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = null);
         }
+		#endregion MainWindowFolderList
 
-        #endregion MainWindowFolderList
-
-        #region Utility_Functions
-        /// <summary>
-        /// Adds a hierarchical path to the specified <see cref="TreeView"/> control, creating any missing nodes.
-        /// </summary>
-        /// <remarks>
-        /// This method splits the <paramref name="path"/> into individual folder names
-        /// using the directory separator character. It then iteratively traverses or creates <see cref="TreeViewItem"/>
-        /// nodes to represent each folder in the hierarchy. If a folder node already exists, it is reused; otherwise, a
-        /// new node is created.
-        /// </remarks>
-        /// <param name="treeView">The <see cref="TreeView"/> control to which the path will be added.</param>
-        /// <param name="path">The file system path to add, represented as a string with directory separators.</param>
-        public static void AddPathToTree(TreeView treeView, string path)
+		#region Utility_Functions
+		/// <summary>
+		/// Adds a hierarchical path to the specified <see cref="TreeView"/> control, creating any missing nodes.
+		/// </summary>
+		/// <remarks>
+		/// This method splits the <paramref name="path"/> into individual folder names
+		/// using the directory separator character. It then iteratively traverses or creates <see cref="TreeViewItem"/>
+		/// nodes to represent each folder in the hierarchy. If a folder node already exists, it is reused; otherwise, a
+		/// new node is created.
+		/// </remarks>
+		/// <param name="treeView">The <see cref="TreeView"/> control to which the path will be added.</param>
+		/// <param name="path">The file system path to add, represented as a string with directory separators.</param>
+		public static void AddPathToTree(TreeView treeView, string path)
         {
             string[] folders = path.Split(System.IO.Path.DirectorySeparatorChar);
             ItemCollection currentItems = treeView.Items;
@@ -465,6 +520,29 @@ namespace Micasa
             }
         }
         
+        public static void SelectATab(TabControl tabControl, string tabName)
+        {
+            // Find the TabItem with the specified name and select it.
+            foreach (TabItem item in tabControl.Items)
+            {
+                // Ensure that the TabItem has a name.
+                if (string.IsNullOrEmpty(item.Name))
+                {
+                    throw new ArgumentException("TabItem must have a Name property set.");
+                }
+                else 
+                {
+                    Debug.Print($"SelectATab: TabItem Name: '{item.Name}' / tabName: '{tabName}'");
+
+                    if (item.Name.Equals(tabName, StringComparison.Ordinal))
+                    {
+                        tabControl.SelectedItem = item;
+                        return; // Exit once the tab is found and selected.
+                    }
+                } 
+            }
+        }
+
         public static void SelectAFolder(TreeView treeView, string path)
         {
             // Split the path into folders.
@@ -1036,19 +1114,62 @@ namespace Micasa
         {
         }
 
-        #endregion UICode
-    }
+		private void NavigationTabs_GotFocus(object sender, RoutedEventArgs e)
+		{
+			// Determine which TabItem is active and save it in Options.LastSelectedLeftTab
+			if (sender is TabControl tabControl)
+			{
+				if (tabControl.SelectedItem is TabItem selectedTab)
+				{
+					// Save the name of the selected tab.
+					Options.Instance.LastSelectedLeftTab = selectedTab.Name;
+					Debug.WriteLine($"NavigationTabs_GotFocus: Selected tab: {selectedTab.Name}");
+				}
+				else
+				{
+					Debug.WriteLine("NavigationTabs_GotFocus: No tab selected.");
+				}
+			}
+			else
+			{
+				Debug.WriteLine("NavigationTabs_GotFocus: sender is not a TabControl.");
+			}
+		}
+		
+        private void InfoTabs_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Determine which TabItem is active and save it in Options.LastSelectedRightTab
+            if (sender is TabControl tabControl)
+            {
+                if (tabControl.SelectedItem is TabItem selectedTab)
+                {
+                    // Save the name of the selected tab.
+                    Options.Instance.LastSelectedRightTab = selectedTab.Name;
+                    Debug.WriteLine($"InfoTabs_GotFocus: Selected tab: {selectedTab.Name}");
+                }
+                else
+                {
+                    Debug.WriteLine("InfoTabs_GotFocus: No tab selected.");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("InfoTabs_GotFocus: sender is not a TabControl.");
+            }
+        }
+		#endregion UICode
+	}
 
-    /// <summary>
-    /// The global application mode:
-    ///  * Legacy: only use Picasa sidecar files.
-    ///  * Migrate: migrate data contained in Picasa sidecar files into the Micasa 
-    ///    database and Micasa sidecar files.  Don't update/maintain the Picasa
-    ///    sidecar files.
-    ///  * Native: only use Micasa sidecar files (that is, ignore any Picasa 
-    ///    sidecar files).
-    /// </summary>
-    [Flags]
+	/// <summary>
+	/// The global application mode:
+	///  * Legacy: only use Picasa sidecar files.
+	///  * Migrate: migrate data contained in Picasa sidecar files into the Micasa 
+	///    database and Micasa sidecar files.  Don't update/maintain the Picasa
+	///    sidecar files.
+	///  * Native: only use Micasa sidecar files (that is, ignore any Picasa 
+	///    sidecar files).
+	/// </summary>
+	[Flags]
     public enum AppMode
     {
         Legacy,
@@ -1080,7 +1201,10 @@ namespace Micasa
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 
         // Application Saved State
+        public const string sMcLastSelectedLeftTab = "LastSelectedLeftTab";
+        public const string sMcLastSelectedRightTab = "LastSelectedRightTab";
         public const string sMcLastSelectedFolder = "LastSelectedFolder";
+        public const string sMcLastSelectedRightFolder = "LastSelectedRightFolder";
 
         // Application Options
         public const string sMcOpAppMode = @"AppMode";

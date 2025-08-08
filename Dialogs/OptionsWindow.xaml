@@ -102,14 +102,17 @@
             <TabItem Header="Info">
                 <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" /> <!--  0 -->
+                        <RowDefinition Height="auto" /> <!--  1 -->
+                        <RowDefinition Height="auto" /> <!--  2 -->
+                        <RowDefinition Height="auto" /> <!--  3 -->
+                        <RowDefinition Height="auto" /> <!--  4 -->
+                        <RowDefinition Height="auto" /> <!--  5 -->
+                        <RowDefinition Height="auto" /> <!--  6 -->
+                        <RowDefinition Height="auto" /> <!--  7 -->
+                        <RowDefinition Height="auto" /> <!--  8 -->
+                        <RowDefinition Height="auto" /> <!--  9 -->
+                        <RowDefinition Height="*" />    <!-- 10 -->
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="200" />
@@ -142,11 +145,24 @@
                            Margin="0,0,0,0" VerticalAlignment="Top" />
                     <TextBox x:Name="tbDatabasePath" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
                              VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
-                    
-                    <Label x:Name="lblLastSelectedFolder" Grid.Row="6" Grid.Column="0" Content="Last Selected Photo: " HorizontalAlignment="Right"
+
+                    <TextBlock x:Name="tbSavedValues" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left" Margin="15,10,0,0" Text="Micasa Saved Values" FontWeight="Bold" />
+
+                    <Label x:Name="lblLastSelectedLeftTab" Grid.Row="7" Grid.Column="0" Content="Last Selected Left Tab: " HorizontalAlignment="Right"
                            Margin="0,0,0,0" VerticalAlignment="Top" />
-                    <TextBox x:Name="tbLastSelectedFolder" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                    <TextBox x:Name="tbLastSelectedLeftTab" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
                              VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+
+                    <Label x:Name="lblLastSelectedFolder" Grid.Row="8" Grid.Column="0" Content="Last Selected Folder: " HorizontalAlignment="Right"
+                           Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <TextBox x:Name="tbLastSelectedFolder" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                             VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+
+                    <Label x:Name="lblLastSelectedRightTab" Grid.Row="9" Grid.Column="0" Content="Last Selected Right Tab: " HorizontalAlignment="Right"
+                           Margin="0,0,0,0" VerticalAlignment="Top" />
+                    <TextBox x:Name="tbLastSelectedRightTab" Grid.Row="9" Grid.Column="1" HorizontalAlignment="Left" Margin="0,5,0,0"
+                             VerticalAlignment="Top" Width="580" IsReadOnly="True" BorderThickness="0" />
+
                 </Grid>
             </TabItem>
             <TabItem Header="Database"> <!-- Height="22" VerticalAlignment="Bottom"> -->

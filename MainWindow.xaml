@@ -340,9 +340,9 @@
             </MenuItem>
         </Menu>
 
-        <TabControl x:Name="MainWindowTabs" Grid.Row="1" Grid.Column="0" MinHeight="200" Width="250" 
-                    Margin="0,0,0,0" HorizontalAlignment="Left" IsSynchronizedWithCurrentItem="False" >
-            <TabItem Header="Fol_ders">
+        <TabControl x:Name="NavigationTabs" Grid.Row="1" Grid.Column="0" MinHeight="200" Width="250" 
+                    Margin="0,0,0,0" HorizontalAlignment="Left" IsSynchronizedWithCurrentItem="False" GotFocus="NavigationTabs_GotFocus" >
+            <TabItem Header="Fol_ders" x:Name="MWFolderTab" >
                 <TreeView x:Name="dbFoldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="DbFoldersItem_SelectedItemChanged" Width="Auto" >
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem">
@@ -372,9 +372,9 @@
                     </TreeView.Resources>
                 </TreeView>
             </TabItem>
-            <TabItem Header="_Albums">
+            <TabItem Header="_Albums" x:Name="MWAlbumsTab" >
             </TabItem>
-            <TabItem Header="Peop_le">
+            <TabItem Header="Peop_le" x:Name="MWLtPeopleTab" >
             </TabItem>
         </TabControl>
 
@@ -414,12 +414,12 @@
         </ListBox>
 
         <TabControl x:Name="InfoTabs" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" 
-                    Width="250" Margin="0,0,0,0" >
-            <TabItem Header="People">
+                    Width="250" Margin="0,0,0,0" GotFocus="InfoTabs_GotFocus" >
+            <TabItem Header="People" x:Name="MWRtPeopleTab">
             </TabItem>
-            <TabItem Header="Details">
+            <TabItem Header="Details" x:Name="MWDetailsTab">
             </TabItem>
-            <TabItem Header="Map">
+            <TabItem Header="Map" x:Name="MWMapTab" >
             </TabItem>
         </TabControl>
 
