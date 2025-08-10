@@ -20,25 +20,17 @@
         <CommandBinding Command="{x:Static local:MainWindow.AboutCmd}" CanExecute="AboutCmdCanExecute" Executed="AboutCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AddFileCmd}" CanExecute="AddFileCmdCanExecute" Executed="AddFileCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AddFolderCmd}" CanExecute="AddFolderCmdCanExecute" Executed="AddFolderCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.AddToScrnSvrCmd}" CanExecute="AddToScrnSvrCmdCanExecute" Executed="AddToScrnSvrCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AdjustDateCmd}" CanExecute="AdjustDateCmdCanExecute" Executed="AdjustDateCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.AutomaticCmd}" CanExecute="AutomaticCmdCanExecute" Executed="AutomaticCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.BackupCmd}" CanExecute="BackupCmdCanExecute" Executed="BackupCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.BatchUploadCmd}" CanExecute="BatchUploadCmdCanExecute" Executed="BatchUploadCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ConfigButtonsCmd}" CanExecute="ConfigButtonsCmdCanExecute" Executed="ConfigButtonsCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ConfigScrnSavCmd}" CanExecute="ConfigScrnSavCmdCanExecute" Executed="ConfigScrnSavCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ConfigViewCmd}" CanExecute="ConfigViewCmdCanExecute" Executed="ConfigViewCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.CreateGCDCmd}" CanExecute="CreateGCDCmdCanExecute" Executed="CreateGCDCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.DeleteCmd}" CanExecute="DeleteCmdCanExecute" Executed="DeleteCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.EditDescCmd}" CanExecute="EditDescCmdCanExecute" Executed="EditDescCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.EditViewCmd}" CanExecute="EditViewCmdCanExecute" Executed="EditViewCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.EmailCmd}" CanExecute="EmailCmdCanExecute" Executed="EmailCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ExitCmd}" CanExecute="ExitCmdCanExecute" Executed="ExitCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ExportCmd}" CanExecute="ExportCmdCanExecute" Executed="ExportCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ExportHTMLCmd}" CanExecute="ExportHTMLCmdCanExecute" Executed="ExportHTMLCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ExportToDVRCmd}" CanExecute="ExportToDVRCmdCanExecute" Executed="ExportToDVRCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.FolderMgrCmd}" CanExecute="FolderMgrCmdCanExecute" Executed="FolderMgrCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.ForumsCmd}" CanExecute="ForumsCmdCanExecute" Executed="ForumsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.HelpContentsCmd}" CanExecute="HelpContentsCmdCanExecute" Executed="HelpContentsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.HiddenPictCmd}" CanExecute="HiddenPictCmdCanExecute" Executed="HiddenPictCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.HideCmd}" CanExecute="HideCmdCanExecute" Executed="HideCmdExecuted" />
@@ -46,7 +38,6 @@
         <CommandBinding Command="{x:Static local:MainWindow.LibraryViewCmd}" CanExecute="LibraryViewCmdCanExecute" Executed="LibraryViewCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.LocateFolderOnDiskCmd}" CanExecute="LocateFolderOnDiskCmdCanExecute" Executed="LocateFolderOnDiskCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.LocateOnDiskCmd}" CanExecute="LocateOnDiskCmdCanExecute" Executed="LocateOnDiskCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.MakeAPosterCmd}" CanExecute="MakeAPosterCmdCanExecute" Executed="MakeAPosterCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.MoveCmd}" CanExecute="MoveCmdCanExecute" Executed="MoveCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.MoveFolderCmd}" CanExecute="MoveFolderCmdCanExecute" Executed="MoveFolderCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.NewAlbumCmd}" CanExecute="NewAlbumCmdCanExecute" Executed="NewAlbumCmdExecuted" />
@@ -55,23 +46,18 @@
         <CommandBinding Command="{x:Static local:MainWindow.OptionsCmd}" CanExecute="OptionsCmdCanExecute" Executed="OptionsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PeopleCmd}" CanExecute="PeopleCmdCanExecute" Executed="PeopleCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PeopleMgrCmd}" CanExecute="PeopleMgrCmdCanExecute" Executed="PeopleMgrCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.PictureCollageCmd}" CanExecute="PictureCollageCmdCanExecute" Executed="PictureCollageCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PlacesCmd}" CanExecute="PlacesCmdCanExecute" Executed="PlacesCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PrintContactCmd}" CanExecute="PrintContactCmdCanExecute" Executed="PrintContactCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PrivacyCmd}" CanExecute="PrivacyCmdCanExecute" Executed="PrivacyCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.PropertiesCmd}" CanExecute="PropertiesCmdCanExecute" Executed="PropertiesCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.PropertiesCmd}" CanExecute="PropertiesCmdCanExecute" Executed="PropertiesCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.PublishToBlgrCmd}" CanExecute="PublishToBlgrCmdCanExecute" Executed="PublishToBlgrCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ReadmeCmd}" CanExecute="ReadmeCmdCanExecute" Executed="ReadmeCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.RefreshThumbsCmd}" CanExecute="RefreshThumbsCmdCanExecute" Executed="RefreshThumbsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ReleaseNotesCmd}" CanExecute="ReleaseNotesCmdCanExecute" Executed="ReleaseNotesCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.RemoveFromCmd}" CanExecute="RemoveFromCmdCanExecute" Executed="RemoveFromCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.RenameCmd}" CanExecute="RenameCmdCanExecute" Executed="RenameCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ResetFacesCmd}" CanExecute="ResetFacesCmdCanExecute" Executed="ResetFacesCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.RevertCmd}" CanExecute="RevertCmdCanExecute" Executed="RevertCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.SaveACopyCmd}" CanExecute="SaveACopyCmdCanExecute" Executed="SaveACopyCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.SearchOptCmd}" CanExecute="SearchOptCmdCanExecute" Executed="SearchOptCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.SetAsDesktopCmd}" CanExecute="SetAsDesktopCmdCanExecute" Executed="SetAsDesktopCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ShortcutsCmd}" CanExecute="ShortcutsCmdCanExecute" Executed="ShortcutsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ShowEditCtrlsCmd}" CanExecute="ShowEditCtrlsCmdCanExecute" Executed="ShowEditCtrlsCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.SlideshowCmd}" CanExecute="SlideshowCmdCanExecute" Executed="SlideshowCmdExecuted" />
@@ -85,11 +71,9 @@
         <CommandBinding Command="{x:Static local:MainWindow.UninstallingCmd}" CanExecute="UninstallingCmdCanExecute" Executed="UninstallingCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.UpdatesCmd}" CanExecute="UpdatesCmdCanExecute" Executed="UpdatesCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.UploadMgrCmd}" CanExecute="UploadMgrCmdCanExecute" Executed="UploadMgrCmdExecuted" />
-        <CommandBinding Command="{x:Static local:MainWindow.UseClrMgmtCmd}" CanExecute="UseClrMgmtCmdCanExecute" Executed="UseClrMgmtCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ViewAndEditCmd}" CanExecute="ViewAndEditCmdCanExecute" Executed="ViewAndEditCmdExecuted" />
         <CommandBinding Command="{x:Static local:MainWindow.ViewSlidesCmd}" CanExecute="ViewSlidesCmdCanExecute" Executed="ViewSlidesCmdExecuted" />
     </Window.CommandBindings>
-
 
     <Grid>
         <Grid.RowDefinitions>
@@ -148,8 +132,6 @@
                 <Separator />
                 <MenuItem Command="Print" Header="Print..."  
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.EmailCmd}" Header="Email..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.ExitCmd}" Header="_Exit" 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
@@ -194,8 +176,6 @@
                 <MenuItem Command="{x:Static local:MainWindow.HiddenPictCmd}" Header="Hidden Pictures" 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <Separator />
-                <MenuItem Command="{x:Static local:MainWindow.UseClrMgmtCmd}" Header="Use Color Management" 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <MenuItem Header="_Display Mode" 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <MenuItem Command="{x:Static local:MainWindow.AutomaticCmd}" Header="Automatic" 
@@ -229,12 +209,8 @@
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.PrintContactCmd}" Header="Print Contact Sheet..." 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.ExportHTMLCmd}" Header="Export as HTML Page..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.LocateFolderOnDiskCmd}" Header="Locate on Disk" 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.RemoveFromCmd}" Header="Review from Micasa..." 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.MoveCmd}" Header="Move..." 
@@ -262,26 +238,6 @@
                 <MenuItem Command="{x:Static local:MainWindow.PropertiesCmd}" Header="Properties" 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
             </MenuItem>
-            <MenuItem Header="_Create">
-                <MenuItem Command="{x:Static local:MainWindow.SetAsDesktopCmd}" Header="Set as _Desktop..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.MakeAPosterCmd}" Header="Make a _Poster..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <Separator />
-                <MenuItem Command="{x:Static local:MainWindow.PictureCollageCmd}" Header="_Picture Collage..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.AddToScrnSvrCmd}" Header="Add to _Screensaver..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.CreateGCDCmd}" Header="Create a _Gift CD..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Header="_Movie">
-                </MenuItem>
-                <Separator />
-                <MenuItem Command="{x:Static local:MainWindow.PublishToBlgrCmd}" Header="Publish to _Blogger..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.ExportToDVRCmd}" Header="_Export to TiVo(r) DVR..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-            </MenuItem>
             <MenuItem Header="_Tools">
                 <MenuItem Command="{x:Static local:MainWindow.FolderMgrCmd}" Header="_Folder Manager..." 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
@@ -291,8 +247,6 @@
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.ConfigViewCmd}" Header="Configure Photo Viewer..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.ConfigScrnSavCmd}" Header="Configure Screen Saver..." 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.BackupCmd}" Header="Backup Pictures..." 
@@ -306,11 +260,7 @@
                 </MenuItem>
                 <MenuItem Header="_Geotag">
                 </MenuItem>
-                <MenuItem Header="Experimental">
-                </MenuItem>
                 <Separator />
-                <MenuItem Command="{x:Static local:MainWindow.ConfigButtonsCmd}" Header="Configure Buttons..." 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <MenuItem Command="{x:Static local:MainWindow.OptionsCmd}" Header="_Options..." 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
             </MenuItem>
@@ -320,10 +270,6 @@
                 <MenuItem Command="{x:Static local:MainWindow.ShortcutsCmd}" Header="Keyboard Shortcuts" 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <Separator />
-                <MenuItem Command="{x:Static local:MainWindow.ForumsCmd}" Header="Micasa Formus" 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Command="{x:Static local:MainWindow.ReadmeCmd}" Header="Online Readme" 
-                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <MenuItem Command="{x:Static local:MainWindow.ReleaseNotesCmd}" Header="_Release Notes" 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <MenuItem Command="{x:Static local:MainWindow.PrivacyCmd}" Header="Privacy Policy" 
@@ -417,7 +363,7 @@
                     Width="250" Margin="0,0,0,0" GotFocus="InfoTabs_GotFocus" >
             <TabItem Header="People" x:Name="MWRtPeopleTab">
             </TabItem>
-            <TabItem Header="Details" x:Name="MWDetailsTab">
+            <TabItem Header="Details" x:Name="MWDetailsTab" >
             </TabItem>
             <TabItem Header="Map" x:Name="MWMapTab" >
             </TabItem>
