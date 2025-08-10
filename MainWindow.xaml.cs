@@ -639,13 +639,6 @@ namespace Micasa
         {
         }
 
-        // AddToScrnSvrCmd
-        private void AddToScrnSvrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void AddToScrnSvrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
         // AdjustDateCmd
         private void AdjustDateCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
@@ -674,31 +667,10 @@ namespace Micasa
         {
         }
 
-        // ConfigButtonsCmd
-        private void ConfigButtonsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void ConfigButtonsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ConfigScrnSavCmd
-        private void ConfigScrnSavCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void ConfigScrnSavCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
         // ConfigViewCmd
         private void ConfigViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
         private void ConfigViewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // CreateGCDCmd
-        private void CreateGCDCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void CreateGCDCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -709,13 +681,6 @@ namespace Micasa
         {
         }
 
-        // EditViewCmd
-        private void EditViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void EditViewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
         // EditDescCmd
         private void EditDescCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
@@ -723,10 +688,10 @@ namespace Micasa
         {
         }
 
-        // EmailCmd
-        private void EmailCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
+        // EditViewCmd
+        private void EditViewCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
-        private void EmailCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void EditViewCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -742,20 +707,6 @@ namespace Micasa
         {
         }
 
-        // ExportHTMLCmd
-        private void ExportHTMLCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void ExportHTMLCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // ExportToDVRCmd
-        private void ExportToDVRCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void ExportToDVRCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
         // FolderMgrCmd
         private void FolderMgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
 
@@ -765,24 +716,10 @@ namespace Micasa
             FolderManagerWindow.Show();
         }
 
-        // ForumsCmd
-        private void ForumsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void ForumsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
         // HelpContentsCmd
         private void HelpContentsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
         private void HelpContentsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // HideCmd
-        private void HideCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void HideCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -793,17 +730,17 @@ namespace Micasa
         {
         }
 
+        // HideCmd
+        private void HideCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
+
+        private void HideCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
         // ImportFromCmd
         private void ImportFromCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
         private void ImportFromCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // LocateFolderOnDiskCmd
-        private void LocateFolderOnDiskCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void LocateFolderOnDiskCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -814,17 +751,17 @@ namespace Micasa
         {
         }
 
+        // LocateFolderOnDiskCmd
+        private void LocateFolderOnDiskCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
+
+        private void LocateFolderOnDiskCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
         // LocateOnDiskCmd
         private void LocateOnDiskCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
         private void LocateOnDiskCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // MakeAPosterCmd
-        private void MakeAPosterCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void MakeAPosterCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -886,13 +823,6 @@ namespace Micasa
         {
         }
 
-        // PictureCollageCmd
-        private void PictureCollageCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void PictureCollageCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
         // PlacesCmd
         private void PlacesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
@@ -921,13 +851,6 @@ namespace Micasa
         {
         }
 
-        // PublishToBlgrCmd
-        private void PublishToBlgrCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void PublishToBlgrCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
         // ReadmeCmd
         private void ReadmeCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
@@ -949,13 +872,6 @@ namespace Micasa
         {
             ReleaseNotes ReleaseNotesWindow = new();
             ReleaseNotesWindow.Show();
-        }
-
-        // RemoveFromCmd
-        private void RemoveFromCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void RemoveFromCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
         }
 
         // RenameCmd
@@ -990,13 +906,6 @@ namespace Micasa
         private void SearchOptCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
         private void SearchOptCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // SetAsDesktopCmd
-        private void SetAsDesktopCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void SetAsDesktopCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
@@ -1058,6 +967,20 @@ namespace Micasa
         {
         }
 
+        // UndoAddEditsCmd
+        private void UndoAddEditsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
+
+        private void UndoAddEditsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        // UnhideCmd
+        private void UnhideCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
+
+        private void UnhideCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
         // UninstallingCmd
         private void UninstallingCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
@@ -1079,20 +1002,6 @@ namespace Micasa
         {
         }
 
-        // UnhideCmd
-        private void UnhideCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void UnhideCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // UseClrMgmtCmd
-        private void UseClrMgmtCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void UseClrMgmtCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
         // ViewAndEditCmd
         private void ViewAndEditCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
@@ -1104,13 +1013,6 @@ namespace Micasa
         private void ViewSlidesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
 
         private void ViewSlidesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-        }
-
-        // UndoAddEditsCmd
-        private void UndoAddEditsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
-
-        private void UndoAddEditsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
         }
 
