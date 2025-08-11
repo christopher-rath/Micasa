@@ -28,9 +28,13 @@ namespace ExifLibrary
         protected ImageFile()
         {
             Format = ImageFileFormat.Unknown;
+#pragma warning disable IDE0028 // Simplify collection initialization
             Properties = new ExifPropertyCollection<ExifProperty>();
+#pragma warning restore IDE0028 // Simplify collection initialization
             Encoding = Encoding.UTF8;
+#pragma warning disable IDE0028 // Simplify collection initialization
             Errors = new List<ImageError>();
+#pragma warning restore IDE0028 // Simplify collection initialization
         }
         #endregion
 
@@ -85,7 +89,9 @@ namespace ExifLibrary
         /// <param name="stream">A stream to save image data to.</param>
         public void Save(Stream stream)
         {
+#pragma warning disable IDE0019 // Use pattern matching
             var memStream = stream as MemoryStream;
+#pragma warning restore IDE0019 // Use pattern matching
             if (memStream != null)
             {
                 SaveInternal(memStream);
@@ -119,7 +125,14 @@ namespace ExifLibrary
         /// <param name="stream">A stream to save image data to.</param>
         public virtual async Task SaveAsync(Stream stream)
         {
-            Save(stream);
+            // Replaced line because of this Intellicode warning: "[CS1998] This async method lacks 
+            // 'await' operators and will run synchronously. Consider using the 'await' operator to 
+            // await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a 
+            // background thread.
+            //
+            // Original line:
+            //      Save(stream);
+            await Task.Run(() => Save(stream));
         }
 
         /// <summary>
@@ -171,7 +184,9 @@ namespace ExifLibrary
         /// <returns>The <see cref="ImageFile"/> created from the stream.</returns>
         protected static ImageFile FromStream(Stream stream, Encoding encoding)
         {
+#pragma warning disable IDE0019 // Use pattern matching
             var memStream = stream as MemoryStream;
+#pragma warning restore IDE0019 // Use pattern matching
             if (memStream != null)
             {
                 return FromStreamInternal(memStream, encoding);
@@ -259,7 +274,14 @@ namespace ExifLibrary
         /// <returns>The <see cref="ImageFile"/> created from the stream.</returns>
         public static async Task<ImageFile> FromStreamAsync(Stream stream, Encoding encoding)
         {
-            return FromStream(stream, encoding);
+            // Replaced line because of this Intellicode warning: "[CS1998] This async method lacks 
+            // 'await' operators and will run synchronously. Consider using the 'await' operator to 
+            // await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a 
+            // background thread.
+            //
+            // Original line:
+            //       return FromStream(stream, encoding);
+            return await Task.Run(() => FromStream(stream, encoding));
         }
         #endregion
 
