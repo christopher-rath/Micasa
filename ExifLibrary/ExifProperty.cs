@@ -9,16 +9,10 @@
 // Warranty: None, see the license.
 #endregion
 using System;
-using System.Linq;
 using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1707 // Identifiers should not contain underscores
-#pragma warning disable IDE0090 // Use 'new(...)'
-#pragma warning disable IDE1006 // Naming Styles
     /// <summary>
     /// Represents the abstract base class for an Exif property.
     /// </summary>
@@ -48,7 +42,10 @@ namespace ExifLibrary
                 else
                     return mName;
             }
-            set => mName = value;
+            set
+            {
+                mName = value;
+            }
         }
         protected abstract object _Value { get; set; }
         /// <summary>
@@ -94,7 +91,7 @@ namespace ExifLibrary
         {
             get
             {
-                return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.BYTE, 1, [mValue]);
+                return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.BYTE, 1, new byte[] { mValue });
             }
         }
     }
@@ -162,7 +159,7 @@ namespace ExifLibrary
         {
             get
             {
-                return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.SBYTE, 1, [(byte)mValue]);
+                return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.SBYTE, 1, new byte[] { (byte)mValue });
             }
         }
     }
@@ -395,7 +392,7 @@ namespace ExifLibrary
 
         public uint[] ToArray()
         {
-            return [mValue.Numerator, mValue.Denominator];
+            return new uint[] { mValue.Numerator, mValue.Denominator };
         }
 
         public ExifURational(ExifTag tag, uint numerator, uint denominator)
@@ -592,7 +589,7 @@ namespace ExifLibrary
 
         public int[] ToArray()
         {
-            return [mValue.Numerator, mValue.Denominator];
+            return new int[] { mValue.Numerator, mValue.Denominator };
         }
 
         public ExifSRational(ExifTag tag, int numerator, int denominator)
@@ -707,7 +704,7 @@ namespace ExifLibrary
         {
             StringBuilder sb = new StringBuilder();
             sb.Append('[');
-            foreach (ushort b in mValue.Select(v => (ushort)v))
+            foreach (ushort b in mValue)
             {
                 sb.Append(b);
                 sb.Append(' ');
@@ -843,7 +840,7 @@ namespace ExifLibrary
         {
             StringBuilder sb = new StringBuilder();
             sb.Append('[');
-            foreach (float b in mValue.Select(v => (float)v))
+            foreach (float b in mValue)
             {
                 sb.Append(b);
                 sb.Append(' ');

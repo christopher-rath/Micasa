@@ -12,11 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Contains utility functions.
     /// </summary>
@@ -54,7 +54,7 @@ namespace ExifLibrary
             if (length < 32768)
             {
                 byte[] b = new byte[length];
-                //int r = stream.Read(b, 0, (int)length);
+                int r = stream.Read(b, 0, (int)length);
                 return b;
             }
             else
@@ -66,7 +66,7 @@ namespace ExifLibrary
                     while (length > 0 && (r = stream.Read(b, 0, (int)Math.Min(length, b.Length))) > 0)
                     {
                         mem.Write(b, 0, r);
-                        length -= r;
+                        length = length - r;
                     }
 
                     return mem.ToArray();
@@ -96,7 +96,7 @@ namespace ExifLibrary
                         if ((c & 1) != 0)
                             c = 0xedb88320L ^ (c >> 1);
                         else
-                            c >>= 1;
+                            c = c >> 1;
                     }
                     table[n] = c;
                 }
@@ -198,7 +198,7 @@ namespace ExifLibrary
         /// <returns>Sub arrays splitted at the separator.</returns>
         public static List<byte[]> SplitByteArray(byte[] data, byte seperator)
         {
-            List<byte[]> output = [];
+            List<byte[]> output = new List<byte[]>();
             int lastSepIndex = -1;
             int sepIndex = -1;
             for (int i = 0; i < data.Length; i++)

@@ -8,11 +8,12 @@
 // Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
 // Warranty: None, see the license.
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Represents a TIFF Header.
     /// </summary>

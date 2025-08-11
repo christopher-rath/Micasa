@@ -8,10 +8,12 @@
 // Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
 // Warranty: None, see the license.
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1825 // Avoid zero-length array allocations
     /// <summary>
     /// Represents a JFIF thumbnail.
     /// </summary>
@@ -44,8 +46,8 @@ namespace ExifLibrary
         #region Constructors
         protected JFIFThumbnail()
         {
-            Palette = [];
-            PixelData = [];
+            Palette = new byte[0];
+            PixelData = new byte[0];
         }
 
         public JFIFThumbnail(ImageFormat format, byte[] data)

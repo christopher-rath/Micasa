@@ -8,11 +8,12 @@
 // Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
 // Warranty: None, see the license.
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1720 // Identifier contains type name
     /// <summary>
     /// Represents the type code defined in the Exif standard.
     /// </summary>
@@ -70,12 +71,12 @@ namespace ExifLibrary
     /// <summary>
     /// Represents interoperability data for an exif tag in the platform byte order.
     /// </summary>
-    public readonly struct ExifInterOperability
+    public struct ExifInterOperability
     {
-        private readonly ushort mTagID;
-        private readonly InterOpType mTypeID;
-        private readonly uint mCount;
-        private readonly byte[] mData;
+        private ushort mTagID;
+        private InterOpType mTypeID;
+        private uint mCount;
+        private byte[] mData;
 
         /// <summary>
         /// Gets the tag ID defined in the Exif standard.

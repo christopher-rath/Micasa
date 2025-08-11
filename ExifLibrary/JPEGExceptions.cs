@@ -9,10 +9,11 @@
 // Warranty: None, see the license.
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1710 // Identifiers should have correct suffix
     /// <summary>
     /// The exception that is thrown when the format of the image file
     /// could not be understood.

@@ -14,23 +14,21 @@ using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1715 // Identifiers should have correct prefix
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Represents a collection of <see cref="ExifLibrary.ExifProperty"/> objects.
     /// </summary>
     public class ExifPropertyCollection<T> : IList<T> where T : ExifProperty
     {
         #region Member Variables
-        private readonly List<T> items;
-        private readonly Dictionary<ExifTag, List<T>> lookup;
+        private List<T> items;
+        private Dictionary<ExifTag, List<T>> lookup;
         #endregion
 
         #region Constructor
         internal ExifPropertyCollection()
         {
-            items = [];
-            lookup = [];
+            items = new List<T>();
+            lookup = new Dictionary<ExifTag, List<T>>();
         }
         #endregion
 
@@ -162,8 +160,8 @@ namespace ExifLibrary
         public void Add(ExifTag key, object value)
         {
             Type type = value.GetType();
-            Type etype = typeof(ExifEnumProperty<>).MakeGenericType([type]);
-            object prop = Activator.CreateInstance(etype, [key, value]);
+            Type etype = typeof(ExifEnumProperty<>).MakeGenericType(new Type[] { type });
+            object prop = Activator.CreateInstance(etype, new object[] { key, value });
             AddItem((ExifProperty)prop);
         }
         /// <summary>
@@ -184,7 +182,7 @@ namespace ExifLibrary
         /// <param name="s">Angular seconds (or clock seconds for a timestamp).</param>
         public void Add(ExifTag key, float d, float m, float s)
         {
-            AddItem(new ExifURationalArray(key, [new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s)]));
+            AddItem(new ExifURationalArray(key, new MathEx.UFraction32[] { new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s) }));
         }
         /// <summary>
         /// Adds an <see cref="ExifLibrary.ExifProperty"/> with the specified key.
@@ -342,8 +340,8 @@ namespace ExifLibrary
         public void Set(ExifTag key, object value)
         {
             Type type = value.GetType();
-            Type etype = typeof(ExifEnumProperty<>).MakeGenericType([type]);
-            object prop = Activator.CreateInstance(etype, [key, value]);
+            Type etype = typeof(ExifEnumProperty<>).MakeGenericType(new Type[] { type });
+            object prop = Activator.CreateInstance(etype, new object[] { key, value });
             SetItem((ExifProperty)prop);
         }
         /// <summary>
@@ -368,7 +366,7 @@ namespace ExifLibrary
         /// <param name="s">Angular seconds (or clock seconds for a timestamp).</param>
         public void Set(ExifTag key, float d, float m, float s)
         {
-            SetItem(new ExifURationalArray(key, [new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s)]));
+            SetItem(new ExifURationalArray(key, new MathEx.UFraction32[] { new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s) }));
         }
         /// <summary>
         /// Sets an <see cref="ExifLibrary.ExifProperty"/> with the specified key.
@@ -399,11 +397,12 @@ namespace ExifLibrary
         /// <returns>
         /// true if the collection contains the given element; otherwise, false.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="T:System.ArgumentNullException">
         /// <paramref name="item"/> is null.</exception>
         public bool Contains(T item)
         {
-            if (lookup.TryGetValue(item.Tag, out List<T> foundItems))
+            List<T> foundItems;
+            if (lookup.TryGetValue(item.Tag, out foundItems))
             {
                 return foundItems.Contains(item);
             }
@@ -427,12 +426,13 @@ namespace ExifLibrary
         /// <returns>
         /// true if the element is successfully removed; otherwise, false.  
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="T:System.ArgumentNullException">
         /// <paramref name="item"/> is null.</exception>
         public bool Remove(T item)
         {
             bool contains = items.Remove(item);
-            if (lookup.TryGetValue(item.Tag, out List<T> foundItems))
+            List<T> foundItems;
+            if (lookup.TryGetValue(item.Tag, out foundItems))
             {
                 foundItems.Remove(item);
             }
@@ -446,7 +446,8 @@ namespace ExifLibrary
         {
             var item = items[index];
             items.RemoveAt(index);
-            if (lookup.TryGetValue(item.Tag, out List<T> foundItems))
+            List<T> foundItems;
+            if (lookup.TryGetValue(item.Tag, out foundItems))
             {
                 foundItems.Remove(item);
             }
@@ -460,7 +461,8 @@ namespace ExifLibrary
             foreach (var item in itemsToRemove)
             {
                 items.Remove(item);
-                if (lookup.TryGetValue(item.Tag, out List<T> foundItems))
+                List<T> foundItems;
+                if (lookup.TryGetValue(item.Tag, out foundItems))
                 {
                     foundItems.Remove(item);
                 }
@@ -472,7 +474,7 @@ namespace ExifLibrary
         /// <param name="ifd">The IFD section to remove.</param>
         public void Remove(IFD ifd)
         {
-            List<T> toRemove = [];
+            List<T> toRemove = new List<T>();
             foreach (T item in items)
             {
                 if (item.IFD == ifd)
@@ -486,7 +488,8 @@ namespace ExifLibrary
         /// <param name="ifd">The IFD section to remove.</param>
         public void Remove(ExifTag tag)
         {
-            if (lookup.TryGetValue(tag, out List<T> toRemove))
+            List<T> toRemove;
+            if (lookup.TryGetValue(tag, out toRemove))
             {
                 foreach (var item in toRemove)
                 {
@@ -528,13 +531,14 @@ namespace ExifLibrary
         void IList<T>.Insert(int index, T item)
         {
             items.Insert(index, item);
-            if (lookup.TryGetValue(item.Tag, out List<T> lookupitems))
+            List<T> lookupitems;
+            if (lookup.TryGetValue(item.Tag, out lookupitems))
             {
                 lookupitems.Add(item);
             }
             else
             {
-                lookup[item.Tag] = [item];
+                lookup[item.Tag] = new List<T>() { item };
             }
         }
 
@@ -563,13 +567,14 @@ namespace ExifLibrary
         {
             var genericItem = item as T;
             items.Add(genericItem);
-            if (lookup.TryGetValue(item.Tag, out List<T> lookupitems))
+            List<T> lookupitems;
+            if (lookup.TryGetValue(item.Tag, out lookupitems))
             {
                 lookupitems.Add(genericItem);
             }
             else
             {
-                lookup[item.Tag] = [genericItem];
+                lookup[item.Tag] = new List<T>() { genericItem };
             }
         }
         /// <summary>
@@ -580,7 +585,8 @@ namespace ExifLibrary
         /// <param name="tag">the tag ıf an item to get from the collection</param>
         protected ExifProperty GetItem(ExifTag tag)
         {
-            if (lookup.TryGetValue(tag, out List<T> lookupitems))
+            List<T> lookupitems;
+            if (lookup.TryGetValue(tag, out lookupitems))
             {
                 if (lookupitems.Count != 0)
                     return lookupitems[0];
@@ -595,11 +601,12 @@ namespace ExifLibrary
         /// <param name="tag">the tag ıf an item to get from the collection</param>
         protected List<ExifProperty> GetItems(ExifTag tag)
         {
-            if (lookup.TryGetValue(tag, out List<T> lookupitems))
+            List<T> lookupitems;
+            if (lookup.TryGetValue(tag, out lookupitems))
             {
                 return lookupitems as List<ExifProperty>;
             }
-            return [];
+            return new List<ExifProperty>();
         }
         /// <summary>
         /// Sets an item in the collection.
@@ -609,7 +616,8 @@ namespace ExifLibrary
         /// <param name="item">an item to set in the collection</param>
         protected void SetItem(ExifProperty item)
         {
-            if (lookup.TryGetValue(item.Tag, out List<T> lookupitems))
+            List<T> lookupitems;
+            if (lookup.TryGetValue(item.Tag, out lookupitems))
             {
                 foreach (var existingItem in lookupitems)
                 {
@@ -618,7 +626,7 @@ namespace ExifLibrary
             }
             var genericItem = item as T;
             items.Add(genericItem);
-            lookup[item.Tag] = [genericItem];
+            lookup[item.Tag] = new List<T>() { genericItem };
         }
         #endregion
     }

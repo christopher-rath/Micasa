@@ -15,9 +15,6 @@ using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1822 // Mark members as static
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Represents the binary view of a GIF file.
     /// </summary>
@@ -80,17 +77,12 @@ namespace ExifLibrary
         /// specified data stream.
         /// </summary>
         /// <param name="stream">A stream that contains image data.</param>
-        /// <param name="encoding">The encoding to be used for text metadata when the source encoding 
-        ///     is unknown.  This parameter is not used at present, but exists to align this method with 
-        ///     the others in this class.</param>
-        protected internal GIFFile(MemoryStream stream, System.Text.Encoding encoding = null)
+        /// <param name="encoding">The encoding to be used for text metadata when the source encoding is unknown.</param>
+        protected internal GIFFile(MemoryStream stream, System.Text.Encoding encoding)
         {
-#pragma warning disable IDE0059 // Unnecessary assignment of a value
-            encoding ??= System.Text.Encoding.Default;
-#pragma warning restore IDE0059 // Unnecessary assignment of a value
             Format = ImageFileFormat.GIF;
 
-            Blocks = [];
+            Blocks = new List<GIFBlock>();
 
             var conv = BitConverterEx.LittleEndian;
             stream.Seek(0, SeekOrigin.Begin);
@@ -140,13 +132,11 @@ namespace ExifLibrary
                 else if (separator == 0x2C)
                 {
                     // image descriptor block
-                    var block = new GIFImageDescriptor
-                    {
-                        Left = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0),
-                        Top = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0),
-                        Width = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0),
-                        Height = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0)
-                    };
+                    var block = new GIFImageDescriptor();
+                    block.Left = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
+                    block.Top = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
+                    block.Width = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
+                    block.Height = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
 
                     var idByte = (byte)stream.ReadByte();
                     // local color table flag in bit 7
@@ -183,7 +173,7 @@ namespace ExifLibrary
                     if (label == 0xF9)
                     {
                         // graphic control extension
-                        // unused // var size = stream.ReadByte();
+                        var size = stream.ReadByte();
                         var block = new GIFGraphicControlExtension();
                         var geByte = (byte)stream.ReadByte();
                         // reserved value in bits 7, 6, 5
@@ -204,64 +194,57 @@ namespace ExifLibrary
                         block.DelayTime = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
                         block.TransparentColorIndex = (byte)stream.ReadByte();
 
-                        // unused // var term = stream.ReadByte();
+                        var term = stream.ReadByte();
 
                         Blocks.Add(block);
                     }
                     else if (label == 0xFE)
                     {
                         // comment extension
-                        var block = new GIFCommentExtension
-                        {
-                            // comment data
-                            Data = ReadDataBlock(stream)
-                        };
+                        var block = new GIFCommentExtension();
+
+                        // comment data
+                        block.Data = ReadDataBlock(stream);
 
                         Blocks.Add(block);
                     }
                     else if (label == 0x01)
                     {
                         // plain text extension
-                        var block = new GIFPlainTextExtension
-                        {
-                            // unused // var size = stream.ReadByte();
-                            Left = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0),
-                            Top = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0),
-                            Width = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0),
-                            Height = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0),
-                            CellWidth = (byte)stream.ReadByte(),
-                            CellHeight = (byte)stream.ReadByte(),
-                            ForegroundColorIndex = (byte)stream.ReadByte(),
-                            BackgroundColorIndex = (byte)stream.ReadByte(),
+                        var block = new GIFPlainTextExtension();
+                        var size = stream.ReadByte();
+                        block.Left = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
+                        block.Top = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
+                        block.Width = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
+                        block.Height = conv.ToUInt16(Utility.GetStreamBytes(stream, 2), 0);
+                        block.CellWidth = (byte)stream.ReadByte();
+                        block.CellHeight = (byte)stream.ReadByte();
+                        block.ForegroundColorIndex = (byte)stream.ReadByte();
+                        block.BackgroundColorIndex = (byte)stream.ReadByte();
 
-                            // plain text data
-                            Data = ReadDataBlock(stream)
-                        };
+                        // plain text data
+                        block.Data = ReadDataBlock(stream);
 
                         Blocks.Add(block);
                     }
                     else if (label == 0xFF)
                     {
                         // application extension
-                        var block = new GIFApplicationExtension
-                        {
-                            // unused // var size = stream.ReadByte();
-                            ApplicationIdentifier = Utility.GetStreamBytes(stream, 8),
-                            AuthenticationCode = Utility.GetStreamBytes(stream, 3),
+                        var block = new GIFApplicationExtension();
+                        var size = stream.ReadByte();
+                        block.ApplicationIdentifier = Utility.GetStreamBytes(stream, 8);
+                        block.AuthenticationCode = Utility.GetStreamBytes(stream, 3);
 
-                            // application data
-                            Data = ReadDataBlock(stream)
-                        };
+                        // application data
+                        block.Data = ReadDataBlock(stream);
 
                         Blocks.Add(block);
                     }
                     else
                     {
                         // unkown extension block
-                        var block = new GIFExtensionBlock(label)
-                        {
-                            Data = ReadDataBlock(stream)
-                        };
+                        var block = new GIFExtensionBlock(label);
+                        block.Data = ReadDataBlock(stream);
                         Blocks.Add(block);
                     }
                 }
@@ -273,7 +256,7 @@ namespace ExifLibrary
             }
 
             // insert a terminator if it doesn't exist
-            if (Blocks[^1].Separator != GIFSeparator.Terminator)
+            if (Blocks[Blocks.Count - 1].Separator != GIFSeparator.Terminator)
             {
                 Blocks.Add(new GIFTerminator());
             }
@@ -479,7 +462,7 @@ namespace ExifLibrary
         /// <param name="stream">A stream that contains image data.</param>
         protected byte[][] ReadDataBlock(MemoryStream stream)
         {
-            List<byte[]> data = [];
+            List<byte[]> data = new List<byte[]>();
             while (true)
             {
                 int val = stream.ReadByte();
@@ -487,7 +470,7 @@ namespace ExifLibrary
                 byte count = (byte)val;
                 data.Add(Utility.GetStreamBytes(stream, count));
             }
-            return [.. data];
+            return data.ToArray();
         }
         /// <summary>
         /// Writes data sub-blocks.
@@ -511,16 +494,15 @@ namespace ExifLibrary
             {
                 var block = Blocks[i];
                 var nextBlock = (i == Blocks.Count - 1 ? null : Blocks[i + 1]);
-                if (block is GIFCommentExtension extension)
+                var extension = block as GIFCommentExtension;
+                if (extension == null) continue;
+                using (var memStream = new MemoryStream())
                 {
-                    using (var memStream = new MemoryStream())
+                    foreach (var subData in extension.Data)
                     {
-                        foreach (var subData in extension.Data)
-                        {
-                            memStream.Write(subData, 0, subData.Length);
-                        }
-                        Properties.Add(new GIFComment(ExifTag.GIFComment, Encoding.ASCII.GetString(memStream.ToArray()), nextBlock));
+                        memStream.Write(subData, 0, subData.Length);
                     }
+                    Properties.Add(new GIFComment(ExifTag.GIFComment, Encoding.ASCII.GetString(memStream.ToArray()), nextBlock));
                 }
             }
         }
@@ -534,7 +516,8 @@ namespace ExifLibrary
             {
                 if (prop.Tag == ExifTag.GIFComment)
                 {
-                    if (prop is GIFComment gifComment)
+                    var gifComment = prop as GIFComment;
+                    if (gifComment != null)
                     {
                         var block = new GIFCommentExtension();
                         var interop = gifComment.Interoperability;
@@ -554,7 +537,7 @@ namespace ExifLibrary
                         int index = insertBefore == null ? -1 : Blocks.IndexOf(insertBefore);
                         if (index == -1)
                         {
-                            index = Blocks[^1].Separator == GIFSeparator.Terminator ? Blocks.Count - 1 : Blocks.Count;
+                            index = Blocks[Blocks.Count - 1].Separator == GIFSeparator.Terminator ? Blocks.Count - 1 : Blocks.Count;
                         }
 
                         Blocks.Insert(index, block);

@@ -8,7 +8,6 @@
 // Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
 // Warranty: None, see the license.
 #endregion
-
 namespace ExifLibrary
 {
     /// <summary>

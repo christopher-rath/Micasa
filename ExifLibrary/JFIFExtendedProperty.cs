@@ -9,11 +9,11 @@
 // Warranty: None, see the license.
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-#pragma warning disable CA1305 // Specify IFormatProvider
     /// <summary>
     /// Represents the JFIF version as a 16 bit unsigned integer. (EXIF Specification: SHORT) 
     /// </summary>

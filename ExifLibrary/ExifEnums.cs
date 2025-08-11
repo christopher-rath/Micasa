@@ -154,7 +154,7 @@ namespace ExifLibrary
         /// <summary>
         /// Pixar LogL color space.
         /// </summary>
-        PixarLOGL = 32844,
+        Pixar_LOGL = 32844,
         /// <summary>
         /// Pixar LogLUV color space.
         /// </summary>

@@ -45,7 +45,7 @@ namespace ExifLibrary
         /// </summary>
         public static string GetTagName(ExifTag tag)
         {
-            string name = Enum.GetName(tag);
+            string name = Enum.GetName(typeof(ExifTag), tag);
             if (name == null)
                 return "Unknown";
             else
@@ -66,10 +66,11 @@ namespace ExifLibrary
         /// </summary>
         public static string GetTagLongName(ExifTag tag)
         {
-            string ifdname = Enum.GetName(GetTagIFD(tag));
-            string name = Enum.GetName(tag);
-            name ??= "Unknown";
-            string tagidname = GetTagID(tag).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string ifdname = Enum.GetName(typeof(IFD), GetTagIFD(tag));
+            string name = Enum.GetName(typeof(ExifTag), tag);
+            if (name == null)
+                name = "Unknown";
+            string tagidname = GetTagID(tag).ToString();
             return ifdname + ": " + name + " (" + tagidname + ")";
         }
         #endregion

@@ -10,10 +10,10 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Represents an image file directory.
     /// </summary>
@@ -37,8 +37,8 @@ namespace ExifLibrary
         /// </summary>
         public ImageFileDirectory()
         {
-            Fields = [];
-            Strips = [];
+            Fields = new List<ImageFileDirectoryEntry>();
+            Strips = new List<TIFFStrip>();
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace ExifLibrary
             ImageFileDirectory ifd = new ImageFileDirectory();
             BitConverterEx conv = new BitConverterEx(byteOrder, BitConverterEx.SystemByteOrder);
 
-            List<uint> stripOffsets = [];
-            List<uint> stripLengths = [];
+            List<uint> stripOffsets = new List<uint>();
+            List<uint> stripLengths = new List<uint>();
 
             // Count
             ushort fieldcount = conv.ToUInt16(data, offset);

@@ -18,8 +18,8 @@ namespace ExifLibrary
     /// </summary>
     public class ExifEnumProperty<T> : ExifProperty where T : Enum
     {
-        private T mValue; // Changed from protected to private
-        private readonly bool mIsBitField; // Changed from protected to private
+        protected T mValue;
+        protected bool mIsBitField;
         protected override object _Value { get { return Value; } set { Value = (T)value; } }
         public new T Value { get { return mValue; } set { mValue = value; } }
         public bool IsBitField { get { return mIsBitField; } }
@@ -85,8 +85,8 @@ namespace ExifLibrary
     /// </summary>
     public class ExifEncodedString : ExifProperty
     {
-        private string mValue; // Changed from protected to private
-        private Encoding mEncoding; // Changed from protected to private
+        protected string mValue;
+        private Encoding mEncoding;
         protected override object _Value { get { return Value; } set { Value = (string)value; } }
         public new string Value { get { return mValue; } set { mValue = value; } }
         public Encoding Encoding { get { return mEncoding; } set { mEncoding = value; } }
@@ -135,16 +135,13 @@ namespace ExifLibrary
     /// </summary>
     public class ExifDateTime : ExifProperty
     {
-        private DateTime mValue; // Changed from protected to private
+        protected DateTime mValue;
         protected override object _Value { get { return Value; } set { Value = (DateTime)value; } }
         public new DateTime Value { get { return mValue; } set { mValue = value; } }
 
         static public implicit operator DateTime(ExifDateTime obj) { return obj.mValue; }
 
-        public override string ToString()
-        {
-            return mValue.ToString("yyyy.MM.dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-        }
+        public override string ToString() { return mValue.ToString("yyyy.MM.dd HH:mm:ss"); }
 
         public ExifDateTime(ExifTag tag, DateTime value)
             : base(tag)
@@ -167,16 +164,13 @@ namespace ExifLibrary
     /// </summary>
     public class ExifDate : ExifProperty
     {
-        private DateTime mValue; // Changed from protected to private
+        protected DateTime mValue;
         protected override object _Value { get { return Value; } set { Value = (DateTime)value; } }
         public new DateTime Value { get { return mValue; } set { mValue = value; } }
 
         static public implicit operator DateTime(ExifDate obj) { return obj.mValue; }
 
-        public override string ToString()
-        {
-            return mValue.ToString("yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture);
-        }
+        public override string ToString() { return mValue.ToString("yyyy.MM.dd"); }
 
         public ExifDate(ExifTag tag, DateTime value)
             : base(tag)
@@ -199,15 +193,15 @@ namespace ExifLibrary
     /// </summary>
     public class ExifVersion : ExifProperty
     {
-        private string mValue; // Changed from protected to private
+        protected string mValue;
         protected override object _Value { get { return Value; } set { Value = (string)value; } }
-        public new string Value { get { return mValue; } set { mValue = value[..4]; } }
+        public new string Value { get { return mValue; } set { mValue = value.Substring(0, 4); } }
 
         public ExifVersion(ExifTag tag, string value)
             : base(tag)
         {
             if (value.Length > 4)
-                mValue = value[..4];
+                mValue = value.Substring(0, 4);
             else if (value.Length < 4)
                 mValue = value + new string(' ', 4 - value.Length);
             else
@@ -229,7 +223,7 @@ namespace ExifLibrary
                 {
                     byte[] data = new byte[4];
                     for (int i = 0; i < 4; i++)
-                        data[i] = byte.Parse(mValue[0].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+                        data[i] = byte.Parse(mValue[0].ToString());
                     return new ExifInterOperability(ExifTagFactory.GetTagID(mTag), InterOpType.UNDEFINED, 4, data);
                 }
             }
@@ -249,7 +243,7 @@ namespace ExifLibrary
 
         public override string ToString()
         {
-            StringBuilder sb = new();
+            StringBuilder sb = new StringBuilder();
             foreach (var b in Value)
             {
                 sb.Append(b).Append('.');
@@ -271,8 +265,8 @@ namespace ExifLibrary
 
         public override string ToString()
         {
-            StringBuilder sb = new();
-            sb.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "({0:d}, {1:d})", mValue[0], mValue[1]);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("({0:d}, {1:d})", mValue[0], mValue[1]);
             return sb.ToString();
         }
 
@@ -283,7 +277,7 @@ namespace ExifLibrary
         }
 
         public ExifPointSubjectArea(ExifTag tag, ushort x, ushort y)
-            : base(tag, [x, y])
+            : base(tag, new ushort[] { x, y })
         {
             ;
         }
@@ -300,8 +294,8 @@ namespace ExifLibrary
 
         public override string ToString()
         {
-            StringBuilder sb = new();
-            sb.AppendFormat(System.Globalization.CultureInfo.InvariantCulture, "({0:d}, {1:d}) {2:d}", mValue[0], mValue[1], mValue[2]);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("({0:d}, {1:d}) {2:d}", mValue[0], mValue[1], mValue[2]);
             return sb.ToString();
         }
 
@@ -312,7 +306,7 @@ namespace ExifLibrary
         }
 
         public ExifCircularSubjectArea(ExifTag tag, ushort x, ushort y, ushort d)
-            : base(tag, [x, y, d])
+            : base(tag, new ushort[] { x, y, d })
         {
             ;
         }
@@ -325,13 +319,12 @@ namespace ExifLibrary
     /// </summary>
     public class ExifRectangularSubjectArea : ExifPointSubjectArea
     {
-#pragma warning disable CA1305 // Specify IFormatProvider -- We are parsing a known metadata type and the region lookup is not needed.
         public ushort Width { get { return mValue[2]; } set { mValue[2] = value; } }
         public ushort Height { get { return mValue[3]; } set { mValue[3] = value; } }
 
         public override string ToString()
         {
-            StringBuilder sb = new();
+            StringBuilder sb = new StringBuilder();
             sb.AppendFormat("({0:d}, {1:d}) ({2:d} x {3:d})", mValue[0], mValue[1], mValue[2], mValue[3]);
             return sb.ToString();
         }
@@ -343,7 +336,7 @@ namespace ExifLibrary
         }
 
         public ExifRectangularSubjectArea(ExifTag tag, ushort x, ushort y, ushort w, ushort h)
-            : base(tag, [x, y, w, h])
+            : base(tag, new ushort[] { x, y, w, h })
         {
             ;
         }
@@ -377,7 +370,7 @@ namespace ExifLibrary
         }
 
         public GPSLatitudeLongitude(ExifTag tag, float d, float m, float s)
-            : base(tag, [new(d), new(m), new(s)])
+            : base(tag, new MathEx.UFraction32[] { new MathEx.UFraction32(d), new MathEx.UFraction32(m), new MathEx.UFraction32(s) })
         {
             ;
         }
@@ -405,7 +398,7 @@ namespace ExifLibrary
         }
 
         public GPSTimeStamp(ExifTag tag, float h, float m, float s)
-            : base(tag, [new(h), new(m), new(s)])
+            : base(tag, new MathEx.UFraction32[] { new MathEx.UFraction32(h), new MathEx.UFraction32(m), new MathEx.UFraction32(s) })
         {
             ;
         }
@@ -417,11 +410,9 @@ namespace ExifLibrary
     /// </summary>
     public class WindowsByteString : ExifProperty
     {
-#pragma warning disable CA1051 // Do not declare visible instance fields
         protected string mValue;
         protected override object _Value { get { return Value; } set { Value = (string)value; } }
         public new string Value { get { return mValue; } set { mValue = value; } }
-#pragma warning restore CA1051 // Do not declare visible instance fields
 
         static public implicit operator string(WindowsByteString obj) { return obj.mValue; }
 
@@ -448,7 +439,6 @@ namespace ExifLibrary
     /// </summary>
     public class LensSpecification : ExifURationalArray
     {
-#pragma warning disable CA1305 // Specify IFormatProvider -- We are parsing a known metadata type and the region lookup is not needed.
         protected new MathEx.UFraction32[] Value { get { return mValue; } set { mValue = value; } }
         public MathEx.UFraction32 MinFocalLength { get { return mValue[0]; } set { mValue[0] = value; } }
         public MathEx.UFraction32 MaxFocalLength { get { return mValue[1]; } set { mValue[1] = value; } }
@@ -467,7 +457,8 @@ namespace ExifLibrary
         }
 
         public LensSpecification(ExifTag tag, float minFocal, float maxFocal, float minFocalF, float maxFocalF)
-            : base(tag, [new(minFocal), new(maxFocal), new(minFocalF), new(maxFocalF)])
+            : base(tag, new MathEx.UFraction32[] { new MathEx.UFraction32(minFocal), new MathEx.UFraction32(maxFocal),
+                new MathEx.UFraction32(minFocalF), new MathEx.UFraction32(maxFocalF) })
         {
             ;
         }

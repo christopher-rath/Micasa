@@ -8,10 +8,12 @@
 // Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
 // Warranty: None, see the license.
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1825 // Avoid zero-length array allocations
     #region Enums
     /// <summary>
     /// Represents a GIF block separator.
@@ -163,7 +165,7 @@ namespace ExifLibrary
         public GIFImageDescriptor() : base(0x2C)
         {
             LCT = new byte[0, 3];
-            ImageData = [];
+            ImageData = new byte[0][] { };
         }
         #endregion
     }
@@ -194,8 +196,7 @@ namespace ExifLibrary
         public GIFExtensionBlock(byte label) : base(0x21)
         {
             Label = (GIFExtensionLabel)label;
-            Data = [];
-#pragma warning restore CA1825 // Avoid zero-length array allocations
+            Data = new byte[0][] { };
         }
         #endregion
     }

@@ -60,13 +60,11 @@ namespace ExifLibrary
         /// </summary>
         public static string ToString(byte[] data)
         {
-            StringBuilder sb = new();
+            StringBuilder sb = new StringBuilder();
             foreach (byte b in data)
                 sb.Append(b);
             return sb.ToString();
         }
-
-        private static readonly char[] separator = new char[] { ':', ' ' };
 
         /// <summary>
         /// Returns a DateTime object converted from the given byte array.
@@ -74,7 +72,7 @@ namespace ExifLibrary
         public static DateTime ToDateTime(byte[] data, bool hastime)
         {
             string str = ToAscii(data, Encoding.ASCII);
-            string[] parts = str.Split(separator);
+            string[] parts = str.Split(new char[] { ':', ' ' });
             try
             {
                 if (hastime && parts.Length == 6)
@@ -82,12 +80,7 @@ namespace ExifLibrary
                     // yyyy:MM:dd HH:mm:ss
                     // This is the expected format though some cameras
                     // can use single digits. See Issue 21.
-                    return new DateTime(year: int.Parse(parts[0]),
-                                        month: int.Parse(parts[1]),
-                                        day: int.Parse(parts[2]),
-                                        hour: int.Parse(parts[3]),
-                                        minute: int.Parse(parts[4]),
-                                        second: int.Parse(parts[5]));
+                    return new DateTime(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]), int.Parse(parts[5]));
                 }
                 else if (!hastime && parts.Length == 3)
                 {

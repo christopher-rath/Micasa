@@ -8,11 +8,11 @@
 // Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
 // Warranty: None, see the license.
 #endregion
+using System;
 using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1051 // Do not declare visible instance fields
     /// <summary>
     /// Represents a 7-bit ASCII encoded comment string. (GIF Specification: Comment Extension)
     /// </summary>

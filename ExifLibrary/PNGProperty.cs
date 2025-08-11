@@ -13,9 +13,6 @@ using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1825 // Avoid zero-length array allocations
     /// <summary>
     /// Represents an Latin-1 [ISO-8859-1] string. (PNG Specification: tEXt, zTXt)
     /// </summary>
@@ -108,7 +105,7 @@ namespace ExifLibrary
             {
                 Encoding latin1 = Encoding.GetEncoding(28591);
                 byte[] keyword = latin1.GetBytes(Keyword);
-                byte[] value = [];
+                byte[] value = new byte[0];
                 if (Compressed)
                     value = Utility.CompressString(mValue, Encoding.UTF8);
                 else

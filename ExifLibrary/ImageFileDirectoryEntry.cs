@@ -9,11 +9,11 @@
 // Warranty: None, see the license.
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1051 // Do not declare visible instance fields
-#pragma warning disable CA1507 // Use nameof to express symbol names
     /// <summary>
     /// Represents an entry in the image file directory.
     /// </summary>

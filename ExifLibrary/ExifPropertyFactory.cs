@@ -13,8 +13,6 @@ using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA2251 // Use 'string.Equals'
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Creates exif properties from interoperability parameters.
     /// </summary>

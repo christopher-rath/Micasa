@@ -36,8 +36,7 @@ namespace ExifLibrary
         #endregion
 
         #region Member Variables
-        private readonly ByteOrder mFrom;
-        private readonly ByteOrder mTo;
+        private ByteOrder mFrom, mTo;
         #endregion
 
         #region Constructors

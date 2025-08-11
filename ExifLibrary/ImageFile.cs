@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 
 namespace ExifLibrary
 {
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Represents the base class for image files.
     /// </summary>
@@ -29,9 +28,9 @@ namespace ExifLibrary
         protected ImageFile()
         {
             Format = ImageFileFormat.Unknown;
-            Properties = [];
+            Properties = new ExifPropertyCollection<ExifProperty>();
             Encoding = Encoding.UTF8;
-            Errors = [];
+            Errors = new List<ImageError>();
         }
         #endregion
 
@@ -86,7 +85,8 @@ namespace ExifLibrary
         /// <param name="stream">A stream to save image data to.</param>
         public void Save(Stream stream)
         {
-            if (stream is MemoryStream memStream)
+            var memStream = stream as MemoryStream;
+            if (memStream != null)
             {
                 SaveInternal(memStream);
             }
@@ -119,7 +119,7 @@ namespace ExifLibrary
         /// <param name="stream">A stream to save image data to.</param>
         public virtual async Task SaveAsync(Stream stream)
         {
-            await SaveAsync(stream);
+            Save(stream);
         }
 
         /// <summary>
@@ -171,7 +171,8 @@ namespace ExifLibrary
         /// <returns>The <see cref="ImageFile"/> created from the stream.</returns>
         protected static ImageFile FromStream(Stream stream, Encoding encoding)
         {
-            if (stream is MemoryStream memStream)
+            var memStream = stream as MemoryStream;
+            if (memStream != null)
             {
                 return FromStreamInternal(memStream, encoding);
             }
@@ -258,7 +259,7 @@ namespace ExifLibrary
         /// <returns>The <see cref="ImageFile"/> created from the stream.</returns>
         public static async Task<ImageFile> FromStreamAsync(Stream stream, Encoding encoding)
         {
-            return await FromStreamAsync(stream, encoding);
+            return FromStream(stream, encoding);
         }
         #endregion
 

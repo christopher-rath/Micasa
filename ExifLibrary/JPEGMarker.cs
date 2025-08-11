@@ -8,6 +8,9 @@
 // Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
 // Warranty: None, see the license.
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {

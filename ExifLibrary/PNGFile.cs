@@ -15,10 +15,6 @@ using System.IO;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1822 // Mark members as static
-#pragma warning disable CA1825 // Avoid zero-length array allocations
-#pragma warning disable CA2251 // Use 'string.Equals'
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Represents the binary view of a PNG file.
     /// </summary>
@@ -41,7 +37,7 @@ namespace ExifLibrary
         protected internal PNGFile(MemoryStream stream, System.Text.Encoding encoding)
         {
             Format = ImageFileFormat.PNG;
-            Chunks = [];
+            Chunks = new List<PNGChunk>();
             Encoding = encoding;
             BitConverterEx conv = BitConverterEx.BigEndian;
 
@@ -101,9 +97,9 @@ namespace ExifLibrary
         protected override void SaveInternal(MemoryStream stream)
         {
             // Add end chunk if it does not exist
-            if (Chunks[^1].Type != "IEND")
+            if (Chunks[Chunks.Count - 1].Type != "IEND")
             {
-                Chunks.Add(new PNGChunk("IEND", []));
+                Chunks.Add(new PNGChunk("IEND", new byte[0]));
             }
 
             // Save metadata

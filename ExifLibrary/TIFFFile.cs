@@ -14,7 +14,6 @@ using System.IO;
 
 namespace ExifLibrary
 {
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Represents the binary view of a TIFF file.
     /// </summary>
@@ -24,7 +23,7 @@ namespace ExifLibrary
         /// <summary>
         /// The whitelist of tags to keep.
         /// </summary>
-        private static readonly Dictionary<ExifTag, bool> WhiteList = new Dictionary<ExifTag, bool>()
+        private static Dictionary<ExifTag, bool> WhiteList = new Dictionary<ExifTag, bool>()
         {
             { ExifTag.BitsPerSample, false },
             { ExifTag.CellLength, false },
@@ -112,7 +111,7 @@ namespace ExifLibrary
         protected internal TIFFFile(MemoryStream stream, System.Text.Encoding encoding)
         {
             Format = ImageFileFormat.TIFF;
-            IFDs = [];
+            IFDs = new List<ImageFileDirectory>();
             Encoding = encoding;
 
             // Read the entire stream
@@ -170,7 +169,7 @@ namespace ExifLibrary
             // Write TIFF header
             uint ifdoffset = 8;
             // Byte order
-            stream.Write((BitConverterEx.SystemByteOrder == BitConverterEx.ByteOrder.LittleEndian ? "II"u8.ToArray() : "MM"u8.ToArray()), 0, 2);
+            stream.Write((BitConverterEx.SystemByteOrder == BitConverterEx.ByteOrder.LittleEndian ? new byte[] { 0x49, 0x49 } : new byte[] { 0x4D, 0x4D }), 0, 2);
             // TIFF ID
             stream.Write(conv.GetBytes((ushort)42), 0, 2);
             // Offset to 0th IFD, will be corrected below

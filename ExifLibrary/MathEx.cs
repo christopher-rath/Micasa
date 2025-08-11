@@ -13,13 +13,6 @@ using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1036 // Override methods on comparable types
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1507 // Use nameof to express symbol names
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-#pragma warning disable CA1725 // Parameter names should match base declaration
-#pragma warning disable CA1830 // Prefer strongly-typed Append and Insert method overloads on StringBuilder
-#pragma warning disable IDE0090 // Use 'new(...)'
     /// <summary>
     /// Contains extended Math functions.
     /// </summary>
@@ -92,7 +85,7 @@ namespace ExifLibrary
         /// Represents a generic rational number represented by 32-bit signed numerator and denominator.
         /// </summary>
         public struct Fraction32 : IComparable, IFormattable, IComparable<Fraction32>, IEquatable<Fraction32>
-       {
+        {
             #region Constants
             private const uint MaximumIterations = 10000000;
             #endregion
@@ -101,7 +94,7 @@ namespace ExifLibrary
             private bool mIsNegative;
             private int mNumerator;
             private int mDenominator;
-            private readonly double mError;
+            private double mError;
             #endregion
 
             #region Properties
@@ -148,7 +141,7 @@ namespace ExifLibrary
             /// <summary>
             /// Gets the error term.
             /// </summary>
-            public readonly double Error
+            public double Error
             {
                 get
                 {
@@ -161,7 +154,10 @@ namespace ExifLibrary
             /// </summary>
             public bool IsNegative
             {
-                readonly get => mIsNegative;
+                get
+                {
+                    return mIsNegative;
+                }
                 set
                 {
                     mIsNegative = value;
@@ -514,17 +510,15 @@ namespace ExifLibrary
             /// <param name="obj">Another object to compare to.</param>
             /// <returns>true if obj and this instance are the same type and represent 
             /// the same value; otherwise, false.</returns>
-            public override readonly bool Equals(object obj)
+            public override bool Equals(object obj)
             {
                 if (obj == null)
                     return false;
 
-#pragma warning disable IDE0038 // Use pattern matching
                 if (obj is Fraction32)
                     return Equals((Fraction32)obj);
                 else
                     return false;
-#pragma warning restore IDE0038 // Use pattern matching
             }
 
             /// <summary>
@@ -533,7 +527,7 @@ namespace ExifLibrary
             /// <param name="obj">Another fraction object to compare to.</param>
             /// <returns>true if obj and this instance represent the same value; 
             /// otherwise, false.</returns>
-            public readonly bool Equals(Fraction32 obj)
+            public bool Equals(Fraction32 obj)
             {
                 return (mIsNegative == obj.IsNegative) && (mNumerator == obj.Numerator) && (mDenominator == obj.Denominator);
             }
@@ -542,7 +536,7 @@ namespace ExifLibrary
             /// Returns the hash code for this instance.
             /// </summary>
             /// <returns> A 32-bit signed integer that is the hash code for this instance.</returns>
-            public override readonly int GetHashCode()
+            public override int GetHashCode()
             {
                 return mDenominator ^ ((mIsNegative ? -1 : 1) * mNumerator);
             }
@@ -562,7 +556,7 @@ namespace ExifLibrary
             /// <exception cref="System.FormatException">
             /// format is invalid or not supported.
             /// </exception>
-            public readonly string ToString(string format, IFormatProvider formatProvider)
+            public string ToString(string format, IFormatProvider formatProvider)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(((mIsNegative ? -1 : 1) * mNumerator).ToString(format, formatProvider));
@@ -582,7 +576,7 @@ namespace ExifLibrary
             /// <exception cref="System.FormatException">
             /// format is invalid or not supported.
             /// </exception>
-            public readonly string ToString(string format)
+            public string ToString(string format)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(((mIsNegative ? -1 : 1) * mNumerator).ToString(format));
@@ -602,7 +596,7 @@ namespace ExifLibrary
             /// The string representation of the value of this instance as 
             /// specified by provider.
             /// </returns>
-            public readonly string ToString(IFormatProvider formatProvider)
+            public string ToString(IFormatProvider formatProvider)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(((mIsNegative ? -1 : 1) * mNumerator).ToString(formatProvider));
@@ -615,7 +609,7 @@ namespace ExifLibrary
             /// Returns a string representation of the fraction.
             /// </summary>
             /// <returns>A string formatted as numerator/denominator.</returns>
-            public override readonly string ToString()
+            public override string ToString()
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(((mIsNegative ? -1 : 1) * mNumerator).ToString());
@@ -636,7 +630,7 @@ namespace ExifLibrary
             /// Greater than zero: This instance is greater than obj or obj is null.
             /// </returns>
             /// <exception cref="System.ArgumentException">obj is not a Fraction.</exception>
-            public readonly int CompareTo(object obj)
+            public int CompareTo(object obj)
             {
                 if (!(obj is Fraction32))
                     throw new ArgumentException("obj must be of type Fraction", "obj");
@@ -655,7 +649,7 @@ namespace ExifLibrary
             /// Zero: This instance is equal to obj. 
             /// Greater than zero: This instance is greater than obj or obj is null.
             /// </returns>
-            public readonly int CompareTo(Fraction32 obj)
+            public int CompareTo(Fraction32 obj)
             {
                 if (this < obj)
                     return -1;
@@ -697,7 +691,7 @@ namespace ExifLibrary
                     if (++currIteration > MaximumIterations) break;
 
                     a = (int)Math.Floor(f);
-                    f -= (double)a;
+                    f = f - (double)a;
                     if (Math.Abs(f) < double.Epsilon)
                         break;
                     f = 1.0 / f;
@@ -736,7 +730,8 @@ namespace ExifLibrary
             /// </exception>
             private static Fraction32 FromString(string s)
             {
-                ArgumentNullException.ThrowIfNull(s);
+                if (s == null)
+                    throw new ArgumentNullException("s");
 
                 string[] sa = s.Split('/');
                 int numerator = 1;
@@ -777,8 +772,8 @@ namespace ExifLibrary
             {
                 uint gcd = MathEx.GCD((uint)numerator, (uint)denominator);
                 if (gcd == 0) gcd = 1;
-                numerator /= (int)gcd;
-                denominator /= (int)gcd;
+                numerator = numerator / (int)gcd;
+                denominator = denominator / (int)gcd;
             }
             #endregion
         }
@@ -795,7 +790,7 @@ namespace ExifLibrary
             #region Member Variables
             private uint mNumerator;
             private uint mDenominator;
-            private readonly double mError;
+            private double mError;
             #endregion
 
             #region Properties
@@ -819,7 +814,7 @@ namespace ExifLibrary
             /// </summary>
             public uint Denominator
             {
-                readonly get
+                get
                 {
                     return mDenominator;
                 }
@@ -834,7 +829,7 @@ namespace ExifLibrary
             /// <summary>
             /// Gets the error term.
             /// </summary>
-            public readonly double Error
+            public double Error
             {
                 get
                 {
@@ -1143,12 +1138,15 @@ namespace ExifLibrary
             /// <param name="obj">Another object to compare to.</param>
             /// <returns>true if obj and this instance are the same type and represent 
             /// the same value; otherwise, false.</returns>
-            public override readonly bool Equals(object obj)
+            public override bool Equals(object obj)
             {
                 if (obj == null)
                     return false;
 
-                return obj is UFraction32 fraction && Equals(fraction);
+                if (obj is UFraction32)
+                    return Equals((UFraction32)obj);
+                else
+                    return false;
             }
 
             /// <summary>
@@ -1157,7 +1155,7 @@ namespace ExifLibrary
             /// <param name="obj">Another fraction object to compare to.</param>
             /// <returns>true if obj and this instance represent the same value; 
             /// otherwise, false.</returns>
-            public readonly bool Equals(UFraction32 obj)
+            public bool Equals(UFraction32 obj)
             {
                 return (mNumerator == obj.Numerator) && (mDenominator == obj.Denominator);
             }
@@ -1166,7 +1164,7 @@ namespace ExifLibrary
             /// Returns the hash code for this instance.
             /// </summary>
             /// <returns> A 32-bit signed integer that is the hash code for this instance.</returns>
-            public override readonly int GetHashCode()
+            public override int GetHashCode()
             {
                 return ((int)mDenominator) ^ ((int)mNumerator);
             }
@@ -1186,7 +1184,7 @@ namespace ExifLibrary
             /// <exception cref="System.FormatException">
             /// format is invalid or not supported.
             /// </exception>
-            public readonly string ToString(string format, IFormatProvider formatProvider)
+            public string ToString(string format, IFormatProvider formatProvider)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(mNumerator.ToString(format, formatProvider));
@@ -1206,7 +1204,7 @@ namespace ExifLibrary
             /// <exception cref="System.FormatException">
             /// format is invalid or not supported.
             /// </exception>
-            public readonly string ToString(string format)
+            public string ToString(string format)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(mNumerator.ToString(format));
@@ -1226,7 +1224,7 @@ namespace ExifLibrary
             /// The string representation of the value of this instance as 
             /// specified by provider.
             /// </returns>
-            public readonly string ToString(IFormatProvider formatProvider)
+            public string ToString(IFormatProvider formatProvider)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(mNumerator.ToString(formatProvider));
@@ -1239,7 +1237,7 @@ namespace ExifLibrary
             /// Returns a string representation of the fraction.
             /// </summary>
             /// <returns>A string formatted as numerator/denominator.</returns>
-            public override readonly string ToString()
+            public override string ToString()
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(mNumerator.ToString());
@@ -1260,9 +1258,9 @@ namespace ExifLibrary
             /// Greater than zero: This instance is greater than obj or obj is null.
             /// </returns>
             /// <exception cref="System.ArgumentException">obj is not a Fraction.</exception>
-            public readonly int CompareTo(object obj)
+            public int CompareTo(object obj)
             {
-                if (obj is not UFraction32)
+                if (!(obj is UFraction32))
                     throw new ArgumentException("obj must be of type UFraction32", "obj");
 
                 return CompareTo((UFraction32)obj);
@@ -1279,7 +1277,7 @@ namespace ExifLibrary
             /// Zero: This instance is equal to obj. 
             /// Greater than zero: This instance is greater than obj or obj is null.
             /// </returns>
-            public readonly int CompareTo(UFraction32 obj)
+            public int CompareTo(UFraction32 obj)
             {
                 if (this < obj)
                     return -1;
@@ -1319,7 +1317,7 @@ namespace ExifLibrary
                     if (++currIteration > MaximumIterations) break;
 
                     a = (uint)Math.Floor(f);
-                    f -= (double)a;
+                    f = f - (double)a;
                     if (Math.Abs(f) < double.Epsilon)
                         break;
                     f = 1.0 / f;
@@ -1360,7 +1358,8 @@ namespace ExifLibrary
             /// </exception>
             private static UFraction32 FromString(string s)
             {
-                ArgumentNullException.ThrowIfNull(s);
+                if (s == null)
+                    throw new ArgumentNullException("s");
 
                 string[] sa = s.Split('/');
                 uint numerator = 1;
@@ -1400,8 +1399,8 @@ namespace ExifLibrary
             private static void Reduce(ref uint numerator, ref uint denominator)
             {
                 uint gcd = MathEx.GCD(numerator, denominator);
-                numerator /= gcd;
-                denominator /= gcd;
+                numerator = numerator / gcd;
+                denominator = denominator / gcd;
             }
             #endregion
         }

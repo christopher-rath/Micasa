@@ -8,11 +8,12 @@
 // Distributed under the MIT License (MIT) -- see http://opensource.org/licenses/MIT
 // Warranty: None, see the license.
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ExifLibrary
 {
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1825 // Avoid zero-length array allocations
     /// <summary>
     /// Represents the memory view of a JPEG section.
     /// A JPEG section is the data between markers of the JPEG file.
@@ -56,7 +57,7 @@ namespace ExifLibrary
         /// </summary>
         /// <param name="marker">The marker byte representing the section.</param>
         public JPEGSection(JPEGMarker marker)
-            : this(marker, [], [])
+            : this(marker, new byte[0], new byte[0])
         {
             ;
         }
