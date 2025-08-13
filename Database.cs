@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Media.Imaging;
 using LiteDB;
+using Microsoft.VisualBasic;
 
 namespace Micasa
 {
@@ -237,6 +238,8 @@ namespace Micasa
         /// of the caption string; that is, any RTF, HTML, or other markup is simply retrieved 
         /// from the image and returned by the method in its raw form.
         /// 
+        /// The BitmapMetadata class supports GIF, JPEG, PNG, and TIFF image formats.
+        /// 
         /// If any error occurs, this method will silently return an empty string.
         /// </summary>
         /// <param name="imgFl">Filename with any required path.</param>
@@ -250,7 +253,8 @@ namespace Micasa
 
             supportedImg = Path.GetExtension(imgFl).ToLower(invC) switch
             {
-                Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Tif or Constants.sMcFT_TifA => true,
+                Constants.sMcFT_Gif or Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Png 
+                    or Constants.sMcFT_Tif or Constants.sMcFT_TifA => true,
                 _ => false,
             };
             if (supportedImg)
