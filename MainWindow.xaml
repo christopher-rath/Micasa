@@ -80,11 +80,11 @@
             <RowDefinition Height="19" />
             <RowDefinition Height="*" />
             <RowDefinition Height="23" />
-        </Grid.RowDefinitions>  
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="290" />
         </Grid.ColumnDefinitions>
         <!--
         The menu bar has almost been completely built-out to match Picasa's menu bar.
@@ -301,7 +301,7 @@
                                 <Setter.Value>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Name="folderImg"  MaxWidth="20" MaxHeight="20" Stretch="Uniform"
+                                            <Image Name="imgFolder"  MaxWidth="20" MaxHeight="20" Stretch="Uniform"
                                                 Source="{Binding 
                                                     RelativeSource={RelativeSource 
                                                                     Mode=FindAncestor, 
@@ -325,7 +325,8 @@
         </TabControl>
 
         <ListBox x:Name="MainWindowPhotos" Grid.Row="1" Grid.Column="1" Width="Auto" Margin="0,0,0,0" 
-                 HorizontalAlignment="Left" BorderBrush="White" BorderThickness="0" >
+                 HorizontalAlignment="Left" BorderBrush="White" BorderThickness="0" 
+                 SelectionChanged="MainWindowPhotos_SelectionChanged" >
             <ListBox.Resources>
                 <Style TargetType="{x:Type ListBox}">
                     <!-- Set the ItemTemplate of the ListBox to a DataTemplate 
@@ -358,12 +359,150 @@
                 </Style>
             </ListBox.Resources>
         </ListBox>
-
+        <!-- Margin="left,top,right,bottom"-->
         <TabControl x:Name="InfoTabs" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" 
-                    Width="250" Margin="0,0,0,0" GotFocus="InfoTabs_GotFocus" >
-            <TabItem Header="People" x:Name="MWRtPeopleTab">
+                    Width="290" Margin="0,0,0,0" GotFocus="InfoTabs_GotFocus" >
+            <TabItem Header="People" x:Name="MWRtPeopleTab" >
             </TabItem>
-            <TabItem Header="Details" x:Name="MWDetailsTab" >
+            <TabItem Header="Details" x:Name="MWDetailsTab" Height="24" VerticalAlignment="Bottom" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock x:Name="tbDetailHdr" Text="DETAILS" FontWeight="Bold" Margin="0,0,0,0"
+                                    Background="PaleGoldenrod" MinWidth="250" TextAlignment="Center" />
+                        <TextBlock Text="Filename" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbFilename" Text="Filename" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Location" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbLocation" Text="Location" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Size" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbFileSize" Text="Size" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Created Date" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbCreatedDate" Text="Created Date" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Modified Date" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbModifiedDate" Text="Modified Date" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Owner" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbOwner" Text="Owner" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Permissions" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbPermissions" Text="Permissions" Margin="10,0,0,0" MinWidth="250" />
+
+                        <TextBlock x:Name="tbImgMetadataHdr" Text="IMAGE METADATA" FontWeight="Bold" Margin="0,0,0,0"
+                                    Background="PaleGoldenrod" MinWidth="250" TextAlignment="Center" />
+                        <TextBlock Text="Title (Caption)" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbTitleCaption" Text="Title (Caption)" Margin="10,0,0,0" MinWidth="250" />
+
+                        <TextBlock x:Name="tbEXIFHdr" Text="EXIF TAGS" FontWeight="Bold" Margin="0,0,0,0"
+                                    Background="PaleGoldenrod" MinWidth="250" TextAlignment="Center" />
+                        <TextBlock Text="Dimensions" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbDimensions" Text="Dimensions" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Camera Make" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbCameraMake" Text="Camera Make" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Camera Model" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbCameraModel" Text="Camera Model" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Image Creation Date" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbImgCreationDate" Text="Image Creation Date" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Digitised Date" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbImgDigitisedDate" Text="Digitised Date" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Modified Date" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbImgModifiedDate" Text="Modified Date" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Orientation" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbOrientation" Text="Orientation" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Flash" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbFlash" Text="Flash" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Lens" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbLens" Text="Lens" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Focal Length" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbFocalLength" Text="Focal Length" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Focal Length in 35mm Film" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbFocalLength35mm" Text="Focal Length in 35mm Film" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Exposure Time" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbExposureTime" Text="Exposure Time" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Aperture" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbAperture" Text="Aperture" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="F Number (F-stop)" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbFNumber" Text="F Number (F-stop)" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Subject Distance" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbDistance" Text="Subject Distance" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="ISO" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbISO" Text="ISO" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="White Balance" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbWhiteBalance" Text="White Balance" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Metering Mode" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbMeteringMode" Text="Metering Mode" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Exposure Program" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbExposureProgram" Text="Exposure Program" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Colour Space" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbColorSpace" Text="Colour Space" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock x:Name="tbThumbnailHdr" Text="Thumbnail (w x h pixels)" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <Image Name="imgThumbnail" MaxWidth="20" MaxHeight="20" Stretch="Uniform" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="JPEG Quality" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbJPEGQuality" Text="JPEG Quality" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Unique ID" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbUniqueID" Text="Unique ID" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="X Resolution" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbXResolution" Text="X Resolution" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Y Resolution" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbYResolution" Text="Y Resolution" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Resolution Unit" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbResolutionUnit" Text="Resolution Unit" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Software" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbSoftware" Text="Software" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Artist" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbArtist" Text="Artist" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Copyright" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbCopyright" Text="Copyright" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Shutter Speed" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbShutterSpeed" Text="Shutter Speed" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Exposure Bias" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbExposureBias" Text="Exposure Bias" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Maker Note" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbMakerNote" Text="Maker Note" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="User Comment" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbUserComment" Text="User Comment" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="GPS Version" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbGPSVersion" Text="GPS Version" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="EXIF Version" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbEXIFVersion" Text="EXIF Version" Margin="10,0,0,0" MinWidth="250" />
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Map" x:Name="MWMapTab" >
             </TabItem>

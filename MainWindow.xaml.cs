@@ -19,10 +19,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ExifLibrary;
 using LiteDB;
-using Windows.Security.Cryptography.Core;
-using static Micasa.FolderManagerWindow;
+using StringExtensions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Micasa
 {
@@ -173,7 +173,7 @@ namespace Micasa
             // Start the new/updated/deleted picture scanner.
             try
             {
-                StartScanners();
+                //StartScanners();
             }
             catch (Exception e)
             {
@@ -390,13 +390,13 @@ namespace Micasa
                     {
                         Debug.WriteLine("StartFolderTab: adding to TreeView: " + folderRow.Pathname);
 
-                        Application.Current.Dispatcher.Invoke(() =>
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
                             AddPathToTree(Instance.dbFoldersItem, folderRow.Pathname);
                         });
                     }
                 }
-                Application.Current.Dispatcher.Invoke(() =>
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
                     SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder);
                     SelectATab(Instance.NavigationTabs, Options.Instance.LastSelectedLeftTab);
@@ -425,7 +425,7 @@ namespace Micasa
 
         private void DbFoldersItem_Selected(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = Cursors.Wait);
+            System.Windows.Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = Cursors.Wait);
 
             // Walk back up the tree to assemble the full path of the selected folder.
             if (e.OriginalSource is TreeViewItem item)
@@ -477,23 +477,60 @@ namespace Micasa
                 Debug.WriteLine("DbFoldersItem_Selected: e.OriginalSource is not a TreeViewItem.");
                 MessageBox.Show("DbFoldersItem_Selected: e.OriginalSource is not a TreeViewItem.");
             }
-            Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = null);
+            System.Windows.Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = null);
         }
-		#endregion MainWindowFolderList
 
-		#region Utility_Functions
-		/// <summary>
-		/// Adds a hierarchical path to the specified <see cref="TreeView"/> control, creating any missing nodes.
-		/// </summary>
-		/// <remarks>
-		/// This method splits the <paramref name="path"/> into individual folder names
-		/// using the directory separator character. It then iteratively traverses or creates <see cref="TreeViewItem"/>
-		/// nodes to represent each folder in the hierarchy. If a folder node already exists, it is reused; otherwise, a
-		/// new node is created.
-		/// </remarks>
-		/// <param name="treeView">The <see cref="TreeView"/> control to which the path will be added.</param>
-		/// <param name="path">The file system path to add, represented as a string with directory separators.</param>
-		public static void AddPathToTree(TreeView treeView, string path)
+        private void MainWindowPhotos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Get the selected image object
+            var selectedImage = MainWindowPhotos.SelectedItem;
+            if (selectedImage != null)
+            {
+                var filename = selectedImage.ToString().RmPrefix("file:///");
+
+                LoadImageDetails(filename);
+            }
+        }
+
+        /// <summary>
+        /// @@@
+        /// </summary>
+        /// <param name="filename"></param>
+        static private void LoadImageDetails(string filename)
+        {
+            Debug.WriteLine($"LoadImageDetails: Image selected: {filename}");
+            try
+            {
+                var file = ImageFile.FromFile(filename);
+                var basename = System.IO.Path.GetFileName(filename);
+                Debug.WriteLine("     Properties in the image:");
+                Instance.tbDetailHdr.Text = $"Properties of {basename}:";
+                foreach (var property in file.Properties)
+                {
+                    Debug.WriteLine($"     -- {property.Name}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ShowImageDetails: Error loading image details: {ex.Message}");
+            }
+
+        }
+        #endregion MainWindowFolderList
+
+        #region Utility_Functions
+        /// <summary>
+        /// Adds a hierarchical path to the specified <see cref="TreeView"/> control, creating any missing nodes.
+        /// </summary>
+        /// <remarks>
+        /// This method splits the <paramref name="path"/> into individual folder names
+        /// using the directory separator character. It then iteratively traverses or creates <see cref="TreeViewItem"/>
+        /// nodes to represent each folder in the hierarchy. If a folder node already exists, it is reused; otherwise, a
+        /// new node is created.
+        /// </remarks>
+        /// <param name="treeView">The <see cref="TreeView"/> control to which the path will be added.</param>
+        /// <param name="path">The file system path to add, represented as a string with directory separators.</param>
+        public static void AddPathToTree(TreeView treeView, string path)
         {
             string[] folders = path.Split(System.IO.Path.DirectorySeparatorChar);
             ItemCollection currentItems = treeView.Items;
