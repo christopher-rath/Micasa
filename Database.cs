@@ -122,7 +122,7 @@ namespace Micasa
             PhotosTbl aPhoto = new()
             {
                 Picture = Path.GetFileName(f),
-                Caption = GetCaptionFromImage(f), //TO DO: need to get any caption from the .micasa file & reconcile the two based on timestamps.
+                Caption = Metadata.GetCaptionFromImage(f),
                 FileType = Path.GetExtension(f).ToLower(invC),
                 Pathname = Path.GetDirectoryName(f),
                 FQFilename = f,
@@ -233,50 +233,6 @@ namespace Micasa
             return false;
         }
 
-        /// <summary>
-        /// Get the Caption from the image file.  This method is agnostic regarding the formatting
-        /// of the caption string; that is, any RTF, HTML, or other markup is simply retrieved 
-        /// from the image and returned by the method in its raw form.
-        /// 
-        /// The BitmapMetadata class supports GIF, JPEG, PNG, and TIFF image formats.
-        /// 
-        /// If any error occurs, this method will silently return an empty string.
-        /// </summary>
-        /// <param name="imgFl">Filename with any required path.</param>
-        /// <returns>A string.</returns>
-        private static string GetCaptionFromImage(string imgFl)
-        {
-            string caption = "";
-            // Retrieve a CultureInfo object.
-            CultureInfo invC = CultureInfo.InvariantCulture;
-            bool supportedImg = false;
-
-            supportedImg = Path.GetExtension(imgFl).ToLower(invC) switch
-            {
-                Constants.sMcFT_Gif or Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Png 
-                    or Constants.sMcFT_Tif or Constants.sMcFT_TifA => true,
-                _ => false,
-            };
-            if (supportedImg)
-            {
-                try
-                {
-                    using (FileStream fs = File.OpenRead(imgFl))
-                    {
-                        BitmapSource img = BitmapFrame.Create(fs);
-                        BitmapMetadata md = (BitmapMetadata)img.Metadata;
-
-                        caption = md.Title;
-                        caption ??= ""; // ??= means if 'caption' is null then do the assignment.
-                    }
-                }
-                catch
-                {
-                    Debug.WriteLine(string.Format(invC, "GetCaptionFromImage ({0}): Unknown exception; returning empty string.", imgFl));
-                }
-            }
-            return caption;
-        }
 
         /// <summary>
         /// Get the list of folders from the Folders table in the database.
