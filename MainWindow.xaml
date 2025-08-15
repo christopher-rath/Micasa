@@ -366,14 +366,14 @@
             </TabItem>
             <TabItem Header="Details" x:Name="MWDetailsTab" Height="24" VerticalAlignment="Bottom" >
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <StackPanel>
-                        <TextBlock x:Name="tbDetailHdr" Text="DETAILS" FontWeight="Bold" Margin="0,0,0,0"
+                    <StackPanel Width="250">
+                        <TextBlock Text="DETAILS" FontWeight="Bold" Margin="0,0,0,0"
                                     Background="PaleGoldenrod" MinWidth="250" TextAlignment="Center" />
                         <TextBlock Text="Filename" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbFilename" Text="Filename" Margin="10,0,0,0" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
                         <TextBlock Text="Location" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
-                        <TextBlock x:Name="tbLocation" Text="Location" Margin="10,0,0,0" MinWidth="250" />
+                        <TextBlock x:Name="tbLocation" Text="Location" Margin="10,0,0,0" MinWidth="250" TextWrapping="Wrap" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
                         <TextBlock Text="Size" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbFileSize" Text="Size" Margin="10,0,0,0" MinWidth="250" />
@@ -385,17 +385,15 @@
                         <TextBlock x:Name="tbModifiedDate" Text="Modified Date" Margin="10,0,0,0" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
                         <TextBlock Text="Owner" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
-                        <TextBlock x:Name="tbOwner" Text="Owner" Margin="10,0,0,0" MinWidth="250" />
+                        <TextBlock x:Name="tbOwner" Text="Owner" Margin="10,0,0,5" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
-                        <TextBlock Text="Permissions" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
-                        <TextBlock x:Name="tbPermissions" Text="Permissions" Margin="10,0,0,0" MinWidth="250" />
 
-                        <TextBlock x:Name="tbImgMetadataHdr" Text="IMAGE METADATA" FontWeight="Bold" Margin="0,0,0,0"
+                        <TextBlock Text="IMAGE METADATA" FontWeight="Bold" Margin="0,0,0,0"
                                     Background="PaleGoldenrod" MinWidth="250" TextAlignment="Center" />
                         <TextBlock Text="Title (Caption)" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
-                        <TextBlock x:Name="tbTitleCaption" Text="Title (Caption)" Margin="10,0,0,0" MinWidth="250" />
+                        <TextBlock x:Name="tbTitleCaption" Text="Title (Caption)" Margin="10,0,0,5" MinWidth="250" />
 
-                        <TextBlock x:Name="tbEXIFHdr" Text="EXIF TAGS" FontWeight="Bold" Margin="0,0,0,0"
+                        <TextBlock Text="EXIF TAGS" FontWeight="Bold" Margin="0,0,0,0"
                                     Background="PaleGoldenrod" MinWidth="250" TextAlignment="Center" />
                         <TextBlock Text="Dimensions" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbDimensions" Text="Dimensions" Margin="10,0,0,0" MinWidth="250" />
@@ -412,9 +410,6 @@
                         <TextBlock Text="Digitised Date" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbImgDigitisedDate" Text="Digitised Date" Margin="10,0,0,0" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
-                        <TextBlock Text="Modified Date" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
-                        <TextBlock x:Name="tbImgModifiedDate" Text="Modified Date" Margin="10,0,0,0" MinWidth="250" />
-                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
                         <TextBlock Text="Orientation" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbOrientation" Text="Orientation" Margin="10,0,0,0" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
@@ -426,9 +421,6 @@
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
                         <TextBlock Text="Focal Length" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbFocalLength" Text="Focal Length" Margin="10,0,0,0" MinWidth="250" />
-                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
-                        <TextBlock Text="Focal Length in 35mm Film" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
-                        <TextBlock x:Name="tbFocalLength35mm" Text="Focal Length in 35mm Film" Margin="10,0,0,0" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
                         <TextBlock Text="Exposure Time" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbExposureTime" Text="Exposure Time" Margin="10,0,0,0" MinWidth="250" />

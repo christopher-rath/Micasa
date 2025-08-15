@@ -11,7 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +25,6 @@ using System.Windows.Media.Imaging;
 using ExifLibrary;
 using LiteDB;
 using StringExtensions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Micasa
 {
@@ -173,7 +175,7 @@ namespace Micasa
             // Start the new/updated/deleted picture scanner.
             try
             {
-                //StartScanners();
+                StartScanners();
             }
             catch (Exception e)
             {
@@ -398,6 +400,7 @@ namespace Micasa
                 }
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
+                    ClearImageDetails();
                     SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder);
                     SelectATab(Instance.NavigationTabs, Options.Instance.LastSelectedLeftTab);
                     SelectATab(Instance.InfoTabs, Options.Instance.LastSelectedRightTab);
@@ -501,10 +504,44 @@ namespace Micasa
             Debug.WriteLine($"LoadImageDetails: Image selected: {filename}");
             try
             {
+                Metadata metadata = new Metadata(filename);
                 var file = ImageFile.FromFile(filename);
                 var basename = System.IO.Path.GetFileName(filename);
+                FileInfo fileInfo = new FileInfo(filename);
+#pragma warning disable CA1416 // Validate platform compatibility
+                FileSecurity fileSecurity = fileInfo.GetAccessControl();
+                IdentityReference owner = fileSecurity.GetOwner(typeof(NTAccount));
+#pragma warning restore CA1416 // Validate platform compatibility
+
+                ClearImageDetails();
+                // Populate File Details fields.
+                Instance.tbFilename.Text = basename;
+                Instance.tbLocation.Text = Path.GetDirectoryName(filename);
+                Instance.tbFileSize.Text = $"{(fileInfo.Length / (1024.0 * 1024.0)).ToString("N2", CultureInfo.InvariantCulture)} MB";
+                Instance.tbCreatedDate.Text = fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                Instance.tbModifiedDate.Text = fileInfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+#pragma warning disable CA1416 // Validate platform compatibility
+                Instance.tbOwner.Text = $"{owner.Value}";
+#pragma warning restore CA1416 // Validate platform compatibility
+
+                // Populate Image Metadata fields.
+                Instance.tbTitleCaption.Text = metadata.GetMetadataValue(Metadata.Const.CaptionTagNm);
+
+                // Populate EXIF Metadata fields.
+                Instance.tbDimensions.Text = metadata.GetMetadataValue(Metadata.Const.PixelXDimensionNm) + " x "
+                                            + metadata.GetMetadataValue(Metadata.Const.PixelYDimensionNm) + " pixels";
+                Instance.tbCameraMake.Text = metadata.GetMetadataValue(Metadata.Const.MakeNm);
+                Instance.tbCameraModel.Text = metadata.GetMetadataValue(Metadata.Const.ModelNm);
+                Instance.tbImgCreationDate.Text = metadata.GetMetadataValue(Metadata.Const.DateTimeNm);
+                Instance.tbImgDigitisedDate.Text = metadata.GetMetadataValue(Metadata.Const.DateTimeDigitizedNm);
+                Instance.tbOrientation.Text = metadata.GetMetadataValue(Metadata.Const.OrientationNm);
+                Instance.tbFlash.Text = metadata.GetMetadataValue(Metadata.Const.FlashNm);
+                Instance.tbLens.Text = metadata.GetMetadataValue(Metadata.Const.LensMakerNm) + " " 
+                                        + metadata.GetMetadataValue(Metadata.Const.LensModelNm);
+                Instance.tbFocalLength.Text = metadata.GetMetadataValue(Metadata.Const.FocalLengthNm) + " mm";
+
+
                 Debug.WriteLine("     Properties in the image:");
-                Instance.tbDetailHdr.Text = $"Properties of {basename}:";
                 foreach (var property in file.Properties)
                 {
                     Debug.WriteLine($"     -- {property.Name}");
@@ -514,7 +551,50 @@ namespace Micasa
             {
                 Debug.WriteLine($"ShowImageDetails: Error loading image details: {ex.Message}");
             }
+        }
 
+        private static void ClearImageDetails()
+        {
+            Instance.tbFilename.Text = string.Empty;
+            Instance.tbLocation.Text = string.Empty;
+            Instance.tbFileSize.Text = string.Empty;
+            Instance.tbCreatedDate.Text = string.Empty;
+            Instance.tbModifiedDate.Text = string.Empty;
+            Instance.tbOwner.Text = string.Empty;
+            Instance.tbTitleCaption.Text = string.Empty;
+            Instance.tbDimensions.Text = string.Empty;
+            Instance.tbCameraMake.Text = string.Empty;
+            Instance.tbCameraModel.Text = string.Empty;
+            Instance.tbImgCreationDate.Text = string.Empty;
+            Instance.tbImgDigitisedDate.Text = string.Empty;
+            Instance.tbOrientation.Text = string.Empty;
+            Instance.tbFlash.Text = string.Empty;
+            Instance.tbLens.Text = string.Empty;
+            Instance.tbFocalLength.Text = string.Empty;
+            Instance.tbExposureTime.Text = string.Empty;
+            Instance.tbAperture.Text = string.Empty;
+            Instance.tbFNumber.Text = string.Empty;
+            Instance.tbDistance.Text = string.Empty;
+            Instance.tbISO.Text = string.Empty;
+            Instance.tbWhiteBalance.Text = string.Empty;
+            Instance.tbMeteringMode.Text = string.Empty;
+            Instance.tbExposureProgram.Text = string.Empty;
+            Instance.tbColorSpace.Text = string.Empty;
+            Instance.tbThumbnailHdr.Text = string.Empty;
+            Instance.tbJPEGQuality.Text = string.Empty;
+            Instance.tbUniqueID.Text = string.Empty;
+            Instance.tbXResolution.Text = string.Empty;
+            Instance.tbYResolution.Text = string.Empty;
+            Instance.tbResolutionUnit.Text = string.Empty;
+            Instance.tbSoftware.Text = string.Empty;
+            Instance.tbArtist.Text = string.Empty;
+            Instance.tbCopyright.Text = string.Empty;
+            Instance.tbShutterSpeed.Text = string.Empty;
+            Instance.tbExposureBias.Text = string.Empty;
+            Instance.tbMakerNote.Text = string.Empty;
+            Instance.tbUserComment.Text = string.Empty;
+            Instance.tbGPSVersion.Text = string.Empty;
+            Instance.tbEXIFVersion.Text = string.Empty;
         }
         #endregion MainWindowFolderList
 

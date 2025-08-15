@@ -117,12 +117,13 @@ namespace Micasa
                                          string f, bool PicasaIniExists,
                                          IniFile DotPicasa, IniFile DotMisasa)
         {
+            Metadata metadata = new(f);
             // Retrieve a CultureInfo object.
             CultureInfo invC = CultureInfo.InvariantCulture;
             PhotosTbl aPhoto = new()
             {
                 Picture = Path.GetFileName(f),
-                Caption = Metadata.GetCaptionFromImage(f),
+                Caption = metadata.GetMetadataValue(Metadata.Const.CaptionTagNm),
                 FileType = Path.GetExtension(f).ToLower(invC),
                 Pathname = Path.GetDirectoryName(f),
                 FQFilename = f,
