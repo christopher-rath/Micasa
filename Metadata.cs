@@ -63,7 +63,7 @@ namespace Micasa
         /// 
         /// If any error occurs, this method will silently return an empty string.
         /// 
-        /// TO DO: get any caption from the .micasa file & reconcile the two sources based on timestamps; 
+        /// TO DO: get the caption from the .micasa file & reconcile the two sources based on timestamps; 
         /// then return the most current caption.
         /// </summary>
         /// <param name="imgFl">Fully-qualified filename.</param>
@@ -133,16 +133,29 @@ namespace Micasa
                         case Const.CaptionTagNm:
                             return GetCaptionFromImage();
                         case Const.PixelXDimensionNm:
+                            // For each of the EXIF Library sourced fields, the same logic applies:
+                            //   1. Check that the property exists in the EXIF dataset.
+                            //   2. If it exists, check that the propety's value is not null.
+                            //   3. If the value is not null then retrieve the value and use it.
+                            // This overall approach is used each time, and won't be individually
+                            // documented any further.
                             if (ExifFs.Properties.Contains(ExifTag.PixelXDimension))
                             {
-                                uint Xdim = ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelXDimension);
-                                if (Xdim == 0)
+                                if (ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelXDimension) == null)
                                 {
                                     return string.Empty;
                                 }
                                 else
                                 {
-                                    return $"{Xdim}";
+                                    uint Xdim = ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelXDimension);
+                                    if (Xdim == 0)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{Xdim}";
+                                    }
                                 }
                             }
                             else
@@ -152,14 +165,21 @@ namespace Micasa
                         case Const.PixelYDimensionNm:
                             if (ExifFs.Properties.Contains(ExifTag.PixelYDimension))
                             {
-                                uint Ydim = ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelYDimension);
-                                if (Ydim == 0)
+                                if (ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelYDimension) == null)
                                 {
                                     return string.Empty;
                                 }
                                 else
                                 {
-                                    return $"{Ydim}";
+                                    uint Ydim = ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelYDimension);
+                                    if (Ydim == 0)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{Ydim}";
+                                    }
                                 }
                             }
                             else
@@ -169,8 +189,7 @@ namespace Micasa
                         case Const.MakeNm:
                             if (ExifFs.Properties.Contains(ExifTag.Make))
                             {
-                                string make = ExifFs.Properties.Get<ExifAscii>(ExifTag.Make);
-                                return make ?? string.Empty;
+                                return ExifFs.Properties.Get<ExifAscii>(ExifTag.Make) ?? string.Empty;
                             }
                             else
                             {
@@ -179,8 +198,7 @@ namespace Micasa
                         case Const.ModelNm:
                             if (ExifFs.Properties.Contains(ExifTag.Model))
                             {
-                                string model = ExifFs.Properties.Get<ExifAscii>(ExifTag.Model);
-                                return model ?? string.Empty;
+                                return ExifFs.Properties.Get<ExifAscii>(ExifTag.Model) ?? string.Empty;
                             }
                             else
                             {
@@ -189,14 +207,21 @@ namespace Micasa
                         case Const.DateTimeNm:
                             if (ExifFs.Properties.Contains(ExifTag.DateTime))
                             {
-                                DateTime dateTime = ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTime);
-                                if (dateTime == DateTime.MinValue)
+                                if (ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTime) == null)
                                 {
                                     return string.Empty;
                                 }
                                 else
                                 {
-                                    return dateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                    DateTime dateTime = ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTime);
+                                    if (dateTime == DateTime.MinValue)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return dateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                    }
                                 }
                             }
                             else
@@ -206,14 +231,21 @@ namespace Micasa
                         case Const.DateTimeDigitizedNm:
                             if (ExifFs.Properties.Contains(ExifTag.DateTimeDigitized))
                             {
-                                DateTime dateTimeDigitized = ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTimeDigitized);
-                                if (dateTimeDigitized == DateTime.MinValue)
+                                if (ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTimeDigitized) == null)
                                 {
                                     return string.Empty;
                                 }
                                 else
                                 {
-                                    return dateTimeDigitized.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                    DateTime dateTimeDigitized = ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTimeDigitized);
+                                    if (dateTimeDigitized == DateTime.MinValue)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return dateTimeDigitized.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                    }
                                 }
                             }
                             else
@@ -223,14 +255,21 @@ namespace Micasa
                         case Const.OrientationNm:
                             if (ExifFs.Properties.Contains(ExifTag.Orientation))
                             {
-                                var orientation = ExifFs.Properties.Get<ExifEnumProperty<Orientation>>(ExifTag.Orientation);
-                                if (orientation == null)
+                                if (ExifFs.Properties.Get<ExifEnumProperty<Orientation>>(ExifTag.Orientation) == null)
                                 {
                                     return string.Empty;
                                 }
                                 else
                                 {
-                                    return orientation.Value.ToString();
+                                    var orientation = ExifFs.Properties.Get<ExifEnumProperty<Orientation>>(ExifTag.Orientation);
+                                    if (orientation == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return orientation.Value.ToString();
+                                    }
                                 }
                             }
                             else
@@ -240,14 +279,21 @@ namespace Micasa
                         case Const.FlashNm:
                             if (ExifFs.Properties.Contains(ExifTag.Flash))
                             {
-                                var flash = ExifFs.Properties.Get<ExifEnumProperty<Flash>>(ExifTag.Flash);
-                                if (flash == null)
+                                if (ExifFs.Properties.Get<ExifEnumProperty<Flash>>(ExifTag.Flash) == null)
                                 {
                                     return string.Empty;
                                 }
                                 else
                                 {
-                                    return flash.Value.ToString();
+                                    var flash = ExifFs.Properties.Get<ExifEnumProperty<Flash>>(ExifTag.Flash);
+                                    if (flash == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return flash.Value.ToString();
+                                    }
                                 }
                             }
                             else
@@ -257,8 +303,7 @@ namespace Micasa
                         case Const.LensMakerNm:
                             if (ExifFs.Properties.Contains(ExifTag.LensMake))
                             {
-                                string lensMaker = ExifFs.Properties.Get<ExifAscii>(ExifTag.LensMake);
-                                return lensMaker ?? string.Empty;
+                                return ExifFs.Properties.Get<ExifAscii>(ExifTag.LensMake) ?? string.Empty;
                             }
                             else
                             {
@@ -267,8 +312,7 @@ namespace Micasa
                         case Const.LensModelNm:
                             if (ExifFs.Properties.Contains(ExifTag.LensModel))
                             {
-                                string lensModel = ExifFs.Properties.Get<ExifAscii>(ExifTag.LensModel);
-                                return lensModel ?? string.Empty;
+                                return ExifFs.Properties.Get<ExifAscii>(ExifTag.LensModel) ?? string.Empty;
                             }
                             else
                             {
@@ -277,20 +321,206 @@ namespace Micasa
                         case Const.FocalLengthNm:
                             if (ExifFs.Properties.Contains(ExifTag.FocalLength))
                             {
-                                var focalLength = ExifFs.Properties.Get<ExifURational>(ExifTag.FocalLength);
-                                if (focalLength == null)
+                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.FocalLength) == null)
                                 {
                                     return string.Empty;
                                 }
                                 else
                                 {
-                                    if (focalLength.Value.Denominator == 1)
+                                    var focalLength = ExifFs.Properties.Get<ExifURational>(ExifTag.FocalLength);
+                                    if (focalLength == null)
                                     {
-                                        return $"{focalLength.Value.Numerator}";
+                                        return string.Empty;
                                     }
                                     else
                                     {
-                                        return $"{focalLength.Value.Numerator}/{focalLength.Value.Denominator}";
+                                        if (focalLength.Value.Denominator == 1)
+                                        {
+                                            return $"{focalLength.Value.Numerator}";
+                                        }
+                                        else
+                                        {
+                                            return $"{focalLength.Value.Numerator}/{focalLength.Value.Denominator}";
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Const.FocalLengthIn35mmFilmNm:
+                            if (ExifFs.Properties.Contains(ExifTag.FocalLengthIn35mmFilm))
+                            {
+                                if (ExifFs.Properties.Get<ExifUInt>(ExifTag.FocalLengthIn35mmFilm) == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    uint focalLength35mm = ExifFs.Properties.Get<ExifUInt>(ExifTag.FocalLengthIn35mmFilm);
+                                    if (focalLength35mm == 0)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{focalLength35mm}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Const.ExposureTimeNm:
+                            if (ExifFs.Properties.Contains(ExifTag.ExposureTime))
+                            {
+                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.ExposureTime) == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var exposureTime = ExifFs.Properties.Get<ExifURational>(ExifTag.ExposureTime);
+                                    if (exposureTime == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        if (exposureTime.Value.Denominator == 1)
+                                        {
+                                            return $"{exposureTime.Value.Numerator}";
+                                        }
+                                        else
+                                        {
+                                            return $"{exposureTime.Value.Numerator}/{exposureTime.Value.Denominator}";
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Const.ApertureValueNm:
+                            if (ExifFs.Properties.Contains(ExifTag.ApertureValue))
+                            {
+                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.ApertureValue) == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var apertureValue = ExifFs.Properties.Get<ExifURational>(ExifTag.ApertureValue);
+                                    if (apertureValue == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{(double)apertureValue.Value.Numerator / apertureValue.Value.Denominator:F2}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Const.FNumberNm:
+                            if (ExifFs.Properties.Contains(ExifTag.FNumber))
+                            {
+                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber) == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var fNumber = ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber);
+                                    if (fNumber == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{(double)fNumber.Value.Numerator / fNumber.Value.Denominator:F1}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Const.SubjectDistanceNm:
+                            if (ExifFs.Properties.Contains(ExifTag.SubjectDistance))
+                            {
+                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.SubjectDistance) == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var subjectDistance = ExifFs.Properties.Get<ExifURational>(ExifTag.SubjectDistance);
+                                    if (subjectDistance == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{(double)subjectDistance.Value.Numerator / subjectDistance.Value.Denominator:F2}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        // ISO -- How this is stored changed in EXIF v2.3; so, we first check
+                        // for the new tags (PhotographicSensitivity & SensitivityType), if they
+                        // don't exist then we look for the old tag (ISOSpeedRatings).
+                        case Const.ISONm:
+                            // ExifLibary doesn't support the Exif v2.3 tags, so we will have to use the 
+                            // BitmapMetadata class to retrieve the ISO speed.
+                            //
+                            //if (ExifFs.Properties.Contains(ExifTag.PhotographicSensitivity) &&
+                            //    ExifFs.Properties.Contains(ExifTag.SensitivityType))
+                            //{
+                            //    if (ExifFs.Properties.Get<ExifUInt>(ExifTag.PhotographicSensitivity) == null ||
+                            //        ExifFs.Properties.Get<ExifEnumProperty<SensitivityType>>(ExifTag.SensitivityType) == null)
+                            //    {
+                            //        return string.Empty;
+                            //    }
+                            //    else
+                            //    {
+                            //        uint isoSpeed = ExifFs.Properties.Get<ExifUInt>(ExifTag.PhotographicSensitivity);
+                            //        if (isoSpeed == 0)
+                            //        {
+                            //            return string.Empty;
+                            //        }
+                            //        else
+                            //        {
+                            //            return $"{isoSpeed}";
+                            //        }
+                            //    }
+                            //}
+                            //else 
+                            if (ExifFs.Properties.Contains(ExifTag.ISOSpeedRatings))
+                            {
+                                if (ExifFs.Properties.Get<ExifUInt>(ExifTag.ISOSpeedRatings) == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    uint isoSpeed = ExifFs.Properties.Get<ExifUInt>(ExifTag.ISOSpeedRatings);
+                                    if (isoSpeed == 0)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{isoSpeed}";
                                     }
                                 }
                             }
@@ -328,6 +558,12 @@ namespace Micasa
             public const string LensMakerNm = "LensMaker";
             public const string LensModelNm = "LensModel";
             public const string FocalLengthNm = "FocalLength";
+            public const string FocalLengthIn35mmFilmNm = "FocalLengthIn35mmFilm";
+            public const string ExposureTimeNm = "ExposureTime";
+            public const string ApertureValueNm = "ApertureValue";
+            public const string FNumberNm = "FNumber";
+            public const string SubjectDistanceNm = "SubjectDistance";
+            public const string ISONm = "ISO";
         }
     }
 }

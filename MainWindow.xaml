@@ -422,6 +422,9 @@
                         <TextBlock Text="Focal Length" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbFocalLength" Text="Focal Length" Margin="10,0,0,0" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
+                        <TextBlock Text="Focal Length in 35mm Film" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbFocalLength35mm" Text="Focal Length" Margin="10,0,0,0" MinWidth="250" />
+                        <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
                         <TextBlock Text="Exposure Time" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbExposureTime" Text="Exposure Time" Margin="10,0,0,0" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />

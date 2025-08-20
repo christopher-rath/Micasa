@@ -528,18 +528,24 @@ namespace Micasa
                 Instance.tbTitleCaption.Text = metadata.GetMetadataValue(Metadata.Const.CaptionTagNm);
 
                 // Populate EXIF Metadata fields.
-                Instance.tbDimensions.Text = metadata.GetMetadataValue(Metadata.Const.PixelXDimensionNm) + " x "
-                                            + metadata.GetMetadataValue(Metadata.Const.PixelYDimensionNm) + " pixels";
+                Instance.tbDimensions.Text = $"{metadata.GetMetadataValue(Metadata.Const.PixelXDimensionNm)} x "
+                                            + $"{metadata.GetMetadataValue(Metadata.Const.PixelYDimensionNm)} pixels";
                 Instance.tbCameraMake.Text = metadata.GetMetadataValue(Metadata.Const.MakeNm);
                 Instance.tbCameraModel.Text = metadata.GetMetadataValue(Metadata.Const.ModelNm);
                 Instance.tbImgCreationDate.Text = metadata.GetMetadataValue(Metadata.Const.DateTimeNm);
                 Instance.tbImgDigitisedDate.Text = metadata.GetMetadataValue(Metadata.Const.DateTimeDigitizedNm);
                 Instance.tbOrientation.Text = metadata.GetMetadataValue(Metadata.Const.OrientationNm);
                 Instance.tbFlash.Text = metadata.GetMetadataValue(Metadata.Const.FlashNm);
-                Instance.tbLens.Text = metadata.GetMetadataValue(Metadata.Const.LensMakerNm) + " " 
+                Instance.tbLens.Text = metadata.GetMetadataValue(Metadata.Const.LensMakerNm) + " "
                                         + metadata.GetMetadataValue(Metadata.Const.LensModelNm);
-                Instance.tbFocalLength.Text = metadata.GetMetadataValue(Metadata.Const.FocalLengthNm) + " mm";
-
+                Instance.tbFocalLength.Text = $"{metadata.GetMetadataValue(Metadata.Const.FocalLengthNm)} mm";
+                Instance.tbFocalLength35mm.Text = $"{metadata.GetMetadataValue(Metadata.Const.FocalLengthIn35mmFilmNm)} mm";
+                Instance.tbExposureTime.Text = $"{metadata.GetMetadataValue(Metadata.Const.ExposureTimeNm)} s";
+                Instance.tbAperture.Text = metadata.GetMetadataValue(Metadata.Const.ApertureValueNm);
+                Instance.tbFNumber.Text = $"f/{metadata.GetMetadataValue(Metadata.Const.FNumberNm)}";
+                Instance.tbDistance.Text = $"{metadata.GetMetadataValue(Metadata.Const.SubjectDistanceNm)} m";
+                Instance.tbISO.Text = metadata.GetMetadataValue(Metadata.Const.ISONm);
+                // @@@
 
                 Debug.WriteLine("     Properties in the image:");
                 foreach (var property in file.Properties)
