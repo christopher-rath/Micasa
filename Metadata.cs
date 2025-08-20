@@ -53,6 +53,27 @@ namespace Micasa
             }
         }
 
+        /// <summary>
+        /// 
+        private static bool SupportedImg(string imgFilename)
+        {
+            if (string.IsNullOrEmpty(imgFilename))
+            {
+                return false;
+            }
+            else
+            {
+                bool _supportedImg = false;
+                _supportedImg = Path.GetExtension(imgFilename).ToLower(CultureInfo.InvariantCulture) switch
+                {
+                    Constants.sMcFT_Gif or Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Png
+                        or Constants.sMcFT_Tif or Constants.sMcFT_TifA => true,
+                    _ => false,
+                };
+                return _supportedImg;
+            }
+        }
+
 
         /// <summary>
         /// Get the Caption from the image file.  This method is agnostic regarding the formatting
@@ -71,15 +92,8 @@ namespace Micasa
         private static string GetCaptionFromImage()
         {
             string caption = "";
-            bool supportedImg = false;
 
-            supportedImg = Path.GetExtension(_imgFl).ToLower(CultureInfo.InvariantCulture) switch
-            {
-                Constants.sMcFT_Gif or Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Png
-                    or Constants.sMcFT_Tif or Constants.sMcFT_TifA => true,
-                _ => false,
-            };
-            if (supportedImg)
+            if (SupportedImg(_imgFl))
             {
                 try
                 {
