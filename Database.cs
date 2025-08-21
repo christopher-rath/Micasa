@@ -123,7 +123,7 @@ namespace Micasa
             PhotosTbl aPhoto = new()
             {
                 Picture = Path.GetFileName(f),
-                Caption = metadata.GetMetadataValue(Metadata.Const.CaptionTagNm),
+                Caption = metadata.GetMetadataValue(Metadata.Tagnames.CaptionTagNm),
                 FileType = Path.GetExtension(f).ToLower(invC),
                 Pathname = Path.GetDirectoryName(f),
                 FQFilename = f,

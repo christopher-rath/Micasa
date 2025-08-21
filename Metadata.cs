@@ -9,13 +9,15 @@
 #endregion
 using System;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
+using System.Net.NetworkInformation;
+using System.Runtime.Intrinsics.Arm;
+using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using ExifLibrary;
-using Windows.Networking.BackgroundTransfer;
+using LiteDB;
 
 namespace Micasa
 {
@@ -31,31 +33,55 @@ namespace Micasa
         private static string _imgFl;
         private static FileStream _imgFs;
         private static BitmapSource _img;
-        private static BitmapMetadata _md;
+        private static BitmapMetadata _mdProp;
+        private static FileStream _mdFs;
+        private static BitmapDecoder _mdBmDc;
+        private static BitmapMetadata _mdBmMd;
 
         public Metadata(string imgFl)
         {
             // Initialize the image file path.
             _imgFl = imgFl;
 
-            // Initialize the metadata object.
+            // Initialize the metadata access variables.
             try
             {
                 _imgFs = File.OpenRead(imgFl);
                 _img = BitmapFrame.Create(_imgFs);
-                _md = (BitmapMetadata)_img.Metadata;
+                _mdProp = (BitmapMetadata)_img.Metadata;
+                _mdFs = new FileStream(_imgFl, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                _mdBmDc = BitmapDecoder.Create(_mdFs, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                _mdBmMd = (BitmapMetadata)_mdBmDc.Frames[0].Metadata;
             }
             catch
             {
                 MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "Metadata: Error opening image file: {0}", imgFl),
                     "Micasa Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                _md = null;
+                _mdProp = null;
             }
         }
 
         /// <summary>
+        /// Examine the image filename to determine if it is an image type supported by the
+        /// this Metadata class.  
         /// 
-        private static bool SupportedImg(string imgFilename)
+        /// As of August 2025, the WPF BitmapMetadata class has codecs for the following 
+        /// image types; however, at this time this Metadata class only supports a subset 
+        /// of them (those that support EXIF):
+        ///  * JPEG (.jpg) – Supports EXIF, IPTC, and XMP metadata.
+        ///  * TIFF (.tif) – Supports IFD, EXIF, IPTC, and XMP metadata.
+        ///  * PNG (.png) – Supports tEXt(PNG textual data) and XMP metadata.
+        ///  * GIF (.gif) – Limited metadata support, but some metadata can be accessed.
+        ///  * BMP (.bmp) – Minimal metadata support; not commonly used for metadata.
+        ///  * Windows Media Photo (.wdp) – Supports XMP metadata.
+        ///  * ICO (.ico) – Typically does not support metadata querying.
+        ///  
+        /// TO DO: add the .wdp and .ico image types to the list of types supported by Micasa
+        ///        (i.e., update the list in the Options panel).
+        /// </summary>
+        /// <param name="imgFilename">The filename of the image to be checked.</param>
+        /// <returns></returns>        
+        private static bool MiMdSupportedImg(string imgFilename)
         {
             if (string.IsNullOrEmpty(imgFilename))
             {
@@ -63,24 +89,36 @@ namespace Micasa
             }
             else
             {
-                bool _supportedImg = false;
-                _supportedImg = Path.GetExtension(imgFilename).ToLower(CultureInfo.InvariantCulture) switch
+                bool _supportedImg 
+                    = Path.GetExtension(imgFilename).ToLower(CultureInfo.InvariantCulture) switch
                 {
-                    Constants.sMcFT_Gif or Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Png
-                        or Constants.sMcFT_Tif or Constants.sMcFT_TifA => true,
+                    // Test for the image types that the GetMetadataValue method has been coded to handle.
+                    Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Tif 
+                        or Constants.sMcFT_TifA => true,
                     _ => false,
                 };
                 return _supportedImg;
             }
         }
 
+        public static string GetSensitivityTypeDescription(ushort sensitivityType)
+        {
+            return sensitivityType switch
+            {
+                0 => "Unknown",
+                1 => "ISO Speed",
+                2 => "Recommended Exposure Index (REI)",
+                3 => "ISO Speed and Recommended Exposure Index (REI)",
+                4 => "ISO Speed Latitude (TTL)",
+                5 => "ISO Speed Latitude (Scene)",
+                _ => "Undefined"
+            };
+        }
 
         /// <summary>
         /// Get the Caption from the image file.  This method is agnostic regarding the formatting
         /// of the caption string; that is, any RTF, HTML, or other markup is simply retrieved 
         /// from the image and returned by the method in its raw form.
-        /// 
-        /// The BitmapMetadata class supports GIF, JPEG, PNG, and TIFF image formats.
         /// 
         /// If any error occurs, this method will silently return an empty string.
         /// 
@@ -93,13 +131,13 @@ namespace Micasa
         {
             string caption = "";
 
-            if (SupportedImg(_imgFl))
+            if (MiMdSupportedImg(_imgFl))
             {
                 try
                 {
-                    if (_md != null)
+                    if (_mdProp != null)
                     {
-                        caption = _md.Title;
+                        caption = _mdProp.Title;
                         caption ??= ""; // ??= means if 'caption' is null then do the assignment.
                     }
                 }
@@ -144,9 +182,9 @@ namespace Micasa
 
                     switch (tagName)
                     {
-                        case Const.CaptionTagNm:
+                        case Tagnames.CaptionTagNm:
                             return GetCaptionFromImage();
-                        case Const.PixelXDimensionNm:
+                        case Tagnames.PixelXDimensionNm:
                             // For each of the EXIF Library sourced fields, the same logic applies:
                             //   1. Check that the property exists in the EXIF dataset.
                             //   2. If it exists, check that the propety's value is not null.
@@ -176,7 +214,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.PixelYDimensionNm:
+                        case Tagnames.PixelYDimensionNm:
                             if (ExifFs.Properties.Contains(ExifTag.PixelYDimension))
                             {
                                 if (ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelYDimension) == null)
@@ -200,7 +238,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.MakeNm:
+                        case Tagnames.MakeNm:
                             if (ExifFs.Properties.Contains(ExifTag.Make))
                             {
                                 return ExifFs.Properties.Get<ExifAscii>(ExifTag.Make) ?? string.Empty;
@@ -209,16 +247,16 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.ModelNm:
+                        case Tagnames.ModelNm:
                             if (ExifFs.Properties.Contains(ExifTag.Model))
                             {
                                 return ExifFs.Properties.Get<ExifAscii>(ExifTag.Model) ?? string.Empty;
                             }
                             else
                             {
-                                 return string.Empty;
+                                return string.Empty;
                             }
-                        case Const.DateTimeNm:
+                        case Tagnames.DateTimeNm:
                             if (ExifFs.Properties.Contains(ExifTag.DateTime))
                             {
                                 if (ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTime) == null)
@@ -240,9 +278,9 @@ namespace Micasa
                             }
                             else
                             {
-                                 return string.Empty;
+                                return string.Empty;
                             }
-                        case Const.DateTimeDigitizedNm:
+                        case Tagnames.DateTimeDigitizedNm:
                             if (ExifFs.Properties.Contains(ExifTag.DateTimeDigitized))
                             {
                                 if (ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTimeDigitized) == null)
@@ -266,7 +304,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.OrientationNm:
+                        case Tagnames.OrientationNm:
                             if (ExifFs.Properties.Contains(ExifTag.Orientation))
                             {
                                 if (ExifFs.Properties.Get<ExifEnumProperty<Orientation>>(ExifTag.Orientation) == null)
@@ -290,7 +328,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.FlashNm:
+                        case Tagnames.FlashNm:
                             if (ExifFs.Properties.Contains(ExifTag.Flash))
                             {
                                 if (ExifFs.Properties.Get<ExifEnumProperty<Flash>>(ExifTag.Flash) == null)
@@ -314,7 +352,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.LensMakerNm:
+                        case Tagnames.LensMakerNm:
                             if (ExifFs.Properties.Contains(ExifTag.LensMake))
                             {
                                 return ExifFs.Properties.Get<ExifAscii>(ExifTag.LensMake) ?? string.Empty;
@@ -323,7 +361,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.LensModelNm:
+                        case Tagnames.LensModelNm:
                             if (ExifFs.Properties.Contains(ExifTag.LensModel))
                             {
                                 return ExifFs.Properties.Get<ExifAscii>(ExifTag.LensModel) ?? string.Empty;
@@ -332,7 +370,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.FocalLengthNm:
+                        case Tagnames.FocalLengthNm:
                             if (ExifFs.Properties.Contains(ExifTag.FocalLength))
                             {
                                 if (ExifFs.Properties.Get<ExifURational>(ExifTag.FocalLength) == null)
@@ -363,7 +401,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.FocalLengthIn35mmFilmNm:
+                        case Tagnames.FocalLengthIn35mmFilmNm:
                             if (ExifFs.Properties.Contains(ExifTag.FocalLengthIn35mmFilm))
                             {
                                 if (ExifFs.Properties.Get<ExifUInt>(ExifTag.FocalLengthIn35mmFilm) == null)
@@ -387,7 +425,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.ExposureTimeNm:
+                        case Tagnames.ExposureTimeNm:
                             if (ExifFs.Properties.Contains(ExifTag.ExposureTime))
                             {
                                 if (ExifFs.Properties.Get<ExifURational>(ExifTag.ExposureTime) == null)
@@ -418,7 +456,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.ApertureValueNm:
+                        case Tagnames.ApertureValueNm:
                             if (ExifFs.Properties.Contains(ExifTag.ApertureValue))
                             {
                                 if (ExifFs.Properties.Get<ExifURational>(ExifTag.ApertureValue) == null)
@@ -442,7 +480,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.FNumberNm:
+                        case Tagnames.FNumberNm:
                             if (ExifFs.Properties.Contains(ExifTag.FNumber))
                             {
                                 if (ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber) == null)
@@ -466,7 +504,7 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Const.SubjectDistanceNm:
+                        case Tagnames.SubjectDistanceNm:
                             if (ExifFs.Properties.Contains(ExifTag.SubjectDistance))
                             {
                                 if (ExifFs.Properties.Get<ExifURational>(ExifTag.SubjectDistance) == null)
@@ -493,53 +531,31 @@ namespace Micasa
                         // ISO -- How this is stored changed in EXIF v2.3; so, we first check
                         // for the new tags (PhotographicSensitivity & SensitivityType), if they
                         // don't exist then we look for the old tag (ISOSpeedRatings).
-                        case Const.ISONm:
-                            // ExifLibary doesn't support the Exif v2.3 tags, so we will have to use the 
-                            // BitmapMetadata class to retrieve the ISO speed.
-                            //
-                            //if (ExifFs.Properties.Contains(ExifTag.PhotographicSensitivity) &&
-                            //    ExifFs.Properties.Contains(ExifTag.SensitivityType))
-                            //{
-                            //    if (ExifFs.Properties.Get<ExifUInt>(ExifTag.PhotographicSensitivity) == null ||
-                            //        ExifFs.Properties.Get<ExifEnumProperty<SensitivityType>>(ExifTag.SensitivityType) == null)
-                            //    {
-                            //        return string.Empty;
-                            //    }
-                            //    else
-                            //    {
-                            //        uint isoSpeed = ExifFs.Properties.Get<ExifUInt>(ExifTag.PhotographicSensitivity);
-                            //        if (isoSpeed == 0)
-                            //        {
-                            //            return string.Empty;
-                            //        }
-                            //        else
-                            //        {
-                            //            return $"{isoSpeed}";
-                            //        }
-                            //    }
-                            //}
-                            //else 
-                            if (ExifFs.Properties.Contains(ExifTag.ISOSpeedRatings))
+                        case Tagnames.ISONm:
+                            if (MiMdSupportedImg(_imgFl))
                             {
-                                if (ExifFs.Properties.Get<ExifUInt>(ExifTag.ISOSpeedRatings) == null)
+                                object isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34855}"); // PhotographicSensitivity (ISO)
+                                object sensitivityType = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34864}"); // SensitivityType
+
+                                if (isoValue == null && sensitivityType == null)
                                 {
-                                    return string.Empty;
+                                    isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34867}"); // ISOSpeedRatings
+                                    isoValue ??= string.Empty;
                                 }
                                 else
                                 {
-                                    uint isoSpeed = ExifFs.Properties.Get<ExifUInt>(ExifTag.ISOSpeedRatings);
-                                    if (isoSpeed == 0)
+                                    // If we have the new ISO tags, we can format them correctly.
+                                    if (sensitivityType != null)
                                     {
-                                        return string.Empty;
-                                    }
-                                    else
-                                    {
-                                        return $"{isoSpeed}";
+                                        string sensitivityTypeDesc = GetSensitivityTypeDescription((ushort)sensitivityType);
+                                        isoValue = $"{isoValue} ({sensitivityTypeDesc})";
                                     }
                                 }
+                                return $"{isoValue}";
                             }
                             else
                             {
+                                Debug.WriteLine($"GetMetadataTag: [tag {tagName}] '{_imgFl}' is not a supported image type for metadata retrieval.");
                                 return string.Empty;
                             }
 
@@ -547,7 +563,7 @@ namespace Micasa
                         default:
                             Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "GetMetadataTag: Unknown tag name '{0}'", tagName));
                             return string.Empty;
-                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -557,8 +573,8 @@ namespace Micasa
                 }
             }
         }
-
-        public static class Const
+     
+    public static class Tagnames
         {
             public const string CaptionTagNm = "Caption";
             public const string PixelXDimensionNm = "PixelXDimension";

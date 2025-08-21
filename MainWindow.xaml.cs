@@ -175,7 +175,7 @@ namespace Micasa
             // Start the new/updated/deleted picture scanner.
             try
             {
-                StartScanners();
+                //StartScanners();
             }
             catch (Exception e)
             {
@@ -369,7 +369,7 @@ namespace Micasa
             // Populate the Folders tab with the folders that contain photos that
             // Micasa has discovered; that is, for each Pathname in the FoldersCol
             // database table, create a TreeViewItem.
-            Debug.WriteLine("StartFolderTab: populating TreeView.");
+            //Debug.WriteLine("StartFolderTab: populating TreeView.");
             // Open the database.
             using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
             {
@@ -390,7 +390,7 @@ namespace Micasa
                     }
                     else
                     {
-                        Debug.WriteLine("StartFolderTab: adding to TreeView: " + folderRow.Pathname);
+                        //Debug.WriteLine("StartFolderTab: adding to TreeView: " + folderRow.Pathname);
 
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
@@ -525,33 +525,33 @@ namespace Micasa
 #pragma warning restore CA1416 // Validate platform compatibility
 
                 // Populate Image Metadata fields.
-                Instance.tbTitleCaption.Text = metadata.GetMetadataValue(Metadata.Const.CaptionTagNm);
+                Instance.tbTitleCaption.Text = metadata.GetMetadataValue(Metadata.Tagnames.CaptionTagNm);
 
                 // Populate EXIF Metadata fields.
-                Instance.tbDimensions.Text = $"{metadata.GetMetadataValue(Metadata.Const.PixelXDimensionNm)} x "
-                                            + $"{metadata.GetMetadataValue(Metadata.Const.PixelYDimensionNm)} pixels";
-                Instance.tbCameraMake.Text = metadata.GetMetadataValue(Metadata.Const.MakeNm);
-                Instance.tbCameraModel.Text = metadata.GetMetadataValue(Metadata.Const.ModelNm);
-                Instance.tbImgCreationDate.Text = metadata.GetMetadataValue(Metadata.Const.DateTimeNm);
-                Instance.tbImgDigitisedDate.Text = metadata.GetMetadataValue(Metadata.Const.DateTimeDigitizedNm);
-                Instance.tbOrientation.Text = metadata.GetMetadataValue(Metadata.Const.OrientationNm);
-                Instance.tbFlash.Text = metadata.GetMetadataValue(Metadata.Const.FlashNm);
-                Instance.tbLens.Text = metadata.GetMetadataValue(Metadata.Const.LensMakerNm) + " "
-                                        + metadata.GetMetadataValue(Metadata.Const.LensModelNm);
-                Instance.tbFocalLength.Text = $"{metadata.GetMetadataValue(Metadata.Const.FocalLengthNm)} mm";
-                Instance.tbFocalLength35mm.Text = $"{metadata.GetMetadataValue(Metadata.Const.FocalLengthIn35mmFilmNm)} mm";
-                Instance.tbExposureTime.Text = $"{metadata.GetMetadataValue(Metadata.Const.ExposureTimeNm)} s";
-                Instance.tbAperture.Text = metadata.GetMetadataValue(Metadata.Const.ApertureValueNm);
-                Instance.tbFNumber.Text = $"f/{metadata.GetMetadataValue(Metadata.Const.FNumberNm)}";
-                Instance.tbDistance.Text = $"{metadata.GetMetadataValue(Metadata.Const.SubjectDistanceNm)} m";
-                Instance.tbISO.Text = metadata.GetMetadataValue(Metadata.Const.ISONm);
+                Instance.tbDimensions.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.PixelXDimensionNm)} x "
+                                            + $"{metadata.GetMetadataValue(Metadata.Tagnames.PixelYDimensionNm)} pixels";
+                Instance.tbCameraMake.Text = metadata.GetMetadataValue(Metadata.Tagnames.MakeNm);
+                Instance.tbCameraModel.Text = metadata.GetMetadataValue(Metadata.Tagnames.ModelNm);
+                Instance.tbImgCreationDate.Text = metadata.GetMetadataValue(Metadata.Tagnames.DateTimeNm);
+                Instance.tbImgDigitisedDate.Text = metadata.GetMetadataValue(Metadata.Tagnames.DateTimeDigitizedNm);
+                Instance.tbOrientation.Text = metadata.GetMetadataValue(Metadata.Tagnames.OrientationNm);
+                Instance.tbFlash.Text = metadata.GetMetadataValue(Metadata.Tagnames.FlashNm);
+                Instance.tbLens.Text = metadata.GetMetadataValue(Metadata.Tagnames.LensMakerNm) + " "
+                                        + metadata.GetMetadataValue(Metadata.Tagnames.LensModelNm);
+                Instance.tbFocalLength.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.FocalLengthNm)} mm";
+                Instance.tbFocalLength35mm.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.FocalLengthIn35mmFilmNm)} mm";
+                Instance.tbExposureTime.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.ExposureTimeNm)} s";
+                Instance.tbAperture.Text = metadata.GetMetadataValue(Metadata.Tagnames.ApertureValueNm);
+                Instance.tbFNumber.Text = $"f/{metadata.GetMetadataValue(Metadata.Tagnames.FNumberNm)}";
+                Instance.tbDistance.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.SubjectDistanceNm)} m";
+                Instance.tbISO.Text = metadata.GetMetadataValue(Metadata.Tagnames.ISONm);
                 // @@@
 
-                Debug.WriteLine("     Properties in the image:");
-                foreach (var property in file.Properties)
-                {
-                    Debug.WriteLine($"     -- {property.Name}");
-                }
+                //Debug.WriteLine("     Properties in the image:");
+                //foreach (var property in file.Properties)
+                //{
+                //    Debug.WriteLine($"     -- {property.Name}");
+                //}
             }
             catch (Exception ex)
             {
