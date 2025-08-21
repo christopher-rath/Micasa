@@ -8,6 +8,7 @@
 // Warranty: None, see the license.
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -115,6 +116,53 @@ namespace Micasa
             };
         }
 
+        public static string DecodeFlashBits(string flashValue)
+        {
+            ushort flashBits = (ushort)int.Parse(flashValue);
+
+            var descriptions = new List<string>();
+
+            if ((flashBits & 0x1) != 0)
+            {
+                descriptions.Add("Flash fired");
+            }
+            else
+            {
+                descriptions.Add("Flash did not fire");
+            }
+
+            if ((flashBits & 0x4) != 0)
+            {
+                descriptions.Add("Return light detected");
+            }
+            else if ((flashBits & 0x2) != 0)
+            {
+                descriptions.Add("Return light not detected");
+            }
+
+            if ((flashBits & 0x10) != 0)
+            {
+                descriptions.Add("Compulsory flash");
+            }
+            else if ((flashBits & 0x18) == 0x18)
+            {
+                descriptions.Add("Auto flash");
+            }
+
+            if ((flashBits & 0x20) != 0)
+            {
+                descriptions.Add("No flash function");
+            }
+
+            if ((flashBits & 0x40) != 0)
+            {
+                descriptions.Add("Red-eye reduction");
+            }
+
+            return string.Join(", ", descriptions);
+
+        }
+
         /// <summary>
         /// Get the Caption from the image file.  This method is agnostic regarding the formatting
         /// of the caption string; that is, any RTF, HTML, or other markup is simply retrieved 
@@ -173,11 +221,16 @@ namespace Micasa
             {
                 throw new ArgumentNullException(nameof(tagName), "Tag name cannot be null.");
             }
+            else if (!MiMdSupportedImg(_imgFl))
+            {
+                Debug.WriteLine($"GetMetadataTag: [tag {tagName}] '{_imgFl}' is not a supported image type for metadata retrieval.");
+                return string.Empty;
+            }
             else
             {
-                // Initialize the EXIF file environment variable.
                 try
                 {
+                    // Initialize the EXIF file environment variable.
                     var ExifFs = ImageFile.FromFile(_imgFl);
 
                     switch (tagName)
@@ -185,60 +238,49 @@ namespace Micasa
                         case Tagnames.CaptionTagNm:
                             return GetCaptionFromImage();
                         case Tagnames.PixelXDimensionNm:
+                            object xDimValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=40962}"); // PixelXDimension
+                            if (xDimValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else if (xDimValue is ExifUInt pixelXDimension)
+                            {
+                                // If the value is an ExifUInt, return it as a string.
+                                return $"{pixelXDimension.Value}";
+                            }
+                            else
+                            {
+                                // If it's not an ExifUInt, return it as a string.
+                                return $"{xDimValue}";
+                            }
+                        case Tagnames.PixelYDimensionNm:
+                            object yDimValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=40963}"); // PixelYDimension
+                            if (yDimValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else if (yDimValue is ExifUInt pixelYDimension)
+                            {
+                                // If the value is an ExifUInt, return it as a string.
+                                return $"{pixelYDimension.Value}";
+                            }
+                            else
+                            {
+                                // If it's not an ExifUInt, return it as a string.
+                                return $"{yDimValue}";
+                            }
+                        case Tagnames.MakeNm:
+                            // We have to use EXIFLibrary to retrive the Make value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // Make tag.  The query .GetQuery("/app1/ifd/exif/{ushort=271}" should 
+                            // return the Make field but instead it returns NULL.
+                            //
                             // For each of the EXIF Library sourced fields, the same logic applies:
                             //   1. Check that the property exists in the EXIF dataset.
                             //   2. If it exists, check that the propety's value is not null.
                             //   3. If the value is not null then retrieve the value and use it.
                             // This overall approach is used each time, and won't be individually
                             // documented any further.
-                            if (ExifFs.Properties.Contains(ExifTag.PixelXDimension))
-                            {
-                                if (ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelXDimension) == null)
-                                {
-                                    return string.Empty;
-                                }
-                                else
-                                {
-                                    uint Xdim = ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelXDimension);
-                                    if (Xdim == 0)
-                                    {
-                                        return string.Empty;
-                                    }
-                                    else
-                                    {
-                                        return $"{Xdim}";
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                return string.Empty;
-                            }
-                        case Tagnames.PixelYDimensionNm:
-                            if (ExifFs.Properties.Contains(ExifTag.PixelYDimension))
-                            {
-                                if (ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelYDimension) == null)
-                                {
-                                    return string.Empty;
-                                }
-                                else
-                                {
-                                    uint Ydim = ExifFs.Properties.Get<ExifUInt>(ExifTag.PixelYDimension);
-                                    if (Ydim == 0)
-                                    {
-                                        return string.Empty;
-                                    }
-                                    else
-                                    {
-                                        return $"{Ydim}";
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                return string.Empty;
-                            }
-                        case Tagnames.MakeNm:
                             if (ExifFs.Properties.Contains(ExifTag.Make))
                             {
                                 return ExifFs.Properties.Get<ExifAscii>(ExifTag.Make) ?? string.Empty;
@@ -248,6 +290,10 @@ namespace Micasa
                                 return string.Empty;
                             }
                         case Tagnames.ModelNm:
+                            // We have to use EXIFLibrary to retrive the Make value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // Model tag.  The query .GetQuery("/app1/ifd/exif/{ushort=272}" should 
+                            // return the Model field but instead it returns NULL.
                             if (ExifFs.Properties.Contains(ExifTag.Model))
                             {
                                 return ExifFs.Properties.Get<ExifAscii>(ExifTag.Model) ?? string.Empty;
@@ -281,28 +327,27 @@ namespace Micasa
                                 return string.Empty;
                             }
                         case Tagnames.DateTimeDigitizedNm:
-                            if (ExifFs.Properties.Contains(ExifTag.DateTimeDigitized))
+                            object dateTimeDigitizedValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=36867}"); // DateTimeDigitized
+                            if (dateTimeDigitizedValue == null)
                             {
-                                if (ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTimeDigitized) == null)
+                                return string.Empty;
+                            }
+                            else if (dateTimeDigitizedValue is ExifDateTime dateTimeDigitized)
+                            {
+                                // If the value is an ExifDateTime, return it as a string.
+                                if (dateTimeDigitized.Value == DateTime.MinValue)
                                 {
                                     return string.Empty;
                                 }
                                 else
                                 {
-                                    DateTime dateTimeDigitized = ExifFs.Properties.Get<ExifDateTime>(ExifTag.DateTimeDigitized);
-                                    if (dateTimeDigitized == DateTime.MinValue)
-                                    {
-                                        return string.Empty;
-                                    }
-                                    else
-                                    {
-                                        return dateTimeDigitized.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                                    }
+                                    return dateTimeDigitized.Value.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                                 }
                             }
                             else
                             {
-                                return string.Empty;
+                                // If it's not an ExifDateTime, return it as a string.
+                                return $"{dateTimeDigitizedValue}";
                             }
                         case Tagnames.OrientationNm:
                             if (ExifFs.Properties.Contains(ExifTag.Orientation))
@@ -329,30 +374,40 @@ namespace Micasa
                                 return string.Empty;
                             }
                         case Tagnames.FlashNm:
-                            if (ExifFs.Properties.Contains(ExifTag.Flash))
-                            {
-                                if (ExifFs.Properties.Get<ExifEnumProperty<Flash>>(ExifTag.Flash) == null)
-                                {
-                                    return string.Empty;
-                                }
-                                else
-                                {
-                                    var flash = ExifFs.Properties.Get<ExifEnumProperty<Flash>>(ExifTag.Flash);
-                                    if (flash == null)
-                                    {
-                                        return string.Empty;
-                                    }
-                                    else
-                                    {
-                                        return flash.Value.ToString();
-                                    }
-                                }
-                            }
-                            else
+                            object flashValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=37385}"); // Flash
+                            if (flashValue == null)
                             {
                                 return string.Empty;
                             }
+                            else 
+                            {
+                                return DecodeFlashBits($"{flashValue}");
+                            }
                         case Tagnames.LensMakerNm:
+                            // Neither the EXIF Library nor the BitmapMetadata class return a value to
+                            // this query.  For the time being, the EXIF Library code has been left intact
+                            // and the BitmapMetadata class code left in the comment block, below.
+                            object lensMakerValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=42034}"); // LensMake
+                            if (lensMakerValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else
+                            {
+                                return $"{lensMakerValue}";
+                            }
+                            //if (ExifFs.Properties.Contains(ExifTag.LensMake))
+                            //{
+                            //    return ExifFs.Properties.Get<ExifAscii>(ExifTag.LensMake) ?? string.Empty;
+                            //}
+                            //else
+                            //{
+                            //    return string.Empty;
+                            //}
+                        case Tagnames.LensModelNm:
+                            // Neither the EXIF Library nor the BitmapMetadata class return a value to
+                            // this query.  For the time being, the EXIF Library code has been left intact
+                            // and the BitmapMetadata class code left in the comment block, below.
                             if (ExifFs.Properties.Contains(ExifTag.LensMake))
                             {
                                 return ExifFs.Properties.Get<ExifAscii>(ExifTag.LensMake) ?? string.Empty;
@@ -361,16 +416,21 @@ namespace Micasa
                             {
                                 return string.Empty;
                             }
-                        case Tagnames.LensModelNm:
-                            if (ExifFs.Properties.Contains(ExifTag.LensModel))
-                            {
-                                return ExifFs.Properties.Get<ExifAscii>(ExifTag.LensModel) ?? string.Empty;
-                            }
-                            else
-                            {
-                                return string.Empty;
-                            }
+                            //object lensModelValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=42036}"); // LensModel
+                            //if (lensModelValue == null)
+                            //{
+                            //    return string.Empty;
+                            //}
+                            //else
+                            //{
+                            //    return $"{lensModelValue}";
+                            //}
                         case Tagnames.FocalLengthNm:
+                            // We have to use EXIFLibrary to retrive the FocalLength value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // FocalLength tag.  The query .GetQuery("/app1/ifd/exif/{ushort=37386}" should 
+                            // return the FNumber but instead it returns a nonsensically large value 
+                            // (e.g., 42949673610).
                             if (ExifFs.Properties.Contains(ExifTag.FocalLength))
                             {
                                 if (ExifFs.Properties.Get<ExifURational>(ExifTag.FocalLength) == null)
@@ -402,6 +462,11 @@ namespace Micasa
                                 return string.Empty;
                             }
                         case Tagnames.FocalLengthIn35mmFilmNm:
+                            // We have to use EXIFLibrary to retrive the FocalLengthIn35mmFilm value 
+                            // because as of August 2025 the BitmapMetadata class does not yet properly 
+                            // support the FocalLengthIn35mmFilm tag.  The query 
+                            // .GetQuery("/app1/ifd/exif/{ushort=42053}" should return the FNumber but 
+                            // instead it returns null.
                             if (ExifFs.Properties.Contains(ExifTag.FocalLengthIn35mmFilm))
                             {
                                 if (ExifFs.Properties.Get<ExifUInt>(ExifTag.FocalLengthIn35mmFilm) == null)
@@ -426,6 +491,11 @@ namespace Micasa
                                 return string.Empty;
                             }
                         case Tagnames.ExposureTimeNm:
+                            // We have to use EXIFLibrary to retrive the FocalLengthIn35mmFilm value 
+                            // because as of August 2025 the BitmapMetadata class does not yet properly 
+                            // support the FocalLengthIn35mmFilm tag.  The query 
+                            // .GetQuery("/app1/ifd/exif/{ushort=33434}" should return the FNumber but 
+                            // instead it returns null.
                             if (ExifFs.Properties.Contains(ExifTag.ExposureTime))
                             {
                                 if (ExifFs.Properties.Get<ExifURational>(ExifTag.ExposureTime) == null)
@@ -457,6 +527,11 @@ namespace Micasa
                                 return string.Empty;
                             }
                         case Tagnames.ApertureValueNm:
+                            // We have to use EXIFLibrary to retrive the FocalLength value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // FocalLength tag.  The query .GetQuery("/app1/ifd/exif/{ushort=37378}" should 
+                            // return the FNumber but instead it returns a nonsensically large value 
+                            // (e.g., 429496729897085.
                             if (ExifFs.Properties.Contains(ExifTag.ApertureValue))
                             {
                                 if (ExifFs.Properties.Get<ExifURational>(ExifTag.ApertureValue) == null)
@@ -481,89 +556,81 @@ namespace Micasa
                                 return string.Empty;
                             }
                         case Tagnames.FNumberNm:
-                            if (ExifFs.Properties.Contains(ExifTag.FNumber))
-                            {
-                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber) == null)
-                                {
-                                    return string.Empty;
-                                }
-                                else
-                                {
-                                    var fNumber = ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber);
-                                    if (fNumber == null)
+                                    // We have to use EXIFLibrary to retrive the FNumber value because as of 
+                                    // August 2025 the BitmapMetadata class does not yet properly support the 
+                                    // FNumber tag.  The query .GetQuery("/app1/ifd/exif/{ushort=33437}" should 
+                                    // return the FNumber but instead it returns a nonsensically large value 
+                                    // (e.g., 4294967295).
+                                    if (ExifFs.Properties.Contains(ExifTag.FNumber))
+                                    {
+                                        if (ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber) == null)
+                                        {
+                                            return string.Empty;
+                                        }
+                                        else
+                                        {
+                                            var fNumber = ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber);
+                                            if (fNumber == null)
+                                            {
+                                                return string.Empty;
+                                            }
+                                            else
+                                            {
+                                                return $"{(double)fNumber.Value.Numerator / fNumber.Value.Denominator:F1}";
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return string.Empty;
+                                    }
+                                case Tagnames.SubjectDistanceNm:
+                                    object distanceValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=37383}"); // SubjectDistance
+                                    if (distanceValue == null)
                                     {
                                         return string.Empty;
                                     }
                                     else
                                     {
-                                        return $"{(double)fNumber.Value.Numerator / fNumber.Value.Denominator:F1}";
+                                        // If the distance value is a rational number, format it.
+                                        if (distanceValue is ExifURational subjectDistance)
+                                        {
+                                            return $"{(double)subjectDistance.Value.Numerator / subjectDistance.Value.Denominator:F2}";
+                                        }
+                                        else
+                                        {
+                                            // If it's not a rational number, return it as a string.
+                                            return $"{distanceValue}";
+                                        }
                                     }
-                                }
-                            }
-                            else
-                            {
-                                return string.Empty;
-                            }
-                        case Tagnames.SubjectDistanceNm:
-                            if (ExifFs.Properties.Contains(ExifTag.SubjectDistance))
-                            {
-                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.SubjectDistance) == null)
-                                {
-                                    return string.Empty;
-                                }
-                                else
-                                {
-                                    var subjectDistance = ExifFs.Properties.Get<ExifURational>(ExifTag.SubjectDistance);
-                                    if (subjectDistance == null)
+                                // ISO -- How this is stored changed in EXIF v2.3; so, we first check
+                                // for the new tags (PhotographicSensitivity & SensitivityType), if they
+                                // don't exist then we look for the old tag (ISOSpeedRatings).
+                                case Tagnames.ISONm:
+                                    object isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34855}"); // PhotographicSensitivity (ISO)
+                                    object sensitivityType = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34864}"); // SensitivityType
+
+                                    if (isoValue == null && sensitivityType == null)
                                     {
-                                        return string.Empty;
+                                        isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34867}"); // ISOSpeedRatings
+                                        isoValue ??= string.Empty;
                                     }
                                     else
                                     {
-                                        return $"{(double)subjectDistance.Value.Numerator / subjectDistance.Value.Denominator:F2}";
+                                        // If we have the new ISO tags, format them correctly.
+                                        if (sensitivityType != null)
+                                        {
+                                            string sensitivityTypeDesc = GetSensitivityTypeDescription((ushort)sensitivityType);
+                                            isoValue = $"{isoValue} ({sensitivityTypeDesc})";
+                                        }
                                     }
-                                }
-                            }
-                            else
-                            {
-                                return string.Empty;
-                            }
-                        // ISO -- How this is stored changed in EXIF v2.3; so, we first check
-                        // for the new tags (PhotographicSensitivity & SensitivityType), if they
-                        // don't exist then we look for the old tag (ISOSpeedRatings).
-                        case Tagnames.ISONm:
-                            if (MiMdSupportedImg(_imgFl))
-                            {
-                                object isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34855}"); // PhotographicSensitivity (ISO)
-                                object sensitivityType = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34864}"); // SensitivityType
+                                    return $"{isoValue}";
 
-                                if (isoValue == null && sensitivityType == null)
-                                {
-                                    isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34867}"); // ISOSpeedRatings
-                                    isoValue ??= string.Empty;
+                                // Add more cases for other metadata tags as needed.
+                                default:
+                                    Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "GetMetadataTag: Unknown tag name '{0}'", tagName));
+                                    return string.Empty;
                                 }
-                                else
-                                {
-                                    // If we have the new ISO tags, we can format them correctly.
-                                    if (sensitivityType != null)
-                                    {
-                                        string sensitivityTypeDesc = GetSensitivityTypeDescription((ushort)sensitivityType);
-                                        isoValue = $"{isoValue} ({sensitivityTypeDesc})";
-                                    }
-                                }
-                                return $"{isoValue}";
-                            }
-                            else
-                            {
-                                Debug.WriteLine($"GetMetadataTag: [tag {tagName}] '{_imgFl}' is not a supported image type for metadata retrieval.");
-                                return string.Empty;
-                            }
-
-                        // Add more cases for other metadata tags as needed.
-                        default:
-                            Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "GetMetadataTag: Unknown tag name '{0}'", tagName));
-                            return string.Empty;
-                    }
                 }
                 catch (Exception ex)
                 {
