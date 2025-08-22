@@ -25,6 +25,7 @@ using System.Windows.Media.Imaging;
 using ExifLibrary;
 using LiteDB;
 using StringExtensions;
+using Windows.Graphics.Display;
 
 namespace Micasa
 {
@@ -545,6 +546,19 @@ namespace Micasa
                 Instance.tbFNumber.Text = $"f/{metadata.GetMetadataValue(Metadata.Tagnames.FNumberNm)}";
                 Instance.tbDistance.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.SubjectDistanceNm)} m";
                 Instance.tbISO.Text = metadata.GetMetadataValue(Metadata.Tagnames.ISONm);
+                Instance.tbWhiteBalance.Text = metadata.GetMetadataValue(Metadata.Tagnames.WhiteBalanceNm);
+                Instance.tbMeteringMode.Text = metadata.GetMetadataValue(Metadata.Tagnames.MeteringModeNm);
+                Instance.tbExposureProgram.Text = metadata.GetMetadataValue(Metadata.Tagnames.ExposureProgramNm);
+                Instance.tbColorSpace.Text = metadata.GetMetadataValue(Metadata.Tagnames.ColorSpaceNm);
+                Instance.tbXResolution.Text = metadata.GetMetadataValue(Metadata.Tagnames.XResolutionNm);
+                Instance.tbYResolution.Text = metadata.GetMetadataValue(Metadata.Tagnames.YResolutionNm);
+                Instance.tbResolutionUnit.Text = metadata.GetMetadataValue(Metadata.Tagnames.ResolutionUnitNm);
+                Instance.tbSoftware.Text = metadata.GetMetadataValue(Metadata.Tagnames.SoftwareNm);
+                Instance.tbArtist.Text = metadata.GetMetadataValue(Metadata.Tagnames.ArtistNm);
+                Instance.tbCopyright.Text = metadata.GetMetadataValue(Metadata.Tagnames.CopyrightNm);
+                Instance.tbShutterSpeed.Text = metadata.GetMetadataValue(Metadata.Tagnames.ShutterSpeedValueNm);
+                Instance.tbExposureBias.Text = metadata.GetMetadataValue(Metadata.Tagnames.ExposureBiasValueNm);
+                Instance.tbMakerNote.Text = metadata.GetMetadataValue(Metadata.Tagnames.MakeNm);
                 // @@@
 
                 //Debug.WriteLine("     Properties in the image:");

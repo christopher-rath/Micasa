@@ -9,7 +9,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -163,6 +165,56 @@ namespace Micasa
 
         }
 
+        public static string DecodeWhiteBalance(string whiteBalanceValue)
+        {
+            ushort whiteBalance = (ushort)int.Parse(whiteBalanceValue);
+
+            return whiteBalance switch
+            {
+                0 => "Auto",
+                1 => "Manual",
+                _ => $"Unknown ({whiteBalanceValue})"
+            };
+        }
+
+        public static string DecodeMeteringMode(string meteringModeValue)
+        {
+            ushort meteringMode = (ushort)int.Parse(meteringModeValue);
+
+            return meteringMode switch
+            {
+                0 => "Unknown",
+                1 => "Average",
+                2 => "Center Weighted Average",
+                3 => "Spot",
+                4 => "MultiSpot",
+                5 => "Pattern",
+                6 => "Partial",
+                255 => "Other",
+                _ => $"Undefined ({meteringModeValue})"
+            };
+        }
+
+        public static string DecodeExposureProgram(string exposureProgramValue)
+        {
+            ushort exposureProgram = (ushort)int.Parse(exposureProgramValue);
+
+            return exposureProgram switch
+            {
+                0 => "Not defined",
+                1 => "Manual",
+                2 => "Normal program",
+                3 => "Aperture priority",
+                4 => "Shutter priority",
+                5 => "Creative program (biased towards depth of field)",
+                6 => "Action program (biased towards fast shutter speed)",
+                7 => "Portrait mode (for closeup photos with the background out of focus)",
+                8 => "Landscape mode (for landscape photos with the background in focus)",
+                _ => $"Unknown ({exposureProgramValue})"
+            };
+        }
+
+
         /// <summary>
         /// Get the Caption from the image file.  This method is agnostic regarding the formatting
         /// of the caption string; that is, any RTF, HTML, or other markup is simply retrieved 
@@ -209,6 +261,9 @@ namespace Micasa
         /// private methods that do access instance variables.  Therefore, this method cannot
         /// be marked as static becuase it must always be involved from an instance (and not 
         /// the class itself).
+        /// 
+        /// TO DO: When a BitmapMetadata or EXIF Library qurey don't return a value, try the
+        ///        other supported query methods.
         /// </summary>
         /// <param name="tagName"></param>
         /// <returns></returns>
@@ -556,81 +611,380 @@ namespace Micasa
                                 return string.Empty;
                             }
                         case Tagnames.FNumberNm:
-                                    // We have to use EXIFLibrary to retrive the FNumber value because as of 
-                                    // August 2025 the BitmapMetadata class does not yet properly support the 
-                                    // FNumber tag.  The query .GetQuery("/app1/ifd/exif/{ushort=33437}" should 
-                                    // return the FNumber but instead it returns a nonsensically large value 
-                                    // (e.g., 4294967295).
-                                    if (ExifFs.Properties.Contains(ExifTag.FNumber))
-                                    {
-                                        if (ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber) == null)
-                                        {
-                                            return string.Empty;
-                                        }
-                                        else
-                                        {
-                                            var fNumber = ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber);
-                                            if (fNumber == null)
-                                            {
-                                                return string.Empty;
-                                            }
-                                            else
-                                            {
-                                                return $"{(double)fNumber.Value.Numerator / fNumber.Value.Denominator:F1}";
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        return string.Empty;
-                                    }
-                                case Tagnames.SubjectDistanceNm:
-                                    object distanceValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=37383}"); // SubjectDistance
-                                    if (distanceValue == null)
-                                    {
-                                        return string.Empty;
-                                    }
-                                    else
-                                    {
-                                        // If the distance value is a rational number, format it.
-                                        if (distanceValue is ExifURational subjectDistance)
-                                        {
-                                            return $"{(double)subjectDistance.Value.Numerator / subjectDistance.Value.Denominator:F2}";
-                                        }
-                                        else
-                                        {
-                                            // If it's not a rational number, return it as a string.
-                                            return $"{distanceValue}";
-                                        }
-                                    }
-                                // ISO -- How this is stored changed in EXIF v2.3; so, we first check
-                                // for the new tags (PhotographicSensitivity & SensitivityType), if they
-                                // don't exist then we look for the old tag (ISOSpeedRatings).
-                                case Tagnames.ISONm:
-                                    object isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34855}"); // PhotographicSensitivity (ISO)
-                                    object sensitivityType = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34864}"); // SensitivityType
-
-                                    if (isoValue == null && sensitivityType == null)
-                                    {
-                                        isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34867}"); // ISOSpeedRatings
-                                        isoValue ??= string.Empty;
-                                    }
-                                    else
-                                    {
-                                        // If we have the new ISO tags, format them correctly.
-                                        if (sensitivityType != null)
-                                        {
-                                            string sensitivityTypeDesc = GetSensitivityTypeDescription((ushort)sensitivityType);
-                                            isoValue = $"{isoValue} ({sensitivityTypeDesc})";
-                                        }
-                                    }
-                                    return $"{isoValue}";
-
-                                // Add more cases for other metadata tags as needed.
-                                default:
-                                    Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "GetMetadataTag: Unknown tag name '{0}'", tagName));
+                            // We have to use EXIFLibrary to retrive the FNumber value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // FNumber tag.  The query .GetQuery("/app1/ifd/exif/{ushort=33437}" should 
+                            // return the FNumber but instead it returns a nonsensically large value 
+                            // (e.g., 4294967295).
+                            if (ExifFs.Properties.Contains(ExifTag.FNumber))
+                            {
+                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber) == null)
+                                {
                                     return string.Empty;
                                 }
+                                else
+                                {
+                                    var fNumber = ExifFs.Properties.Get<ExifURational>(ExifTag.FNumber);
+                                    if (fNumber == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{(double)fNumber.Value.Numerator / fNumber.Value.Denominator:F1}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.SubjectDistanceNm:
+                            object distanceValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=37383}"); // SubjectDistance
+                            if (distanceValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else
+                            {
+                                // If the distance value is a rational number, format it.
+                                if (distanceValue is ExifURational subjectDistance)
+                                {
+                                    return $"{(double)subjectDistance.Value.Numerator / subjectDistance.Value.Denominator:F2}";
+                                }
+                                else
+                                {
+                                    // If it's not a rational number, return it as a string.
+                                    return $"{distanceValue}";
+                                }
+                            }
+                        // ISO -- How this is stored changed in EXIF v2.3; so, we first check
+                        // for the new tags (PhotographicSensitivity & SensitivityType), if they
+                        // don't exist then we look for the old tag (ISOSpeedRatings).
+                        case Tagnames.ISONm:
+                            object isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34855}"); // PhotographicSensitivity (ISO)
+                            object sensitivityType = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34864}"); // SensitivityType
+
+                            if (isoValue == null && sensitivityType == null)
+                            {
+                                isoValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34867}"); // ISOSpeedRatings
+                                isoValue ??= string.Empty;
+                            }
+                            else
+                            {
+                                // If we have the new ISO tags, format them correctly.
+                                if (sensitivityType != null)
+                                {
+                                    string sensitivityTypeDesc = GetSensitivityTypeDescription((ushort)sensitivityType);
+                                    isoValue = $"{isoValue} ({sensitivityTypeDesc})";
+                                }
+                            }
+                            return $"{isoValue}";
+                        case Tagnames.WhiteBalanceNm:
+                            object whiteBalanceValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=41987}"); // WhiteBalance
+                            if (whiteBalanceValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else
+                            {
+                                return DecodeWhiteBalance($"{whiteBalanceValue}");
+                            }
+                        case Tagnames.MeteringModeNm:
+                            object meteringModeValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=37383}"); // MeteringMode
+                            if (meteringModeValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else
+                            {
+                                return DecodeMeteringMode($"{meteringModeValue}");
+                            }
+                        case Tagnames.ExposureProgramNm:
+                            object exposureProgramValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=34850}"); // ExposureProgram
+                            if (exposureProgramValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else
+                            {
+                                return DecodeExposureProgram($"{exposureProgramValue}");
+                            }
+
+                        case Tagnames.ColorSpaceNm:
+                            // We have to use EXIFLibrary to retrive the ColorSpace value 
+                            // because as of August 2025 the BitmapMetadata class does not yet properly 
+                            // support the ColorSpace tag.  The query 
+                            // .GetQuery("/app1/ifd/exif/{ushort=40961}" should return the ColorSpace but 
+                            // instead it generates an invalide query exception.
+                            if (ExifFs.Properties.Contains(ExifTag.ColorSpace))
+                            {
+                                if (ExifFs.Properties.Get<ExifURational>(ExifTag.ColorSpace) == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var colorSpace = ExifFs.Properties.Get(ExifTag.ColorSpace);
+                                    if (colorSpace == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{colorSpace.ToString}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.XResolutionNm:
+                            // We have to use EXIFLibrary to retrive the XResolution value 
+                            // because as of August 2025 the BitmapMetadata class does not yet properly 
+                            // support the XResolution tag.  The query 
+                            // .GetQuery("/app1/ifd/exif/{ushort=0x011A}" should return the XResolution but 
+                            // instead it generates an invalide query exception.
+                            if (ExifFs.Properties.Contains(ExifTag.XResolution))
+                            {
+                                if (ExifFs.Properties.Get<ExifAscii>(ExifTag.XResolution) == null)
+                                { 
+                                    return string.Empty; 
+                                }
+                                else
+                                {
+                                    var xResolution = ExifFs.Properties.Get(ExifTag.XResolution);
+                                    if (xResolution == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{xResolution}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.YResolutionNm:
+                            // We have to use EXIFLibrary to retrive the YResolution value 
+                            // because as of August 2025 the BitmapMetadata class does not yet properly 
+                            // support the YResolution tag.  The query 
+                            // .GetQuery("/app1/ifd/exif/{ushort=0x011A}" should return the YResolution but 
+                            // instead it generates an invalide query exception.
+                            if (ExifFs.Properties.Contains(ExifTag.YResolution))
+                            {
+                                if (ExifFs.Properties.Get<ExifAscii>(ExifTag.YResolution) == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var yResolution = ExifFs.Properties.Get(ExifTag.YResolution);
+                                    if (yResolution == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{yResolution}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.ResolutionUnitNm:
+                            // We have to use EXIFLibrary to retrive the ResolutionUnit value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // ResolutionUnit tag.  The query .GetQuery("/app1/ifd/exif/{ushort=0x0128}" should 
+                            // return the ResolutionUnit but instead it returns an invalide query error.
+                            if (ExifFs.Properties.Contains(ExifTag.ResolutionUnit))
+                            {
+                                if (ExifFs.Properties[ExifTag.ResolutionUnit] == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var resolutionUnit = ExifFs.Properties.Get<ExifEnumProperty<ResolutionUnit>>(ExifTag.ResolutionUnit);
+                                    if (resolutionUnit == null)
+                                    {
+                                        return string.Empty;    
+                                    }
+                                    else
+                                    {
+                                        return $"{resolutionUnit}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.SoftwareNm:
+                            // We have to use EXIFLibrary to retrive the Software value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // Software tag.  The query .GetQuery("/app1/ifd/exif/{ushort=0x0131}" should 
+                            // return the Software but instead it returns an invalide query error.
+                            if (ExifFs.Properties.Contains(ExifTag.Software))
+                            {
+                                if (ExifFs.Properties[ExifTag.Software] == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var software = ExifFs.Properties.Get<ExifAscii>(ExifTag.Software);
+                                    if (software == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{software}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.ArtistNm:
+                            // We have to use EXIFLibrary to retrive the Artist value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // Artist tag.  The query .GetQuery("/app1/ifd/exif/{ushort=315}" should 
+                            // return the Artist but instead it returns null value.
+                            if (ExifFs.Properties.Contains(ExifTag.Artist))
+                            {
+                                if (ExifFs.Properties[ExifTag.Artist] == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var artist = ExifFs.Properties.Get<ExifAscii>(ExifTag.Artist);
+                                    if (artist == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{artist}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.CopyrightNm:
+                            // We have to use EXIFLibrary to retrive the Copyright value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // Copyright tag.  The query .GetQuery("/app1/ifd/exif/{ushort=33432}" should 
+                            // return the Copyright but instead it returns null value.
+                            if (ExifFs.Properties.Contains(ExifTag.Copyright))
+                            {
+                              if (ExifFs.Properties[ExifTag.Copyright] == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var copyright = ExifFs.Properties.Get<ExifAscii>(ExifTag.Copyright);
+                                    if (copyright == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{copyright}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.ShutterSpeedValueNm:
+                            // We have to use EXIFLibrary to retrive the ShutterSpeed value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // ShutterSpeed tag.  The query .GetQuery("/app1/ifd/exif/{ushort=37377}" should 
+                            // return the ShutterSpeed but instead it returns a nonsensically large value
+                            // (e.g., 18014398522064896).
+                            if (ExifFs.Properties.Contains(ExifTag.ShutterSpeedValue))
+                            {
+                                if (ExifFs.Properties[ExifTag.ShutterSpeedValue] == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var shutterSpeed = ExifFs.Properties.Get<ExifSRational>(ExifTag.ShutterSpeedValue);
+                                    if (shutterSpeed == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{(double)shutterSpeed.Value.Numerator / shutterSpeed.Value.Denominator:F1}";
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.ExposureBiasValueNm:
+                            // We have to use EXIFLibrary to retrive the ExposureBias value because as of 
+                            // August 2025 the BitmapMetadata class does not yet properly support the 
+                            // ExposureBias tag.  The query .GetQuery("/app1/ifd/exif/{ushort=37377}" should 
+                            // return the ExposureBias but instead it returns an error.
+                            if (ExifFs.Properties.Contains(ExifTag.ExposureBiasValue))
+                            {
+                                if (ExifFs.Properties[ExifTag.ExposureBiasValue] == null)
+                                {
+                                    return string.Empty;
+                                }
+                                else
+                                {
+                                    var exposureBias = ExifFs.Properties.Get<ExifSRational>(ExifTag.ExposureBiasValue);
+                                    if (exposureBias == null)
+                                    {
+                                        return string.Empty;
+                                    }
+                                    else
+                                    {
+                                        return $"{exposureBias}";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return string.Empty;
+                            }
+                        case Tagnames.MakerNoteNm:
+                            object makerNoteValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=37500}"); // MakerNote
+                            if (makerNoteValue == null)
+                            { 
+                                return string.Empty; 
+                            }
+                            else
+                            {
+                                return $"{makerNoteValue}";
+                            }
+
+
+                                // @@@
+                                default:
+                            Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "GetMetadataTag: Unknown tag name '{0}'", tagName));
+                            return string.Empty;
+                        }
                 }
                 catch (Exception ex)
                 {
@@ -661,6 +1015,19 @@ namespace Micasa
             public const string FNumberNm = "FNumber";
             public const string SubjectDistanceNm = "SubjectDistance";
             public const string ISONm = "ISO";
+            public const string WhiteBalanceNm = "WhiteBalance";
+            public const string MeteringModeNm = "MeteringMode";
+            public const string ExposureProgramNm = "ExposureProgram";
+            public const string ColorSpaceNm = "ColorSpace";
+            public const string XResolutionNm = "XResolution";
+            public const string YResolutionNm = "YResolution";
+            public const string ResolutionUnitNm = "ResolutionUnit";
+            public const string SoftwareNm = "Software";
+            public const string ArtistNm = "Artist";
+            public const string CopyrightNm = "Copyright";
+            public const string ShutterSpeedValueNm = "ShutterSpeedValue";
+            public const string ExposureBiasValueNm = "ExposureBiasValue";
+            public const string MakerNoteNm = "MakerNote";
         }
     }
 }
