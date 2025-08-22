@@ -529,8 +529,8 @@ namespace Micasa
                 Instance.tbTitleCaption.Text = metadata.GetMetadataValue(Metadata.Tagnames.CaptionTagNm);
 
                 // Populate EXIF Metadata fields.
-                Instance.tbDimensions.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.PixelXDimensionNm)} x "
-                                            + $"{metadata.GetMetadataValue(Metadata.Tagnames.PixelYDimensionNm)} pixels";
+                Instance.tbDimensions.Text = Metadata.FormatDimensions(metadata.GetMetadataValue(Metadata.Tagnames.PixelXDimensionNm),
+                                                metadata.GetMetadataValue(Metadata.Tagnames.PixelYDimensionNm), " pixels");
                 Instance.tbCameraMake.Text = metadata.GetMetadataValue(Metadata.Tagnames.MakeNm);
                 Instance.tbCameraModel.Text = metadata.GetMetadataValue(Metadata.Tagnames.ModelNm);
                 Instance.tbImgCreationDate.Text = metadata.GetMetadataValue(Metadata.Tagnames.DateTimeNm);
@@ -559,13 +559,16 @@ namespace Micasa
                 Instance.tbShutterSpeed.Text = metadata.GetMetadataValue(Metadata.Tagnames.ShutterSpeedValueNm);
                 Instance.tbExposureBias.Text = metadata.GetMetadataValue(Metadata.Tagnames.ExposureBiasValueNm);
                 Instance.tbMakerNote.Text = metadata.GetMetadataValue(Metadata.Tagnames.MakeNm);
+                Instance.tbUserComment.Text = metadata.GetMetadataValue(Metadata.Tagnames.UserCommentNm);
+                Instance.tbGPSVersion.Text = metadata.GetMetadataValue(Metadata.Tagnames.GPSVersionIDNm);
+
                 // @@@
 
-                //Debug.WriteLine("     Properties in the image:");
-                //foreach (var property in file.Properties)
-                //{
-                //    Debug.WriteLine($"     -- {property.Name}");
-                //}
+                Debug.WriteLine("     Properties in the image:");
+                foreach (var property in file.Properties)
+                {
+                    Debug.WriteLine($"     -- {property.Name}");
+                }
             }
             catch (Exception ex)
             {

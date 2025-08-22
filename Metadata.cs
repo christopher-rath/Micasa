@@ -29,7 +29,7 @@ namespace Micasa
     /// none of the rest of the code in Micasa needs to know how the metadata is stored or 
     /// retrieved.  That detail is masked by the methods in this class.
     /// 
-    /// For the ExifLibrary documentation, see: https://oozcitak.github.io/exiflibrary/index.html
+    /// For the Exif Library documentation, see: https://oozcitak.github.io/exiflibrary/index.html
     /// </summary>
     internal class Metadata
     {
@@ -120,7 +120,7 @@ namespace Micasa
 
         public static string DecodeFlashBits(string flashValue)
         {
-            ushort flashBits = (ushort)int.Parse(flashValue);
+            ushort flashBits = (ushort)int.Parse(flashValue, CultureInfo.InvariantCulture);
 
             var descriptions = new List<string>();
 
@@ -167,7 +167,7 @@ namespace Micasa
 
         public static string DecodeWhiteBalance(string whiteBalanceValue)
         {
-            ushort whiteBalance = (ushort)int.Parse(whiteBalanceValue);
+            ushort whiteBalance = (ushort)int.Parse(whiteBalanceValue, CultureInfo.InvariantCulture);
 
             return whiteBalance switch
             {
@@ -179,7 +179,7 @@ namespace Micasa
 
         public static string DecodeMeteringMode(string meteringModeValue)
         {
-            ushort meteringMode = (ushort)int.Parse(meteringModeValue);
+            ushort meteringMode = (ushort)int.Parse(meteringModeValue, CultureInfo.InvariantCulture);
 
             return meteringMode switch
             {
@@ -195,9 +195,37 @@ namespace Micasa
             };
         }
 
+        public static string DecodeExposureBias(string exposureBiasValue)
+        {
+            // The exposure bias is stored as a signed rational number.  The EXIFLibrary
+            // returns it as a string in the form "numerator/denominator".
+            if (string.IsNullOrEmpty(exposureBiasValue))
+            {
+                return "0";
+            }
+            else if (!exposureBiasValue.Contains('/'))
+            {                 
+                // If the value is not in the expected format, return it as-is.
+                return exposureBiasValue;
+            }
+            else
+            {
+                string[] parts = exposureBiasValue.Split('/');
+                if (parts.Length != 2 || !int.TryParse(parts[0], out int numerator) || !int.TryParse(parts[1], out int denominator) || denominator == 0)
+                {
+                    return "0";
+                }
+                else
+                {
+                    double exposureBias = (double)numerator / denominator;
+                    return exposureBias.ToString("F1", CultureInfo.InvariantCulture);
+                }
+            }
+        }
+
         public static string DecodeExposureProgram(string exposureProgramValue)
         {
-            ushort exposureProgram = (ushort)int.Parse(exposureProgramValue);
+            ushort exposureProgram = (ushort)int.Parse(exposureProgramValue, CultureInfo.InvariantCulture);
 
             return exposureProgram switch
             {
@@ -214,6 +242,41 @@ namespace Micasa
             };
         }
 
+        public static string FormatGPSVersionID(byte[] gpsVersionID)
+        {
+            if (gpsVersionID == null || gpsVersionID.Length != 4)
+            {
+                return "Unknown";
+            }
+            else
+            {
+                return string.Join(".", gpsVersionID);
+            }
+        }
+
+        public static string FormatEXIFVersion(byte[] exifVersion)
+        {
+            if (exifVersion == null || exifVersion.Length != 4)
+            {
+                return "Unknown";
+            }
+            else
+            {
+                return $"{(char)exifVersion[0]}.{(char)exifVersion[1]}.{(char)exifVersion[2]}.{(char)exifVersion[3]}";
+            }
+        }
+
+        public static string FormatDimensions(string xDimension, string yDimension, string units)
+        {
+            if (string.IsNullOrEmpty(xDimension) && string.IsNullOrEmpty(yDimension))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return $"{xDimension} x {yDimension} {units}";
+            }
+        }
 
         /// <summary>
         /// Get the Caption from the image file.  This method is agnostic regarding the formatting
@@ -960,7 +1023,7 @@ namespace Micasa
                                     }
                                     else
                                     {
-                                        return $"{exposureBias}";
+                                        return DecodeExposureBias($"{exposureBias}");
                                     }
                                 }
                             }
@@ -978,10 +1041,39 @@ namespace Micasa
                             {
                                 return $"{makerNoteValue}";
                             }
+                        case Tagnames.UserCommentNm:
+                            object userCommentValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=37510}"); // UserComment
+                            if (userCommentValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else
+                            {
+                                return $"{userCommentValue}";
+                            }
+                        case Tagnames.GPSVersionIDNm:
+                            object gpsVersionValue = _mdBmMd.GetQuery("/app1/ifd/gps/{ushort=0}"); // GPSVersionID
+                            if (gpsVersionValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else
+                            {
+                                return FormatGPSVersionID((byte[])gpsVersionValue);
+                            }
+                        case Tagnames.EXIFVersionNm:
+                            object exifVersionValue = _mdBmMd.GetQuery("/app1/ifd/exif/{ushort=36864}"); // EXIFVersion
+                            if (exifVersionValue == null)
+                            {
+                                return string.Empty;
+                            }
+                            else
+                            {
+                                return FormatEXIFVersion((byte[])exifVersionValue);
+                            }
 
 
-                                // @@@
-                                default:
+                        default:
                             Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "GetMetadataTag: Unknown tag name '{0}'", tagName));
                             return string.Empty;
                         }
@@ -1028,6 +1120,9 @@ namespace Micasa
             public const string ShutterSpeedValueNm = "ShutterSpeedValue";
             public const string ExposureBiasValueNm = "ExposureBiasValue";
             public const string MakerNoteNm = "MakerNote";
+            public const string UserCommentNm = "UserComment";
+            public const string GPSVersionIDNm = "GPSVersionID";
+            public const string EXIFVersionNm = "EXIFVersion";
         }
     }
 }
