@@ -9,18 +9,12 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
-using System.Net.NetworkInformation;
-using System.Runtime.Intrinsics.Arm;
-using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using ExifLibrary;
-using LiteDB;
 
 namespace Micasa
 {
@@ -30,6 +24,11 @@ namespace Micasa
     /// retrieved.  That detail is masked by the methods in this class.
     /// 
     /// For the Exif Library documentation, see: https://oozcitak.github.io/exiflibrary/index.html
+    /// 
+    /// For the BitmapMetadata class documentation, see: 
+    /// https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.imaging.bitmapmetadata
+    /// Unfortunately, the BitmapMetadata class does not contain comprehensive documentation, and
+    /// often the only source of information is one of the generative AI bots (e.g, MS Copilot).
     /// </summary>
     internal class Metadata
     {
@@ -64,57 +63,50 @@ namespace Micasa
             }
         }
 
-        /// <summary>
-        /// Examine the image filename to determine if it is an image type supported by the
-        /// this Metadata class.  
-        /// 
-        /// As of August 2025, the WPF BitmapMetadata class has codecs for the following 
-        /// image types; however, at this time this Metadata class only supports a subset 
-        /// of them (those that support EXIF):
-        ///  * JPEG (.jpg) – Supports EXIF, IPTC, and XMP metadata.
-        ///  * TIFF (.tif) – Supports IFD, EXIF, IPTC, and XMP metadata.
-        ///  * PNG (.png) – Supports tEXt(PNG textual data) and XMP metadata.
-        ///  * GIF (.gif) – Limited metadata support, but some metadata can be accessed.
-        ///  * BMP (.bmp) – Minimal metadata support; not commonly used for metadata.
-        ///  * Windows Media Photo (.wdp) – Supports XMP metadata.
-        ///  * ICO (.ico) – Typically does not support metadata querying.
-        ///  
-        /// TO DO: add the .wdp and .ico image types to the list of types supported by Micasa
-        ///        (i.e., update the list in the Options panel).
-        /// </summary>
-        /// <param name="imgFilename">The filename of the image to be checked.</param>
-        /// <returns></returns>        
-        private static bool MiMdSupportedImg(string imgFilename)
+        public static string DecodeExposureBias(string exposureBiasValue)
         {
-            if (string.IsNullOrEmpty(imgFilename))
+            // The exposure bias is stored as a signed rational number.  The EXIFLibrary
+            // returns it as a string in the form "numerator/denominator".
+            if (string.IsNullOrEmpty(exposureBiasValue))
             {
-                return false;
+                return "0";
+            }
+            else if (!exposureBiasValue.Contains('/'))
+            {
+                // If the value is not in the expected format, return it as-is.
+                return exposureBiasValue;
             }
             else
             {
-                bool _supportedImg 
-                    = Path.GetExtension(imgFilename).ToLower(CultureInfo.InvariantCulture) switch
+                string[] parts = exposureBiasValue.Split('/');
+                if (parts.Length != 2 || !int.TryParse(parts[0], out int numerator) || !int.TryParse(parts[1], out int denominator) || denominator == 0)
                 {
-                    // Test for the image types that the GetMetadataValue method has been coded to handle.
-                    Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Tif 
-                        or Constants.sMcFT_TifA => true,
-                    _ => false,
-                };
-                return _supportedImg;
+                    return "0";
+                }
+                else
+                {
+                    double exposureBias = (double)numerator / denominator;
+                    return exposureBias.ToString("F1", CultureInfo.InvariantCulture);
+                }
             }
         }
 
-        public static string GetSensitivityTypeDescription(ushort sensitivityType)
+        public static string DecodeExposureProgram(string exposureProgramValue)
         {
-            return sensitivityType switch
+            ushort exposureProgram = (ushort)int.Parse(exposureProgramValue, CultureInfo.InvariantCulture);
+
+            return exposureProgram switch
             {
-                0 => "Unknown",
-                1 => "ISO Speed",
-                2 => "Recommended Exposure Index (REI)",
-                3 => "ISO Speed and Recommended Exposure Index (REI)",
-                4 => "ISO Speed Latitude (TTL)",
-                5 => "ISO Speed Latitude (Scene)",
-                _ => "Undefined"
+                0 => "Not defined",
+                1 => "Manual",
+                2 => "Normal program",
+                3 => "Aperture priority",
+                4 => "Shutter priority",
+                5 => "Creative program (biased towards depth of field)",
+                6 => "Action program (biased towards fast shutter speed)",
+                7 => "Portrait mode (for closeup photos with the background out of focus)",
+                8 => "Landscape mode (for landscape photos with the background in focus)",
+                _ => $"Unknown ({exposureProgramValue})"
             };
         }
 
@@ -165,18 +157,6 @@ namespace Micasa
 
         }
 
-        public static string DecodeWhiteBalance(string whiteBalanceValue)
-        {
-            ushort whiteBalance = (ushort)int.Parse(whiteBalanceValue, CultureInfo.InvariantCulture);
-
-            return whiteBalance switch
-            {
-                0 => "Auto",
-                1 => "Manual",
-                _ => $"Unknown ({whiteBalanceValue})"
-            };
-        }
-
         public static string DecodeMeteringMode(string meteringModeValue)
         {
             ushort meteringMode = (ushort)int.Parse(meteringModeValue, CultureInfo.InvariantCulture);
@@ -195,62 +175,27 @@ namespace Micasa
             };
         }
 
-        public static string DecodeExposureBias(string exposureBiasValue)
+        public static string DecodeWhiteBalance(string whiteBalanceValue)
         {
-            // The exposure bias is stored as a signed rational number.  The EXIFLibrary
-            // returns it as a string in the form "numerator/denominator".
-            if (string.IsNullOrEmpty(exposureBiasValue))
-            {
-                return "0";
-            }
-            else if (!exposureBiasValue.Contains('/'))
-            {                 
-                // If the value is not in the expected format, return it as-is.
-                return exposureBiasValue;
-            }
-            else
-            {
-                string[] parts = exposureBiasValue.Split('/');
-                if (parts.Length != 2 || !int.TryParse(parts[0], out int numerator) || !int.TryParse(parts[1], out int denominator) || denominator == 0)
-                {
-                    return "0";
-                }
-                else
-                {
-                    double exposureBias = (double)numerator / denominator;
-                    return exposureBias.ToString("F1", CultureInfo.InvariantCulture);
-                }
-            }
-        }
+            ushort whiteBalance = (ushort)int.Parse(whiteBalanceValue, CultureInfo.InvariantCulture);
 
-        public static string DecodeExposureProgram(string exposureProgramValue)
-        {
-            ushort exposureProgram = (ushort)int.Parse(exposureProgramValue, CultureInfo.InvariantCulture);
-
-            return exposureProgram switch
+            return whiteBalance switch
             {
-                0 => "Not defined",
+                0 => "Auto",
                 1 => "Manual",
-                2 => "Normal program",
-                3 => "Aperture priority",
-                4 => "Shutter priority",
-                5 => "Creative program (biased towards depth of field)",
-                6 => "Action program (biased towards fast shutter speed)",
-                7 => "Portrait mode (for closeup photos with the background out of focus)",
-                8 => "Landscape mode (for landscape photos with the background in focus)",
-                _ => $"Unknown ({exposureProgramValue})"
+                _ => $"Unknown ({whiteBalanceValue})"
             };
         }
 
-        public static string FormatGPSVersionID(byte[] gpsVersionID)
+        public static string FormatDimensions(string xDimension, string yDimension, string units)
         {
-            if (gpsVersionID == null || gpsVersionID.Length != 4)
+            if (string.IsNullOrEmpty(xDimension) && string.IsNullOrEmpty(yDimension))
             {
-                return "Unknown";
+                return string.Empty;
             }
             else
             {
-                return string.Join(".", gpsVersionID);
+                return $"{xDimension} x {yDimension} {units}";
             }
         }
 
@@ -266,15 +211,15 @@ namespace Micasa
             }
         }
 
-        public static string FormatDimensions(string xDimension, string yDimension, string units)
+        public static string FormatGPSVersionID(byte[] gpsVersionID)
         {
-            if (string.IsNullOrEmpty(xDimension) && string.IsNullOrEmpty(yDimension))
+            if (gpsVersionID == null || gpsVersionID.Length != 4)
             {
-                return string.Empty;
+                return "Unknown";
             }
             else
             {
-                return $"{xDimension} x {yDimension} {units}";
+                return string.Join(".", gpsVersionID);
             }
         }
 
@@ -306,7 +251,7 @@ namespace Micasa
                 }
                 catch
                 {
-                    Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                    Debug.WriteLine(string.Format(CultureInfo.InvariantCulture,
                             "GetCaptionFromImage ({0}): Unknown exception; returning empty string.", _imgFl));
                 }
             }
@@ -1086,43 +1031,97 @@ namespace Micasa
                 }
             }
         }
-     
-    public static class Tagnames
+
+        public static string GetSensitivityTypeDescription(ushort sensitivityType)
         {
+            return sensitivityType switch
+            {
+                0 => "Unknown",
+                1 => "ISO Speed",
+                2 => "Recommended Exposure Index (REI)",
+                3 => "ISO Speed and Recommended Exposure Index (REI)",
+                4 => "ISO Speed Latitude (TTL)",
+                5 => "ISO Speed Latitude (Scene)",
+                _ => "Undefined"
+            };
+        }
+
+        /// <summary>
+        /// Examine the image filename to determine if it is an image type supported by the
+        /// this Metadata class.  
+        /// 
+        /// As of August 2025, the WPF BitmapMetadata class has codecs for the following 
+        /// image types; however, at this time this Metadata class only supports a subset 
+        /// of them (those that support EXIF):
+        ///  * JPEG (.jpg) – Supports EXIF, IPTC, and XMP metadata.
+        ///  * TIFF (.tif) – Supports IFD, EXIF, IPTC, and XMP metadata.
+        ///  * PNG (.png) – Supports tEXt(PNG textual data) and XMP metadata.
+        ///  * GIF (.gif) – Limited metadata support, but some metadata can be accessed.
+        ///  * BMP (.bmp) – Minimal metadata support; not commonly used for metadata.
+        ///  * Windows Media Photo (.wdp) – Supports XMP metadata.
+        ///  * ICO (.ico) – Typically does not support metadata querying.
+        ///  
+        /// TO DO: add the .wdp and .ico image types to the list of types supported by Micasa
+        ///        (i.e., update the list in the Options panel).
+        /// </summary>
+        /// <param name="imgFilename">The filename of the image to be checked.</param>
+        /// <returns></returns>        
+        private static bool MiMdSupportedImg(string imgFilename)
+        {
+            if (string.IsNullOrEmpty(imgFilename))
+            {
+                return false;
+            }
+            else
+            {
+                bool _supportedImg
+                    = Path.GetExtension(imgFilename).ToLower(CultureInfo.InvariantCulture) switch
+                    {
+                        // Test for the image types that the GetMetadataValue method has been coded to handle.
+                        Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Tif
+                            or Constants.sMcFT_TifA => true,
+                        _ => false,
+                    };
+                return _supportedImg;
+            }
+        }
+
+        public static class Tagnames
+        {
+            public const string ApertureValueNm = "ApertureValue";
+            public const string ArtistNm = "Artist";
             public const string CaptionTagNm = "Caption";
-            public const string PixelXDimensionNm = "PixelXDimension";
-            public const string PixelYDimensionNm = "PixelYDimension";
-            public const string MakeNm = "Make";
-            public const string ModelNm = "Model";
-            public const string DateTimeNm = "DateTime";
+            public const string ColorSpaceNm = "ColorSpace";
+            public const string CopyrightNm = "Copyright";
             public const string DateTimeDigitizedNm = "DateTimeDigitized";
-            public const string OrientationNm = "Orientation";
+            public const string DateTimeNm = "DateTime";
+            public const string EXIFVersionNm = "EXIFVersion";
+            public const string ExposureBiasValueNm = "ExposureBiasValue";
+            public const string ExposureProgramNm = "ExposureProgram";
+            public const string ExposureTimeNm = "ExposureTime";
+            public const string FNumberNm = "FNumber";
             public const string FlashNm = "Flash";
+            public const string FocalLengthIn35mmFilmNm = "FocalLengthIn35mmFilm";
+            public const string FocalLengthNm = "FocalLength";
+            public const string GPSVersionIDNm = "GPSVersionID";
+            public const string ISONm = "ISO";
             public const string LensMakerNm = "LensMaker";
             public const string LensModelNm = "LensModel";
-            public const string FocalLengthNm = "FocalLength";
-            public const string FocalLengthIn35mmFilmNm = "FocalLengthIn35mmFilm";
-            public const string ExposureTimeNm = "ExposureTime";
-            public const string ApertureValueNm = "ApertureValue";
-            public const string FNumberNm = "FNumber";
-            public const string SubjectDistanceNm = "SubjectDistance";
-            public const string ISONm = "ISO";
-            public const string WhiteBalanceNm = "WhiteBalance";
+            public const string MakeNm = "Make";
+            public const string MakerNoteNm = "MakerNote";
             public const string MeteringModeNm = "MeteringMode";
-            public const string ExposureProgramNm = "ExposureProgram";
-            public const string ColorSpaceNm = "ColorSpace";
+            public const string ModelNm = "Model";
+            public const string OrientationNm = "Orientation";
+            public const string PixelXDimensionNm = "PixelXDimension";
+            public const string PixelYDimensionNm = "PixelYDimension";
+            public const string ResolutionUnitNm = "ResolutionUnit";
+            public const string ShutterSpeedValueNm = "ShutterSpeedValue";
+            public const string SoftwareNm = "Software";
+            public const string SubjectDistanceNm = "SubjectDistance";
+            public const string UserCommentNm = "UserComment";
+            public const string WhiteBalanceNm = "WhiteBalance";
             public const string XResolutionNm = "XResolution";
             public const string YResolutionNm = "YResolution";
-            public const string ResolutionUnitNm = "ResolutionUnit";
-            public const string SoftwareNm = "Software";
-            public const string ArtistNm = "Artist";
-            public const string CopyrightNm = "Copyright";
-            public const string ShutterSpeedValueNm = "ShutterSpeedValue";
-            public const string ExposureBiasValueNm = "ExposureBiasValue";
-            public const string MakerNoteNm = "MakerNote";
-            public const string UserCommentNm = "UserComment";
-            public const string GPSVersionIDNm = "GPSVersionID";
-            public const string EXIFVersionNm = "EXIFVersion";
         }
     }
 }
