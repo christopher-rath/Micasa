@@ -2,7 +2,7 @@
 // Micasa -- Your Photo Home -- A lightweight photo organiser & editor.
 // Author: Christopher Rath <christopher@rath.ca>
 // Archived at: http://rath.ca/
-// Copyright 2021-2025 © Christopher Rath
+// Copyright 2021-2026 © Christopher Rath
 // Distributed under the GNU Lesser General Public License v2.1
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
@@ -25,7 +25,6 @@ using System.Windows.Media.Imaging;
 using ExifLibrary;
 using LiteDB;
 using StringExtensions;
-using Windows.Graphics.Display;
 
 namespace Micasa
 {
@@ -1298,7 +1297,7 @@ namespace Micasa
         public const string sMcMainSection = @"Main";
         public const string sMcVersion = @"0.12"; // --> Also update in "AssemblyInfo.cs" <--
         public const string sMcPlatform = @"Windows 11";
-        public const string sMcCopyright = @"2021{\'96}2025"; // "{\'96}" is an RTF en dash character.
+        public const string sMcCopyright = @"2021{\'96}2026"; // "{\'96}" is an RTF en dash character.
         public const string sVersionToRepl = @"[@Version String@]";
         public const string sPlatformToRepl = @"[@Platform String@]";
         public const string sCopyrightToRepl = @"[@Copyright Date@]";
