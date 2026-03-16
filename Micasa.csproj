@@ -39,7 +39,7 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <WarningLevel>7</WarningLevel>
-    <Optimize>True</Optimize>
+    <Optimize>False</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
 
@@ -118,6 +118,9 @@
     <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Resources\Micasa_Icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
