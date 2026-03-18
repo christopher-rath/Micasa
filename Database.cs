@@ -8,12 +8,9 @@
 // Warranty: None, see the license.
 #endregion
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Windows.Media.Imaging;
 using LiteDB;
-using Microsoft.VisualBasic;
 
 namespace Micasa
 {
