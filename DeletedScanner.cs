@@ -67,11 +67,11 @@ namespace Micasa
                 ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
 
                 // Iterate through the photos in the PhotoCol table, newest to oldest
-                // ModificationDate date, and check if the file exists.  If the file
+                // ModifiedDate date, and check if the file exists.  If the file
                 // does not exist then delete the record from the table.
 
                 var query = PhotoCol.Query()
-                    .OrderByDescending(x => x.ModificationDate)
+                    .OrderByDescending(x => x.ModifiedDate)
                     .ToEnumerable();
 
                 foreach (var photo in query.ToList())

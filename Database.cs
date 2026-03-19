@@ -124,7 +124,7 @@ namespace Micasa
                 FileType = Path.GetExtension(f).ToLower(invC),
                 Pathname = Path.GetDirectoryName(f),
                 FQFilename = f,
-                ModificationDate = File.GetLastWriteTime(f),
+                ModifiedDate = File.GetLastWriteTime(f),
                 Faces = [""],
                 Albums = [""]
             };
@@ -140,9 +140,9 @@ namespace Micasa
             }
             else
             {
-                if (!Database.IsDateTimeEqual(aPhoto.ModificationDate, results.ModificationDate))
+                if (!Database.IsDateTimeEqual(aPhoto.ModifiedDate, results.ModifiedDate))
                 {
-                    results.ModificationDate = aPhoto.ModificationDate;
+                    results.ModifiedDate = aPhoto.ModifiedDate;
                     pCol.Update(results);
                 }
             }
@@ -161,7 +161,7 @@ namespace Micasa
             FoldersTbl aFolder = new()
             {
                 Pathname = pathname,
-                ModificationDate = File.GetLastWriteTime(pathname),
+                ModifiedDate = File.GetLastWriteTime(pathname),
                 LastScannedDate = DateTime.Now,
                 WatchedParent = watchedPath,
                 CompletedScan = scanCompleted
@@ -182,7 +182,7 @@ namespace Micasa
             }
             else
             {
-                results.ModificationDate = aFolder.ModificationDate;
+                results.ModifiedDate = aFolder.ModifiedDate;
                 results.LastScannedDate = aFolder.LastScannedDate;
                 results.CompletedScan = aFolder.CompletedScan;
                 fCol.Update(results);
@@ -270,7 +270,7 @@ namespace Micasa
     /// </summary>
     /// <param name="Id">Unique ID number assigned by LiteDB.</param>
     /// <param name="Pathname">The folder's fully qualified name; i.e., not a relative path.</param>
-    /// <param name="ModificationDate">The folder's modification date (retrieved from the file sysetem).</param>
+    /// <param name="ModifiedDate">The folder's modification date (retrieved from the file sysetem).</param>
     /// <param name="LastScannedDate">The time and date when this DB record was updated.</param>
     /// <param name="WatchedParent">The watchlist folder to which this folder is a child.</param>
     /// <param name="CompletedScan">Assigned a value of <c>true</c> when every file in the folder has been scanned.</param>
@@ -278,7 +278,7 @@ namespace Micasa
     {
         public int Id { get; set; }
         public string Pathname { get; set; }
-        public DateTime ModificationDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
         public DateTime LastScannedDate { get; set; }
         public string WatchedParent { get; set; }
         public bool CompletedScan { get; set; }
@@ -294,7 +294,7 @@ namespace Micasa
     /// <param name="FileType">The type of picture file (JPG, PNG, etc.); generally, the filename suffix.</param> 
     /// <param name="FQFilename">The fully qualified filename of the picture file; the full path and filename.</param> 
     /// <param name="Pathname">The full pathname; where the picture file is stored.</param> 
-    /// <param name="ModificationDate">The file's modification date.</param> 
+    /// <param name="ModifiedDate">The file's modification date.</param> 
     /// <param name="Faces">A JSON object containing the faces in the photo and their locations.</param> 
     /// <param name="Albums">The list of albums in which this photo is included (JSON object).</param> 
     public class PhotosTbl
@@ -305,7 +305,7 @@ namespace Micasa
         public string FileType { get; set; }
         public string FQFilename { get; set; }
         public string Pathname { get; set; }
-        public DateTime ModificationDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
         public string[] Faces { get; set; }
         public string[] Albums { get; set; }
     }
