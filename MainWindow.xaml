@@ -384,8 +384,8 @@
                         <TextBlock Text="Modified Date" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
                         <TextBlock x:Name="tbModifiedDate" Text="Modified Date" Margin="10,0,0,0" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
-                        <TextBlock Text="Owner" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
-                        <TextBlock x:Name="tbOwner" Text="Owner" Margin="10,0,0,5" MinWidth="250" />
+                        <TextBlock Text="File Owner" Margin="0,0,0,0" FontWeight="Bold" MinWidth="250" />
+                        <TextBlock x:Name="tbFileOwner" Text="File Owner" Margin="10,0,0,5" MinWidth="250" />
                         <Rectangle Margin="0,2,0,0" MinWidth="250" Height="1" Fill="Gray" />
 
                         <TextBlock Text="IMAGE METADATA" FontWeight="Bold" Margin="0,0,0,0"
