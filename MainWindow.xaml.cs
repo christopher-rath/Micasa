@@ -7,24 +7,25 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
+using ExifLibrary;
+using LiteDB;
+using StringExtensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using ExifLibrary;
-using LiteDB;
-using StringExtensions;
+using System.Windows.Shapes;
 
 namespace Micasa
 {
@@ -46,6 +47,8 @@ namespace Micasa
         private static CancellationToken FolderTabCancellationToken = FolderTabCancellationSource.Token;
         private TreeViewItem SelectedItem = null;
         private string SelectedFolderSaved = null;
+        private ILiteCollection<PhotosTbl> PhotoCol = null;
+        private ILiteCollection<FoldersTbl> FolderCol = null;
 
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -175,7 +178,7 @@ namespace Micasa
             // Start the new/updated/deleted picture scanner.
             try
             {
-                //StartScanners();
+                StartScanners();
             }
             catch (Exception e)
             {
@@ -197,6 +200,11 @@ namespace Micasa
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
                 this.Close();
             }
+
+            // If we got to this point in the constructor then a database exists; so, we'll
+            // open it and get the PhotoCol collection for use later.
+            var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename));
+            Instance.PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
         }
 
         #region GetterSetters
@@ -373,11 +381,10 @@ namespace Micasa
             // Open the database.
             using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
             {
-                //ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
-                ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
+                Instance.FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
 
                 // Iterate through the Pathname entries in FolderCol database table, ascending alphanumeric order.
-                var query = FolderCol.Query()
+                var query = Instance.FolderCol.Query()
                     .OrderBy(x => x.Pathname)
                     .ToEnumerable();
 
@@ -453,12 +460,11 @@ namespace Micasa
                 // Open the database.
                 using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
                 {
-                    ILiteCollection<PhotosTbl> PhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
-                    //ILiteCollection<FoldersTbl> FolderCol = db.GetCollection<FoldersTbl>(Constants.sMcFoldersColNm);
+                    ILiteCollection<PhotosTbl> LclPhotoCol = db.GetCollection<PhotosTbl>(Constants.sMcPhotosColNm);
 
                     // Iterate through the entries in PhotoCol database table, where the Pathname equals
                     // the TreeView path, sorted in ascending alphanumeric order.
-                    var query = PhotoCol.Query()
+                    var query = LclPhotoCol.Query()
                         .Where(x => x.Pathname.Equals(path, StringComparison.Ordinal))
                         .OrderBy(x => x.Picture)
                         .ToEnumerable();
@@ -470,6 +476,9 @@ namespace Micasa
                     {
                         // Add the photo to the MainWindowPhotos Listbox as a ListboxItem.
                         Debug.WriteLine($"DbFoldersItem_Selected: adding photo to PhotoList: {photoRow.Picture}");
+
+                        // The Uri() method is used to transform the Windows fully qualified filename
+                        // into a format that can be used by the ListBox ListItem.
                         Uri uri = new Uri(photoRow.FQFilename);
                         MainWindowPhotos.Items.Add(new BitmapImage(uri));
                     }
@@ -483,6 +492,12 @@ namespace Micasa
             System.Windows.Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = null);
         }
 
+        /// <summary>
+        /// This method is invoked when the user clicks on a photo in the MainWindowPhotos Listbox.
+        /// It retrieves the file details and metadata for the selected photo and populates the
+        /// fields in the Details tab.
+        /// </summary>
+        /// <param name="filename"></param>
         private void MainWindowPhotos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Get the selected image object
@@ -491,87 +506,119 @@ namespace Micasa
             {
                 var filename = selectedImage.ToString().RmPrefix("file:///");
 
+                // The ListItem string returns the Uri, which has slashes instead of
+                // backslashes as the path separator; so, before we can use the ListItem's
+                // string we have to swap the path separator back into Windows' form.
+                filename = filename.Replace('/', System.IO.Path.DirectorySeparatorChar);
                 LoadImageDetails(filename);
             }
         }
 
         /// <summary>
-        /// @@@
+        /// This method is invoked when the user clicks on a photo in the MainWindowPhotos Listbox.
+        /// It retrieves the file details and metadata for the selected photo and populates the
+        /// fields in the Details tab.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">The fully qualified filename of the selected image file.</param>
         static private void LoadImageDetails(string filename)
         {
             Debug.WriteLine($"LoadImageDetails: Image selected: {filename}");
+            // Retrieve the PhotoCol database record for the selected photo using the
+            // fully qualified filename.
             try
             {
-                Metadata metadata = new Metadata(filename);
-                var file = ImageFile.FromFile(filename);
-                var basename = System.IO.Path.GetFileName(filename);
-                FileInfo fileInfo = new FileInfo(filename);
-#pragma warning disable CA1416 // Validate platform compatibility
-                FileSecurity fileSecurity = fileInfo.GetAccessControl();
-                IdentityReference owner = fileSecurity.GetOwner(typeof(NTAccount));
-#pragma warning restore CA1416 // Validate platform compatibility
+                var query = Instance.PhotoCol.Query()
+                    .Where(x => x.FQFilename.Equals(filename, StringComparison.Ordinal));
 
-                ClearImageDetails();
-                // Populate File Details fields.
-                Instance.tbFilename.Text = basename;
-                Instance.tbLocation.Text = Path.GetDirectoryName(filename);
-                Instance.tbFileSize.Text = $"{(fileInfo.Length / (1024.0 * 1024.0)).ToString("N2", CultureInfo.InvariantCulture)} MB";
-                Instance.tbCreatedDate.Text = fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                Instance.tbModifiedDate.Text = fileInfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-#pragma warning disable CA1416 // Validate platform compatibility
-                Instance.tbOwner.Text = $"{owner.Value}";
-#pragma warning restore CA1416 // Validate platform compatibility
-
-                // Populate Image Metadata fields.
-                Instance.tbTitleCaption.Text = metadata.GetMetadataValue(Metadata.Tagnames.CaptionTagNm);
-
-                // Populate EXIF Metadata fields.
-                Instance.tbDimensions.Text = Metadata.FormatDimensions(metadata.GetMetadataValue(Metadata.Tagnames.PixelXDimensionNm),
-                                                metadata.GetMetadataValue(Metadata.Tagnames.PixelYDimensionNm), " pixels");
-                Instance.tbCameraMake.Text = metadata.GetMetadataValue(Metadata.Tagnames.MakeNm);
-                Instance.tbCameraModel.Text = metadata.GetMetadataValue(Metadata.Tagnames.ModelNm);
-                Instance.tbImgCreationDate.Text = metadata.GetMetadataValue(Metadata.Tagnames.DateTimeNm);
-                Instance.tbImgDigitisedDate.Text = metadata.GetMetadataValue(Metadata.Tagnames.DateTimeDigitizedNm);
-                Instance.tbOrientation.Text = metadata.GetMetadataValue(Metadata.Tagnames.OrientationNm);
-                Instance.tbFlash.Text = metadata.GetMetadataValue(Metadata.Tagnames.FlashNm);
-                Instance.tbLens.Text = metadata.GetMetadataValue(Metadata.Tagnames.LensMakerNm) + " "
-                                        + metadata.GetMetadataValue(Metadata.Tagnames.LensModelNm);
-                Instance.tbFocalLength.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.FocalLengthNm)} mm";
-                Instance.tbFocalLength35mm.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.FocalLengthIn35mmFilmNm)} mm";
-                Instance.tbExposureTime.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.ExposureTimeNm)} s";
-                Instance.tbAperture.Text = metadata.GetMetadataValue(Metadata.Tagnames.ApertureValueNm);
-                Instance.tbFNumber.Text = $"f/{metadata.GetMetadataValue(Metadata.Tagnames.FNumberNm)}";
-                Instance.tbDistance.Text = $"{metadata.GetMetadataValue(Metadata.Tagnames.SubjectDistanceNm)} m";
-                Instance.tbISO.Text = metadata.GetMetadataValue(Metadata.Tagnames.ISONm);
-                Instance.tbWhiteBalance.Text = metadata.GetMetadataValue(Metadata.Tagnames.WhiteBalanceNm);
-                Instance.tbMeteringMode.Text = metadata.GetMetadataValue(Metadata.Tagnames.MeteringModeNm);
-                Instance.tbExposureProgram.Text = metadata.GetMetadataValue(Metadata.Tagnames.ExposureProgramNm);
-                Instance.tbColorSpace.Text = metadata.GetMetadataValue(Metadata.Tagnames.ColorSpaceNm);
-                Instance.tbXResolution.Text = metadata.GetMetadataValue(Metadata.Tagnames.XResolutionNm);
-                Instance.tbYResolution.Text = metadata.GetMetadataValue(Metadata.Tagnames.YResolutionNm);
-                Instance.tbResolutionUnit.Text = metadata.GetMetadataValue(Metadata.Tagnames.ResolutionUnitNm);
-                Instance.tbSoftware.Text = metadata.GetMetadataValue(Metadata.Tagnames.SoftwareNm);
-                Instance.tbArtist.Text = metadata.GetMetadataValue(Metadata.Tagnames.ArtistNm);
-                Instance.tbCopyright.Text = metadata.GetMetadataValue(Metadata.Tagnames.CopyrightNm);
-                Instance.tbShutterSpeed.Text = metadata.GetMetadataValue(Metadata.Tagnames.ShutterSpeedValueNm);
-                Instance.tbExposureBias.Text = metadata.GetMetadataValue(Metadata.Tagnames.ExposureBiasValueNm);
-                Instance.tbMakerNote.Text = metadata.GetMetadataValue(Metadata.Tagnames.MakeNm);
-                Instance.tbUserComment.Text = metadata.GetMetadataValue(Metadata.Tagnames.UserCommentNm);
-                Instance.tbGPSVersion.Text = metadata.GetMetadataValue(Metadata.Tagnames.GPSVersionIDNm);
-
-                // @@@
-
-                Debug.WriteLine("     Properties in the image:");
-                foreach (var property in file.Properties)
+                if (query == null || query.Count() == 0)
                 {
-                    Debug.WriteLine($"     -- {property.Name}");
+                    Debug.WriteLine($"LoadImageDetails: No database record found for selected photo: {filename}");
+                    MessageBox.Show($"No database record found for selected photo: {filename}");
+                }
+                else if (query.Count() > 1)
+                {
+                    Debug.WriteLine($"LoadImageDetails: Multiple database records found for selected photo: {filename}");
+                    MessageBox.Show($"Multiple database records found for selected photo: {filename}");
+                }
+                else
+                {
+                    try
+                    {
+                        //Metadata metadata = new Metadata(filename);
+                        var basename = System.IO.Path.GetFileName(filename);
+                        //FileInfo fileInfo = new FileInfo(filename);
+#pragma warning disable CA1416 // Validate platform compatibility
+                        //FileSecurity fileSecurity = fileInfo.GetAccessControl();
+                        //IdentityReference owner = fileSecurity.GetOwner(typeof(NTAccount));
+#pragma warning restore CA1416 // Validate platform compatibility
+
+                        ClearImageDetails();
+                        // Populate File Details fields.
+                        Instance.tbFilename.Text = basename;
+                        Instance.tbLocation.Text =  System.IO.Path.GetDirectoryName(filename);
+                        Instance.tbFileSize.Text = $"{(query.FirstOrDefault().FileSize / (1024.0 * 1024.0)).ToString("N2", CultureInfo.InvariantCulture)} MB";
+                        Instance.tbCreatedDate.Text = query.FirstOrDefault().CreatedDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        Instance.tbModifiedDate.Text = query.FirstOrDefault().ModifiedDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        Instance.tbFileOwner.Text = query.FirstOrDefault().FileOwner;
+
+                        // Populate Image Metadata fields.
+                        Instance.tbTitleCaption.Text = query.FirstOrDefault().TitleCaption;
+
+                        // Populate EXIF Metadata fields.
+                        Instance.tbDimensions.Text = Metadata.FormatDimensions(query.FirstOrDefault().XDimension,
+                                                        query.FirstOrDefault().YDimension, " pixels");
+                        Instance.tbCameraMake.Text = query.FirstOrDefault().CameraMake;
+                        Instance.tbCameraModel.Text = query.FirstOrDefault().CameraModel;
+                        Instance.tbImgCreationDate.Text = query.FirstOrDefault().ImgCreationDate;
+                        Instance.tbImgDigitisedDate.Text = query.FirstOrDefault().ImgDigitisedDate;
+                        Instance.tbOrientation.Text = query.FirstOrDefault().Orientation;
+                        Instance.tbFlash.Text = query.FirstOrDefault().Flash;
+                        Instance.tbLens.Text = query.FirstOrDefault().LensMaker + " "
+                                                + query.FirstOrDefault().LensModel; 
+                        Instance.tbFocalLength.Text = $"{query.FirstOrDefault().FocalLength} mm";
+                        Instance.tbFocalLength35mm.Text = $"{query.FirstOrDefault().FocalLength35mm} mm";
+                        Instance.tbExposureTime.Text = $"{query.FirstOrDefault().ExposureTime} s";
+                        Instance.tbAperture.Text = query.FirstOrDefault().Aperture;
+                        Instance.tbFNumber.Text = $"f/{query.FirstOrDefault().FNumber}";
+                        Instance.tbDistance.Text = $"{query.FirstOrDefault().Distance} m";
+                        Instance.tbISO.Text = query.FirstOrDefault().ISO;
+                        Instance.tbWhiteBalance.Text = query.FirstOrDefault().WhiteBalance;
+                        Instance.tbMeteringMode.Text = query.FirstOrDefault().MeteringMode;
+                        Instance.tbExposureProgram.Text = query.FirstOrDefault().ExposureProgram;
+                        Instance.tbColorSpace.Text = query.FirstOrDefault().ColorSpace;
+                        Instance.tbXResolution.Text = query.FirstOrDefault().XResolution;
+                        Instance.tbYResolution.Text = query.FirstOrDefault().YResolution;
+                        Instance.tbResolutionUnit.Text = query.FirstOrDefault().ResolutionUnit;
+                        Instance.tbSoftware.Text = query.FirstOrDefault().Software;
+                        Instance.tbArtist.Text = query.FirstOrDefault().Artist;
+                        Instance.tbCopyright.Text = query.FirstOrDefault().Copyright;
+                        Instance.tbShutterSpeed.Text = query.FirstOrDefault().ShutterSpeed;
+                        Instance.tbExposureBias.Text = query.FirstOrDefault().ExposureBias;
+                        Instance.tbMakerNote.Text = query.FirstOrDefault().MakerNote;
+                        Instance.tbUserComment.Text = query.FirstOrDefault().UserComment;
+                        Instance.tbGPSVersion.Text = query.FirstOrDefault().GPSVersion;
+
+                        // TODO: populate the rest of the metadata fields.
+                        // @@@
+
+                        // Uncomment to list all the properties in the image file (for
+                        // debugging purposes).
+                        //var file = ImageFile.FromFile(filename);
+                        //Debug.WriteLine("     Properties in the image:");
+                        //foreach (var property in file.Properties)
+                        //{
+                        //    Debug.WriteLine($"     -- {property.Name}\t{property.Value}");
+                        //}
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"ShowImageDetails: Error loading image details: {ex.Message}");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"ShowImageDetails: Error loading image details: {ex.Message}");
+                Debug.WriteLine($"ShowImageDetails: Error retrieving photo record from database: {ex.Message}");
             }
         }
 
@@ -582,7 +629,7 @@ namespace Micasa
             Instance.tbFileSize.Text = string.Empty;
             Instance.tbCreatedDate.Text = string.Empty;
             Instance.tbModifiedDate.Text = string.Empty;
-            Instance.tbOwner.Text = string.Empty;
+            Instance.tbFileOwner.Text = string.Empty;
             Instance.tbTitleCaption.Text = string.Empty;
             Instance.tbDimensions.Text = string.Empty;
             Instance.tbCameraMake.Text = string.Empty;

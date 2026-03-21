@@ -107,9 +107,9 @@ namespace Micasa
                     {
                         // Create IniFile objects for the .Micasa and .Picasa files in this folder.
                         // TO DO: We only create a .Picasa file if we're in Legacy mode.
-                        bool PicasaIniExists = File.Exists(wPath + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
-                        IniFile DotPicasa = new(wPath + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
-                        IniFile DotMicasa = new(wPath + Path.DirectorySeparatorChar + Constants.sMcDotMicasa);
+                        bool PicasaIniExists = File.Exists(wPath + System.IO.Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
+                        IniFile DotPicasa = new(wPath + System.IO.Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
+                        IniFile DotMicasa = new(wPath + System.IO.Path.DirectorySeparatorChar + Constants.sMcDotMicasa);
 
                         if (!myCancelToken.IsCancellationRequested)
                         {
@@ -126,7 +126,7 @@ namespace Micasa
                                     if (Options.Instance.IsFileTypeToScan(f))
                                     {
                                         Database.AddPhotoToDB(PhotoCol, f, PicasaIniExists, DotPicasa, DotMicasa);
-                                        Database.AddFolderToDB(wPath, FolderCol, Path.GetDirectoryName(f), false);
+                                        Database.AddFolderToDB(wPath, FolderCol, System.IO.Path.GetDirectoryName(f), false);
                                         // TO DO: add thumbnail
                                     }
                                 }
@@ -162,9 +162,9 @@ namespace Micasa
                 if (!myCancelToken.IsCancellationRequested)
                 {
                     // Create IniFile objects for the .Micasa and .Picasa files in this folder.
-                    bool PicasaIniExists = File.Exists(d + Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
-                    IniFile DotPicasa = new(d + Path.DirectorySeparatorChar + Constants.sMcDotPicasa); // TODO: shouldn't create these until after 
-                    IniFile DotMicasa = new(d + Path.DirectorySeparatorChar + Constants.sMcDotMicasa); //       folder disposition established.
+                    bool PicasaIniExists = File.Exists(d + System.IO.Path.DirectorySeparatorChar + Constants.sMcDotPicasa);
+                    IniFile DotPicasa = new(d + System.IO.Path.DirectorySeparatorChar + Constants.sMcDotPicasa); // TODO: shouldn't create these until after 
+                    IniFile DotMicasa = new(d + System.IO.Path.DirectorySeparatorChar + Constants.sMcDotMicasa); //       folder disposition established.
 
                     Debug.WriteLine( "Folder disposition: " + d + " ==> " + WatchedLists.FolderDisposition(d));
                     if (WatchedLists.FolderDisposition(d) == WatchType.Watched)
@@ -182,7 +182,7 @@ namespace Micasa
                                 if (Options.Instance.IsFileTypeToScan(f))
                                 {
                                     Database.AddPhotoToDB(pCol, f, PicasaIniExists, DotPicasa, DotMicasa);
-                                    Database.AddFolderToDB(wDir, fCol, Path.GetDirectoryName(f), false);
+                                    Database.AddFolderToDB(wDir, fCol, System.IO.Path.GetDirectoryName(f), false);
                                 }
                             }
                         }
