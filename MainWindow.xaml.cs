@@ -7,6 +7,7 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
+using ExifLibrary;
 using LiteDB;
 using StringExtensions;
 using System;
@@ -1028,10 +1029,34 @@ namespace Micasa
         }
 
         // PropertiesCmd
-        private void PropertiesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = false;
+        private void PropertiesCmdCanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
 
         private void PropertiesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            // Determine if a photo is selected in the MainWindowPhotos Listbox.  If no photo
+            // is selected, then show in information message box and exit; otherwise, show the
+            // file's properties in an information message box.
+            var selectedImage = MainWindowPhotos.SelectedItem;
+            if (selectedImage == null)
+            {
+                MessageBox.Show("No photo selected.");
+            }
+            else
+            {
+                string propertiesMsg = $"Property\tValue\n--------\t-----";
+                var filename = selectedImage.ToString().RmPrefix("file:///");
+                // The ListItem string returns the Uri, which has slashes instead of
+                // backslashes as the path separator; so, before we can use the ListItem's
+                // string we have to swap the path separator back into Windows' form.
+                filename = filename.Replace('/', Path.DirectorySeparatorChar);
+
+                var file = ImageFile.FromFile(filename);
+                foreach (var property in file.Properties)
+                {
+                    propertiesMsg = propertiesMsg + $"\n{property.Name}\t{property.Value}";
+                }
+                MessageBox.Show(propertiesMsg);
+            }
         }
 
         // ReadmeCmd
