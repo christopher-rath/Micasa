@@ -7,7 +7,6 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
-using ExifLibrary;
 using LiteDB;
 using StringExtensions;
 using System;
@@ -17,15 +16,12 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
-using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Micasa
 {
@@ -145,11 +141,11 @@ namespace Micasa
             // Ensure that the Micasa data folder exists (where its database and other data is stored).
             try
             {
-                Directory.CreateDirectory(AppData + System.IO.Path.DirectorySeparatorChar + Constants.sMcAppDataFolder);
+                Directory.CreateDirectory(AppData + Path.DirectorySeparatorChar + Constants.sMcAppDataFolder);
             }
             catch
             {
-                string msg = "ERROR: unable to create Micasa roaming folder (" + AppData + System.IO.Path.DirectorySeparatorChar
+                string msg = "ERROR: unable to create Micasa roaming folder (" + AppData + Path.DirectorySeparatorChar
                             + Constants.sMcAppDataFolder + ").\n\nUnable to continue.";
                 MessageBox.Show(msg, "Micasa: Roaming Folder Creation Error", MessageBoxButton.OK, MessageBoxImage.Error,
                                 MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
@@ -450,7 +446,7 @@ namespace Micasa
                     }
                     current = ItemsControl.ItemsControlFromItemContainer(current) as TreeViewItem;
                 }
-                string path = string.Join(System.IO.Path.DirectorySeparatorChar, stack);
+                string path = string.Join(Path.DirectorySeparatorChar, stack);
 
                 //MessageBox.Show($"Item clicked: {path}");
                 Debug.WriteLine($"DbFoldersItem_Selected: Item clicked: {path}.");
@@ -509,7 +505,7 @@ namespace Micasa
                 // The ListItem string returns the Uri, which has slashes instead of
                 // backslashes as the path separator; so, before we can use the ListItem's
                 // string we have to swap the path separator back into Windows' form.
-                filename = filename.Replace('/', System.IO.Path.DirectorySeparatorChar);
+                filename = filename.Replace('/', Path.DirectorySeparatorChar);
                 LoadImageDetails(filename);
             }
         }
@@ -545,7 +541,7 @@ namespace Micasa
                     try
                     {
                         //Metadata metadata = new Metadata(filename);
-                        var basename = System.IO.Path.GetFileName(filename);
+                        var basename = Path.GetFileName(filename);
                         //FileInfo fileInfo = new FileInfo(filename);
 #pragma warning disable CA1416 // Validate platform compatibility
                         //FileSecurity fileSecurity = fileInfo.GetAccessControl();
@@ -555,7 +551,7 @@ namespace Micasa
                         ClearImageDetails();
                         // Populate File Details fields.
                         Instance.tbFilename.Text = basename;
-                        Instance.tbLocation.Text =  System.IO.Path.GetDirectoryName(filename);
+                        Instance.tbLocation.Text =  Path.GetDirectoryName(filename);
                         Instance.tbFileSize.Text = $"{(query.FirstOrDefault().FileSize / (1024.0 * 1024.0)).ToString("N2", CultureInfo.InvariantCulture)} MB";
                         Instance.tbCreatedDate.Text = query.FirstOrDefault().CreatedDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                         Instance.tbModifiedDate.Text = query.FirstOrDefault().ModifiedDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
@@ -597,6 +593,7 @@ namespace Micasa
                         Instance.tbMakerNote.Text = query.FirstOrDefault().MakerNote;
                         Instance.tbUserComment.Text = query.FirstOrDefault().UserComment;
                         Instance.tbGPSVersion.Text = query.FirstOrDefault().GPSVersion;
+                        Instance.tbEXIFVersion.Text = query.FirstOrDefault().EXIFVersion;
 
                         // TODO: populate the rest of the metadata fields.
                         // @@@
@@ -681,7 +678,7 @@ namespace Micasa
         /// <param name="path">The file system path to add, represented as a string with directory separators.</param>
         public static void AddPathToTree(TreeView treeView, string path)
         {
-            string[] folders = path.Split(System.IO.Path.DirectorySeparatorChar);
+            string[] folders = path.Split(Path.DirectorySeparatorChar);
             ItemCollection currentItems = treeView.Items;
             foreach (string folder in folders)
             {
@@ -732,7 +729,7 @@ namespace Micasa
         public static void SelectAFolder(TreeView treeView, string path)
         {
             // Split the path into folders.
-            string[] folders = path.Split(System.IO.Path.DirectorySeparatorChar);
+            string[] folders = path.Split(Path.DirectorySeparatorChar);
             TreeViewItem node = null;
             // Traverse the TreeView to find the item that matches the path.
             foreach (string folder in folders)
@@ -771,7 +768,7 @@ namespace Micasa
         {
             try
             {
-                using (FileStream fs = File.Create(System.IO.Path.Combine(dirPath, System.IO.Path.GetRandomFileName()),
+                using (FileStream fs = File.Create(Path.Combine(dirPath, Path.GetRandomFileName()),
                                                    1, FileOptions.DeleteOnClose))
                 { }
                 return true;
@@ -1275,6 +1272,7 @@ namespace Micasa
         public const string sMcFT_Avi = @".avi";
         public const string sMcFT_Bmp = @".bmp";
         public const string sMcFT_Gif = @".gif";
+        public const string sMcFT_Heic = @".heic";
         public const string sMcFT_Jpg = @".jpg";
         public const string sMcFT_Mov = @".mov";
         public const string sMcFT_Nef = @".nef";
