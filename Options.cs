@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Globalization;
+using Microsoft.VisualBasic;
 
 namespace Micasa
 {
@@ -26,6 +27,7 @@ namespace Micasa
         private bool _FileTypeAvi = false;
         private bool _FileTypeBmp = true;
         private bool _FileTypeGif = true;
+        private bool _FileTypeHeic = true;
         private bool _FileTypeJpg = true;
         private bool _FileTypeMov = false;
         private bool _FileTypeNef = false;
@@ -62,6 +64,7 @@ namespace Micasa
             _FileTypeAvi = iniFile.GetBool(Constants.sMcFT_Section, Constants.sMcFT_Avi, _FileTypeAvi);
             _FileTypeBmp = iniFile.GetBool(Constants.sMcFT_Section, Constants.sMcFT_Bmp, _FileTypeBmp);
             _FileTypeGif = iniFile.GetBool(Constants.sMcFT_Section, Constants.sMcFT_Gif, _FileTypeGif);
+            _FileTypeHeic = iniFile.GetBool(Constants.sMcFT_Section, Constants.sMcFT_Heic, _FileTypeHeic);
             _FileTypeJpg = iniFile.GetBool(Constants.sMcFT_Section, Constants.sMcFT_Jpg, _FileTypeJpg);
             _FileTypeMov = iniFile.GetBool(Constants.sMcFT_Section, Constants.sMcFT_Mov, _FileTypeMov);
             _FileTypeNef = iniFile.GetBool(Constants.sMcFT_Section, Constants.sMcFT_Nef, _FileTypeNef);
@@ -110,6 +113,16 @@ namespace Micasa
             {
                 _FileTypeGif = value;
                 iniFile.SetBool(Constants.sMcFT_Section, Constants.sMcFT_Gif, _FileTypeGif);
+            }
+        }
+
+        public bool FileTypeHeic
+        {
+            get => _FileTypeHeic;
+            set
+            {
+                _FileTypeHeic = value;
+                iniFile.SetBool(Constants.sMcFT_Section, Constants.sMcFT_Heic, _FileTypeHeic);
             }
         }
 
@@ -270,6 +283,7 @@ namespace Micasa
                     Constants.sMcFT_Avi => FileTypeAvi,
                     Constants.sMcFT_Bmp => FileTypeBmp,
                     Constants.sMcFT_Gif => FileTypeGif,
+                    Constants.sMcFT_Heic => FileTypeHeic,
                     Constants.sMcFT_Jpg or Constants.sMcFT_JpgA => FileTypeJpg,
                     Constants.sMcFT_Mov => FileTypeMov,
                     Constants.sMcFT_Nef => FileTypeNef,

@@ -61,6 +61,7 @@ namespace Micasa
             cbOpFileTypeAvi.IsChecked = Options.Instance.FileTypeAvi;
             cbOpFileTypeBmp.IsChecked = Options.Instance.FileTypeBmp;
             cbOpFileTypeGif.IsChecked = Options.Instance.FileTypeGif;
+            cbOpFileTypeHeic.IsChecked = Options.Instance.FileTypeHeic;
             cbOpFileTypeJpg.IsChecked = Options.Instance.FileTypeJpg;
             cbOpFileTypePng.IsChecked = Options.Instance.FileTypePng;
             cbOpFileTypeTga.IsChecked = Options.Instance.FileTypeTga;
@@ -99,6 +100,7 @@ namespace Micasa
             Options.Instance.FileTypeAvi = (bool)cbOpFileTypeAvi.IsChecked;
             Options.Instance.FileTypeBmp = (bool)cbOpFileTypeBmp.IsChecked;
             Options.Instance.FileTypeGif = (bool)cbOpFileTypeGif.IsChecked;
+            Options.Instance.FileTypeHeic = (bool)cbOpFileTypeHeic.IsChecked;
             Options.Instance.FileTypeJpg = (bool)cbOpFileTypeJpg.IsChecked;
             Options.Instance.FileTypeMov = (bool)cbOpFileTypeMov.IsChecked;
             Options.Instance.FileTypePng = (bool)cbOpFileTypePng.IsChecked;

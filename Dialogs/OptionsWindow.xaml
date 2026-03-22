@@ -79,6 +79,7 @@
                         <CheckBox x:Name="cbOpFileTypeAvi" Content=".avi" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
                         <CheckBox x:Name="cbOpFileTypeBmp" Content=".bmp" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
                         <CheckBox x:Name="cbOpFileTypeGif" Content=".gif" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
+                        <CheckBox x:Name="cbOpFileTypeHeic" Content=".heic" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
                         <CheckBox x:Name="cbOpFileTypeJpg" Content=".jpg, .jpeg" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
                         <CheckBox x:Name="cbOpFileTypePng" Content=".png" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
                         <CheckBox x:Name="cbOpFileTypePsd" Content=".psd" HorizontalAlignment="Left" Margin="10.6,5.3,0,0" VerticalAlignment="Top" />
