@@ -356,6 +356,14 @@
                         scrollbar, and the WrapPanel it contains will be constrained 
                         to the width of the ScrollViewer's viewable surface. -->
                     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="P_roperties" Command="{x:Static local:MainWindow.PropertiesCmd}"/>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </ListBox.Resources>
         </ListBox>
