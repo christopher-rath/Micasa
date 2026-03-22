@@ -170,6 +170,7 @@ namespace Micasa
                 MakerNote = metadata.GetMetadataValue(Metadata.Tagnames.MakeNm),
                 UserComment = metadata.GetMetadataValue(Metadata.Tagnames.UserCommentNm),
                 GPSVersion = metadata.GetMetadataValue(Metadata.Tagnames.GPSVersionIDNm),
+                EXIFVersion = metadata.GetMetadataValue(Metadata.Tagnames.EXIFVersionNm),
                 Faces = [""],
                 Albums = [""]
             };
