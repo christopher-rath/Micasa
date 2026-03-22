@@ -221,9 +221,6 @@
             <MenuItem Header="_Picture">
                 <MenuItem Command="{x:Static local:MainWindow.ViewAndEditCmd}" Header="_View and Edit" 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
-                <MenuItem Header="_Batch Edit">
-                </MenuItem>
-                <Separator />
                 <MenuItem Command="{x:Static local:MainWindow.UndoAddEditsCmd}" Header="Undo _All Edits" 
                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={x:Static local:BooleanToCollapsedVisibilityConverter.Instance}}" />
                 <Separator />
