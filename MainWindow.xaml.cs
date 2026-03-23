@@ -9,6 +9,7 @@
 #endregion
 using ExifLibrary;
 using LiteDB;
+using Micasa.Dialogs;
 using StringExtensions;
 using System;
 using System.Collections.Generic;
@@ -1043,19 +1044,14 @@ namespace Micasa
             }
             else
             {
-                string propertiesMsg = $"Property\tValue\n--------\t-----";
                 var filename = selectedImage.ToString().RmPrefix("file:///");
                 // The ListItem string returns the Uri, which has slashes instead of
                 // backslashes as the path separator; so, before we can use the ListItem's
                 // string we have to swap the path separator back into Windows' form.
                 filename = filename.Replace('/', Path.DirectorySeparatorChar);
 
-                var file = ImageFile.FromFile(filename);
-                foreach (var property in file.Properties)
-                {
-                    propertiesMsg = propertiesMsg + $"\n{property.Name}\t{property.Value}";
-                }
-                MessageBox.Show(propertiesMsg);
+                ViewProperties ViewPropertiesWindow = new();
+                ViewPropertiesWindow.Show(filename);
             }
         }
 
