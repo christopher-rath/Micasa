@@ -13,7 +13,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Micasa"
-        Title="Micasa" SizeToContent="Manual" MinHeight="300" MinWidth="550" 
+        Title="Micasa" SizeToContent="Manual" MinHeight="300" MinWidth="750" 
         Closing="Window_Closing" Loaded="Window_Loaded">
 
     <Window.CommandBindings>
@@ -286,7 +286,7 @@
         <TabControl x:Name="NavigationTabs" Grid.Row="1" Grid.Column="0" MinHeight="200" Width="250" 
                     Margin="0,0,0,0" HorizontalAlignment="Left" IsSynchronizedWithCurrentItem="False" GotFocus="NavigationTabs_GotFocus" >
             <TabItem Header="Fol_ders" x:Name="MWFolderTab" >
-                <TreeView x:Name="dbFoldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="DbFoldersItem_SelectedItemChanged" Width="Auto" >
+                <TreeView x:Name="dbFoldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="DbFoldersItem_SelectedItemChanged" Width="Auto" BorderBrush="{x:Null}" >
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem">
                             <EventSetter Event="Selected" Handler="DbFoldersItem_Selected"/>
@@ -332,7 +332,7 @@
                         <Setter.Value>
                             <DataTemplate>
                                 <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="6" >
-                                    <Image Source="{Binding Path=UriSource}" Stretch="Uniform" Height="120" />
+                                    <Image Source="{Binding Path=UriSource}" Stretch="Uniform" Height="100" />
                                 </Border>
                             </DataTemplate>
                         </Setter.Value>
