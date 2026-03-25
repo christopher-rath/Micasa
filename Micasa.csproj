@@ -119,6 +119,9 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Update="Resources\Album.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Micasa_Icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
