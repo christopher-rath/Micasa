@@ -15,7 +15,7 @@ of the GNU Lesser General Public License version 2.1 as published by the Free So
 Foundation (see GNU_LGPL.txt for the license text).
 
 Libraries and other code not authored by Christopher Rath but included in Micasa:
-* LiteDB (https://www.litedb.org/) – Copyright (c) 2014-2023 Mauricio David.  Used under 
+* LiteDB (https://www.litedb.org/) – Copyright (c) 2014-2024 Mauricio David.  Used under 
   the terms of The MIT License (https://opensource.org/licenses/MIT).
 * ExifLibrary (http://oozcitak.github.io/exiflibrary/) – Copyright (c) 2013 Ozgur Ozcitak.  
   Used under the terms of The MIT License (https://opensource.org/licenses/MIT).
@@ -98,7 +98,6 @@ Picasa application.  Key features to include:
 
 ## Work to Date
 
-My work on Micasa so far has been to create the framework for the actual processing and 
-presentation of photos in the UI.  <em><strong>If you do decide to pull and compile Micasa, 
-watch the debug window for a trace of what Micasa is doing as it scans the file 
-system.</strong></em>
+Micasa will now monitor a photo library and then display the photos in the application's main
+window.  When a photo is selected, its metadata is displayed in a side panel.  A raw dump of
+a photo's EXIF metadata is also available from the context menu (and main menu).
