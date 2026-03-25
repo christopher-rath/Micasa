@@ -78,6 +78,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="19" />
+            <RowDefinition Height="28" />
             <RowDefinition Height="*" />
             <RowDefinition Height="23" />
         </Grid.RowDefinitions>
@@ -283,10 +284,12 @@
             </MenuItem>
         </Menu>
 
-        <TabControl x:Name="NavigationTabs" Grid.Row="1" Grid.Column="0" MinHeight="200" Width="250" 
-                    Margin="0,0,0,0" HorizontalAlignment="Left" IsSynchronizedWithCurrentItem="False" GotFocus="NavigationTabs_GotFocus" >
+        <TabControl x:Name="NavigationTabs" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" MinHeight="200" Width="250" 
+                    Margin="0,0,0,0" HorizontalAlignment="Left" IsSynchronizedWithCurrentItem="False" GotFocus="NavigationTabs_GotFocus"
+                    SelectionChanged="NavigationTabs_SelectionChanged" >
             <TabItem Header="Fol_ders" x:Name="MWFolderTab" >
-                <TreeView x:Name="dbFoldersItem" Grid.Row="1" Grid.Column="0" SelectedItemChanged="DbFoldersItem_SelectedItemChanged" Width="Auto" BorderBrush="{x:Null}" >
+                <TreeView x:Name="dbFoldersItem" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" SelectedItemChanged="DbFoldersItem_SelectedItemChanged"
+                          Width="Auto" BorderBrush="{x:Null}" >
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem">
                             <EventSetter Event="Selected" Handler="DbFoldersItem_Selected"/>
@@ -321,8 +324,15 @@
             </TabItem>
         </TabControl>
 
-        <ListBox x:Name="MainWindowPhotos" Grid.Row="1" Grid.Column="1" Width="Auto" Margin="0,0,0,0" 
-                 HorizontalAlignment="Left" BorderBrush="White" BorderThickness="0" 
+        <!-- Margin="left,top,right,bottom"-->
+        <Image x:Name="imgHdrIcon" Grid.Row="1" Grid.Column="1" Height="20" Width="20" VerticalAlignment="Top"
+               HorizontalAlignment="Left" Margin="5,2,0,0" />
+        <TextBlock x:Name="tbPhotosHeader" Grid.Row="1" Grid.Column="1" Height="22" VerticalAlignment="Top"
+                   TextWrapping="NoWrap" Text="Header" Margin="27,3,0,0" FontWeight="Bold" HorizontalAlignment="Left" 
+                   TextTrimming="CharacterEllipsis" IsEnabled="False" />
+
+        <ListBox x:Name="MainWindowPhotos" Grid.Row="2" Grid.Column="1" Width="Auto" Margin="0,0,0,0" 
+                 HorizontalAlignment="Left" BorderBrush="Transparent"  BorderThickness="0" 
                  SelectionChanged="MainWindowPhotos_SelectionChanged" >
             <ListBox.Resources>
                 <Style TargetType="{x:Type ListBox}">
@@ -364,12 +374,13 @@
                 </Style>
             </ListBox.Resources>
         </ListBox>
+        
         <!-- Margin="left,top,right,bottom"-->
-        <TabControl x:Name="InfoTabs" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" 
-                    Width="290" Margin="0,0,0,0" GotFocus="InfoTabs_GotFocus" >
+        <TabControl x:Name="InfoTabs" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" HorizontalAlignment="Right" 
+                    Width="270" Margin="0,0,0,0" GotFocus="InfoTabs_GotFocus" >
             <TabItem Header="People" x:Name="MWRtPeopleTab" >
             </TabItem>
-            <TabItem Header="Details" x:Name="MWDetailsTab" Height="24" VerticalAlignment="Bottom" >
+            <TabItem Header="Details" x:Name="MWDetailsTab" VerticalAlignment="Bottom" >
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <StackPanel Width="250">
                         <TextBlock Text="DETAILS" FontWeight="Bold" Margin="0,0,0,0"
@@ -508,7 +519,7 @@
             </TabItem>
         </TabControl>
 
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Background="#FFF0F0F0" BorderThickness="0,1,0,0" BorderBrush="DarkGray"
+        <StatusBar Grid.Row="3" Grid.ColumnSpan="3" Background="#FFF0F0F0" BorderThickness="0,1,0,0" BorderBrush="DarkGray"
                    VerticalAlignment="Bottom" >
             <StatusBarItem Margin="0,0,0,0" >
                 <TextBox x:Name="tbStatusMsg" HorizontalAlignment="Stretch" IsReadOnly="True" 

@@ -7,7 +7,6 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
-using ExifLibrary;
 using LiteDB;
 using Micasa.Dialogs;
 using StringExtensions;
@@ -18,12 +17,15 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace Micasa
 {
@@ -47,6 +49,7 @@ namespace Micasa
         private string SelectedFolderSaved = null;
         private ILiteCollection<PhotosTbl> PhotoCol = null;
         private ILiteCollection<FoldersTbl> FolderCol = null;
+        private static readonly Regex rgxNumOnly = new Regex("[0-9]+");
 
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -431,6 +434,28 @@ namespace Micasa
             SelectedFolderSaved = path;
         }
 
+        private void NavigationTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MWFolderTab.IsSelected)
+            {
+                // Load a folder icon into the imgHdrIcon Image widget.
+                imgHdrIcon.CacheMode = new BitmapCache();
+                imgHdrIcon.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/FolderClosed.png"));
+            }
+            else if (MWAlbumsTab.IsSelected)
+            {
+                // Load an album icon into the imgHdrIcon Image widget.
+                imgHdrIcon.CacheMode = new BitmapCache();
+                imgHdrIcon.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/Album.png"));
+            }
+            else if (MWLtPeopleTab.IsSelected)
+            {
+                // Load a people icon into the imgHdrIcon Image widget.
+                imgHdrIcon.CacheMode = new BitmapCache();
+                imgHdrIcon.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/People.png"));
+            }
+        }
+
         private void DbFoldersItem_Selected(object sender, RoutedEventArgs e)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => Mouse.OverrideCursor = Cursors.Wait);
@@ -453,8 +478,13 @@ namespace Micasa
                 //MessageBox.Show($"Item clicked: {path}");
                 Debug.WriteLine($"DbFoldersItem_Selected: Item clicked: {path}.");
                 Debug.WriteLine("DbFoldersItem_Selected: ...retrieving photos.");
-                // Save the last selected folder.
+                // Save the last selected folder.  Note that the Path.GetFileName() method is poorly
+                // named because what it actually gets is that final component of the path; whether
+                // it's an actual filename or just the final folder in the path.
                 Options.Instance.LastSelectedFolder = path;
+                // Get the final folder name from the path and post it to the tbPhotosHeader textblock.
+                Instance.tbPhotosHeader.Text = Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar,
+                                                                            Path.AltDirectorySeparatorChar));
                 // Open the database.
                 using (var db = new LiteDatabase(Database.ConnectionString(Database.DBFilename)))
                 {
@@ -553,7 +583,7 @@ namespace Micasa
                         ClearImageDetails();
                         // Populate File Details fields.
                         Instance.tbFilename.Text = basename;
-                        Instance.tbLocation.Text =  Path.GetDirectoryName(filename);
+                        Instance.tbLocation.Text = Path.GetDirectoryName(filename);
                         Instance.tbFileSize.Text = $"{(query.FirstOrDefault().FileSize / (1024.0 * 1024.0)).ToString("N2", CultureInfo.InvariantCulture)} MB";
                         Instance.tbCreatedDate.Text = query.FirstOrDefault().CreatedDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                         Instance.tbModifiedDate.Text = query.FirstOrDefault().ModifiedDate.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
@@ -572,7 +602,7 @@ namespace Micasa
                         Instance.tbOrientation.Text = query.FirstOrDefault().Orientation;
                         Instance.tbFlash.Text = query.FirstOrDefault().Flash;
                         Instance.tbLens.Text = query.FirstOrDefault().LensMaker + " "
-                                                + query.FirstOrDefault().LensModel; 
+                                                + query.FirstOrDefault().LensModel;
                         Instance.tbFocalLength.Text = $"{query.FirstOrDefault().FocalLength} mm";
                         Instance.tbFocalLength35mm.Text = $"{query.FirstOrDefault().FocalLength35mm} mm";
                         Instance.tbExposureTime.Text = $"{query.FirstOrDefault().ExposureTime} s";
@@ -695,16 +725,19 @@ namespace Micasa
                 }
                 if (existingItem == null)
                 {
-                    existingItem = new TreeViewItem { Header = folder, 
-                                                      Tag = folder, 
-                                                      FontWeight = FontWeights.Regular,
-                                                      IsExpanded = true };
+                    existingItem = new TreeViewItem
+                    {
+                        Header = folder,
+                        Tag = folder,
+                        FontWeight = FontWeights.Regular,
+                        IsExpanded = true
+                    };
                     currentItems.Add(existingItem);
                 }
                 currentItems = existingItem.Items;
             }
         }
-        
+
         public static void SelectATab(TabControl tabControl, string tabName)
         {
             // Find the TabItem with the specified name and select it.
@@ -715,7 +748,7 @@ namespace Micasa
                 {
                     throw new ArgumentException("TabItem must have a Name property set.");
                 }
-                else 
+                else
                 {
                     Debug.Print($"SelectATab: TabItem Name: '{item.Name}' / tabName: '{tabName}'");
 
@@ -724,7 +757,7 @@ namespace Micasa
                         tabControl.SelectedItem = item;
                         return; // Exit once the tab is found and selected.
                     }
-                } 
+                }
             }
         }
 
@@ -756,7 +789,7 @@ namespace Micasa
             {
                 node.IsSelected = true;
             }
-        }   
+        }
 
         /// <summary>
         /// Determine if a directory is writable by the curent process by creating and then deleting
@@ -1220,28 +1253,28 @@ namespace Micasa
         {
         }
 
-		private void NavigationTabs_GotFocus(object sender, RoutedEventArgs e)
-		{
-			// Determine which TabItem is active and save it in Options.LastSelectedLeftTab
-			if (sender is TabControl tabControl)
-			{
-				if (tabControl.SelectedItem is TabItem selectedTab)
-				{
-					// Save the name of the selected tab.
-					Options.Instance.LastSelectedLeftTab = selectedTab.Name;
-					Debug.WriteLine($"NavigationTabs_GotFocus: Selected tab: {selectedTab.Name}");
-				}
-				else
-				{
-					Debug.WriteLine("NavigationTabs_GotFocus: No tab selected.");
-				}
-			}
-			else
-			{
-				Debug.WriteLine("NavigationTabs_GotFocus: sender is not a TabControl.");
-			}
-		}
-		
+        private void NavigationTabs_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Determine which TabItem is active and save it in Options.LastSelectedLeftTab
+            if (sender is TabControl tabControl)
+            {
+                if (tabControl.SelectedItem is TabItem selectedTab)
+                {
+                    // Save the name of the selected tab.
+                    Options.Instance.LastSelectedLeftTab = selectedTab.Name;
+                    Debug.WriteLine($"NavigationTabs_GotFocus: Selected tab: {selectedTab.Name}");
+                }
+                else
+                {
+                    Debug.WriteLine("NavigationTabs_GotFocus: No tab selected.");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("NavigationTabs_GotFocus: sender is not a TabControl.");
+            }
+        }
+
         private void InfoTabs_GotFocus(object sender, RoutedEventArgs e)
         {
             // Determine which TabItem is active and save it in Options.LastSelectedRightTab
@@ -1263,19 +1296,19 @@ namespace Micasa
                 Debug.WriteLine("InfoTabs_GotFocus: sender is not a TabControl.");
             }
         }
-		#endregion UICode
-	}
+        #endregion UICode
+    }
 
-	/// <summary>
-	/// The global application mode:
-	///  * Legacy: only use Picasa sidecar files.
-	///  * Migrate: migrate data contained in Picasa sidecar files into the Micasa 
-	///    database and Micasa sidecar files.  Don't update/maintain the Picasa
-	///    sidecar files.
-	///  * Native: only use Micasa sidecar files (that is, ignore any Picasa 
-	///    sidecar files).
-	/// </summary>
-	[Flags]
+    /// <summary>
+    /// The global application mode:
+    ///  * Legacy: only use Picasa sidecar files.
+    ///  * Migrate: migrate data contained in Picasa sidecar files into the Micasa 
+    ///    database and Micasa sidecar files.  Don't update/maintain the Picasa
+    ///    sidecar files.
+    ///  * Native: only use Micasa sidecar files (that is, ignore any Picasa 
+    ///    sidecar files).
+    /// </summary>
+    [Flags]
     public enum AppMode
     {
         Legacy,
