@@ -356,13 +356,15 @@
                     <Setter Property="ItemTemplate">
                         <Setter.Value>
                             <DataTemplate>
-                                <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="6" >
+                                <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5"
+                                        Margin="6" >
                                     <Image Height="100" >
                                         <Image.CacheMode>
                                             <BitmapCache RenderAtScale="1"/>
                                         </Image.CacheMode>
                                         <Image.Source>
-                                            <BitmapImage UriSource="{Binding Path=UriSource}" CacheOption="OnLoad"/>
+                                            <BitmapImage UriSource="{Binding Path=UriSource}"
+                                                         CacheOption="OnLoad"/>
                                         </Image.Source>
                                     </Image>
                                 </Border>

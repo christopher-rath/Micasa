@@ -533,14 +533,14 @@ namespace Micasa
         /// It retrieves the file details and metadata for the selected photo and populates the
         /// fields in the Details tab.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainWindowPhotos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Get the selected image object
-            var selectedImage = MainWindowPhotos.SelectedItem;
-            if (selectedImage != null)
+            if (MainWindowPhotos.SelectedItem != null)
             {
-                var filename = selectedImage.ToString().RmPrefix("file:///");
+                var filename = MainWindowPhotos.SelectedItem.ToString().RmPrefix("file:///");
 
                 // The ListItem string returns the Uri, which has slashes instead of
                 // backslashes as the path separator; so, before we can use the ListItem's
@@ -637,15 +637,6 @@ namespace Micasa
 
                         // TODO: populate the rest of the metadata fields.
                         // @@@
-
-                        // Uncomment to list all the properties in the image file (for
-                        // debugging purposes).
-                        //var file = ImageFile.FromFile(filename);
-                        //Debug.WriteLine("     Properties in the image:");
-                        //foreach (var property in file.Properties)
-                        //{
-                        //    Debug.WriteLine($"     -- {property.Name}\t{property.Value}");
-                        //}
                     }
                     catch (Exception ex)
                     {
@@ -1314,20 +1305,42 @@ namespace Micasa
         /// <param name="e"></param>
         private void MainWindowPhotos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // Hide the MainWindowPhotos ListBox and expose the spSelectedPhoto StackPanel.
-            // I use .Hidden and not .Collapsed because I don't want the other widgets to
-            // move when the visibility is changed.
-            MainWindowPhotos.Visibility = Visibility.Hidden;
-            spNavTabHeader.Visibility = Visibility.Hidden;
-            grdSelectedPhoto.Visibility = Visibility.Visible;
-            btnReturnToLibrary.Visibility = Visibility.Visible;
+            // Determine what photo was double-clicked:
+            // 1. Get the UI element that was the original source of the event;
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            // 2. Walk up the visual tree until a ListBoxItem is found;
+            while ((dep != null) && (dep is not ListBoxItem))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+            // 3. If no ListBoxItem was found, the double click happened on empty space or
+            //    scrollbar, so only take action if a ListBoxItem was found;
+            if (dep != null)
+            {
+                // 4. Cast the found DependencyObject to a ListBoxItem; and, lastly,
+                ListBoxItem clickedItemContainer = (ListBoxItem)dep;
 
-            // Determine what photo was double-clicked, and then load it into the imgSelectedPhoto
-            // Image widget.
+                // 5. Use the ItemContainerGenerator to get the actual data item.
+                BitmapImage clickedItem = (BitmapImage)MainWindowPhotos.ItemContainerGenerator.ItemFromContainer(clickedItemContainer);
 
+                // Double-check that we got a valid data item.
+                if (clickedItem != null)
+                {
+                    // Hide the MainWindowPhotos ListBox and expose the spSelectedPhoto StackPanel.
+                    // I use .Hidden and not .Collapsed because I don't want the other widgets to
+                    // move when the visibility is changed.
+                    MainWindowPhotos.Visibility = Visibility.Hidden;
+                    spNavTabHeader.Visibility = Visibility.Hidden;
+                    grdSelectedPhoto.Visibility = Visibility.Visible;
+                    btnReturnToLibrary.Visibility = Visibility.Visible;
 
-            // Load the photo's caption into the tbSelectedPhotoCaption TextBox.
-
+                    // Load the photo into the imgSelectedPhoto Image widget.
+                    // Note: the ListBoxItem's string is the URI of the photo.
+                    imgSelectedPhoto.Source = new BitmapImage(new Uri(clickedItem.ToString(CultureInfo.InvariantCulture)));
+                    
+                    // Load the photo's caption into the tbSelectedPhotoCaption TextBox.
+                }
+            }
         }
 
         /// <summary>
