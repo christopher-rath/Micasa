@@ -1337,10 +1337,63 @@ namespace Micasa
                     // Load the photo into the imgSelectedPhoto Image widget.
                     // Note: the ListBoxItem's string is the URI of the photo.
                     imgSelectedPhoto.Source = new BitmapImage(new Uri(clickedItem.ToString(CultureInfo.InvariantCulture)));
-                    
+
                     // Load the photo's caption into the tbSelectedPhotoCaption TextBox.
+                    tbSelectedPhotoCaption.Text
+                        = GetCaptionForPhoto(new Uri(clickedItem.ToString(CultureInfo.InvariantCulture)).LocalPath);
                 }
             }
+        }
+
+        /// <summary>
+        /// Retrive the photo's caption from the database.  If no record is found, or if an
+        /// error occurs, return an empty string.
+        ///
+        /// TODO: this method needs to be extended to also check in any .micasa (or .picasa)
+        /// sidecar files that may exist.
+        /// </summary>
+        /// <param name="filename">The full pathname of the photo.</param>
+        /// <returns></returns>
+        private static string GetCaptionForPhoto(string filename)
+        {
+            string theCaption = string.Empty;
+
+            try
+            {
+                var query = Instance.PhotoCol.Query()
+                    .Where(x => x.FQFilename.Equals(filename, StringComparison.Ordinal));
+
+                if (query == null || query.Count() == 0)
+                {
+                    Debug.WriteLine($"GetCaptionForPhoto: No database record found for selected photo: {filename}");
+                    MessageBox.Show($"No database record found for selected photo: {filename}");
+                }
+                else if (query.Count() > 1)
+                {
+                    Debug.WriteLine($"GetCaptionForPhoto: Multiple database records found for selected photo: {filename}");
+                    MessageBox.Show($"Multiple database records found for selected photo: {filename}");
+                }
+                else
+                {
+                    try
+                    {
+                        theCaption = query.FirstOrDefault().TitleCaption;
+                        if (theCaption == null)
+                        {
+                            theCaption = string.Empty;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"GetCaptionForPhoto: Error loading image caption: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"GetCaptionForPhoto: Error retrieving photo record from database: {ex.Message}");
+            }
+            return theCaption;
         }
 
         /// <summary>
