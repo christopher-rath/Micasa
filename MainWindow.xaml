@@ -411,13 +411,14 @@
             </Grid.ColumnDefinitions>
 
             <Image x:Name="imgSelectedPhoto" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                   VerticalAlignment="Center" 
-                   Source="/Micasa;component/Resources/Micasa_Icon.png" />
+                    VerticalAlignment="Center" 
+                    Source="/Micasa;component/Resources/Micasa_Icon.png" />
 
             <TextBox x:Name="tbSelectedPhotoCaption" Grid.Row="1" Grid.Column="0" 
-                        HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
-                        Margin="10,5,1,5" VerticalScrollBarVisibility="Disabled" MinHeight="22"
-                        Text="Type a caption." HorizontalScrollBarVisibility="Disabled" TextWrapping="Wrap" />
+                    HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                    Margin="10,5,1,5" VerticalScrollBarVisibility="Disabled" MinHeight="22"
+                    Text="Type a caption." HorizontalScrollBarVisibility="Disabled" TextWrapping="Wrap"
+                    KeyDown="tbSelectedPhotoCaption_KeyDown" TextAlignment="Center" />
             <Button x:Name="btnDeleteCaption" Grid.Row="1" Grid.Column="1" Width="22" Height="22"
                     VerticalAlignment="Top" Margin="0,1,1,1" Background="{x:Null}"
                     BorderBrush="{x:Null}" Foreground="{x:Null}" >
