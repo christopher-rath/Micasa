@@ -5,9 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "Personal coding style preference is to explicitly assign a value, even if that assignment is redundant.", Scope = "member", Target = "~M:Micasa.Database.GetCaptionFromImage(System.String)~System.String")]
 [assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Personal coding style preference is to use the robust using{} statement.", Scope = "member", Target = "~M:Micasa.Database.CreateDB")]
-[assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Personal coding style preference is to use the robust using{} statement.", Scope = "member", Target = "~M:Micasa.Database.GetCaptionFromImage(System.String)~System.String")]
 [assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Personal coding style preference is to use the robust using{} statement.", Scope = "member", Target = "~M:Micasa.PictureScanner.StartScanner(System.Object)")]
 [assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Personal coding style preference is to use the robust using{} statement.", Scope = "member", Target = "~M:Micasa.PictureWatcher.StartProcessor(System.Object)")]
 [assembly: SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "Personal coding style preference is to explicitly assign a value, even if that assignment is redundant.", Scope = "member", Target = "~M:Micasa.PictureWatcher.StartProcessor(System.Object)")]
@@ -59,7 +57,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Intellicode erroneously thinks this is unnecessary.", Scope = "type", Target = "~T:Micasa.Options")]
 [assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "<Pending>", Scope = "namespace", Target = "~N:ExifLibrary")]
 [assembly: SuppressMessage("Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>", Scope = "member", Target = "~M:Micasa.FolderManagerWindow.PopulateFolderListbox(System.String[])~System.Collections.Generic.List{Micasa.FolderManagerWindow.FolderItem}")]
-[assembly: SuppressMessage("Style", "IDE0300:Simplify collection initialization", Justification = "<Pending>", Scope = "member", Target = "~F:ExifLibrary.ExifBitConverter.separator")]
 [assembly: SuppressMessage("Style", "IDE0300:Simplify collection initialization", Justification = "<Pending>", Scope = "member", Target = "~P:ExifLibrary.ExifEnumProperty`1.Interoperability")]
 [assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "<Pending>", Scope = "namespace", Target = "~N:RichTextBoxExtensions")]
 [assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "<Pending>", Scope = "namespace", Target = "~N:StringExtensions")]
@@ -67,4 +64,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Personal coding style preference is to use the robust using{} statement.", Scope = "member", Target = "~M:Micasa.MainWindow.StartFolderTab(System.Object)")]
 [assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "Personal coding style preference is to use the robust using{} statement.", Scope = "member", Target = "~M:Micasa.MainWindow.DbFoldersItem_Selected(System.Object,System.Windows.RoutedEventArgs)")]
 [assembly: SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "Personal coding style preference is to explicitly assign a value, even if that assignment is redundant.", Scope = "member", Target = "~M:Micasa.Metadata.GetCaptionFromImage~System.String")]
-[assembly: SuppressMessage("Style", "IDE0059:Unnecessary assignment of a value", Justification = "Personal coding style preference is to explicitly assign a value, even if that assignment is redundant.", Scope = "member", Target = "~M:Micasa.Metadata.SupportedImg(System.String)~System.Boolean")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Personal coding style.", Scope = "member", Target = "~M:Micasa.MainWindow.btnReturnToTabs_Click(System.Object,System.Windows.RoutedEventArgs)")]

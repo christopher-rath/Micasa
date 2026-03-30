@@ -53,7 +53,9 @@
 
   <ItemGroup>
     <None Remove="Resources\Album.png" />
+    <None Remove="Resources\NavigateLeft.png" />
     <None Remove="Resources\People.png" />
+    <None Remove="Resources\TrashCan.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,6 +76,12 @@
       <PackagePath></PackagePath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Content Include="Resources\NavigateLeft.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\TrashCan.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

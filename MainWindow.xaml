@@ -325,15 +325,30 @@
         </TabControl>
 
         <!-- Margin="left,top,right,bottom"-->
-        <Image x:Name="imgHdrIcon" Grid.Row="1" Grid.Column="1" Height="20" Width="20" VerticalAlignment="Top"
-               HorizontalAlignment="Left" Margin="5,2,0,0" />
-        <TextBlock x:Name="tbPhotosHeader" Grid.Row="1" Grid.Column="1" Height="22" VerticalAlignment="Top"
-                   TextWrapping="NoWrap" Text="Header" Margin="27,3,0,0" FontWeight="Bold" HorizontalAlignment="Left" 
-                   TextTrimming="CharacterEllipsis" IsEnabled="False" />
+        <StackPanel x:Name="spNavTabHeader" Orientation="Horizontal" Grid.Row="1" Grid.Column="1"
+                    VerticalAlignment="Top" >
+            <Image x:Name="imgHdrIcon" Height="20" Width="20" Margin="5,0,0,0" />
+            <TextBlock x:Name="tbPhotosHeader" Height="22" TextWrapping="NoWrap" Text="Header" 
+                       Margin="5,5,0,0" FontWeight="Bold" 
+                       TextTrimming="CharacterEllipsis" IsEnabled="False" />
+        </StackPanel>
 
+        <Button x:Name="btnReturnToLibrary" Grid.Row="1" Grid.Column="1" Height="20"
+                VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,0,0,1"
+                Background="{x:Null}" BorderBrush="{x:Null}" Visibility="Hidden" Click="btnReturnToLibrary_Click" >
+            <StackPanel Orientation="Horizontal" >
+                <Image Source="/Micasa;component/Resources/NavigateLeft.png" Stretch="Uniform" />
+                <Label Content="Return to Library" Margin="2,0,3,0" Padding="0,0,0,0" />
+            </StackPanel>
+        </Button>
+
+        <!-- The content of the middle panel will change based upon which Navigation tab is
+            selected.  Also, when a photo is double-clicked then it will displayed in the
+            middle panel. The widgets in this section hide and unhide using the
+            Visibility="Hidden" property. -->
         <ListBox x:Name="MainWindowPhotos" Grid.Row="2" Grid.Column="1" Width="Auto" Margin="0,0,0,0" 
                  HorizontalAlignment="Left" BorderBrush="Transparent"  BorderThickness="0" 
-                 SelectionChanged="MainWindowPhotos_SelectionChanged" >
+                 SelectionChanged="MainWindowPhotos_SelectionChanged" MouseDoubleClick="MainWindowPhotos_MouseDoubleClick" >
             <ListBox.Resources>
                 <Style TargetType="{x:Type ListBox}">
                     <!-- Set the ItemTemplate of the ListBox to a DataTemplate 
@@ -342,7 +357,14 @@
                         <Setter.Value>
                             <DataTemplate>
                                 <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="6" >
-                                    <Image Source="{Binding Path=UriSource}" Stretch="Uniform" Height="100" />
+                                    <Image Height="100" >
+                                        <Image.CacheMode>
+                                            <BitmapCache RenderAtScale="1"/>
+                                        </Image.CacheMode>
+                                        <Image.Source>
+                                            <BitmapImage UriSource="{Binding Path=UriSource}" CacheOption="OnLoad"/>
+                                        </Image.Source>
+                                    </Image>
                                 </Border>
                             </DataTemplate>
                         </Setter.Value>
@@ -374,10 +396,35 @@
                 </Style>
             </ListBox.Resources>
         </ListBox>
+
+        <Grid x:Name="grdSelectedPhoto" Grid.Row="2" Grid.Column="1" Margin="0,0,0,0" Visibility="Hidden" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="24" />
+            </Grid.ColumnDefinitions>
+
+            <Image x:Name="imgSelectedPhoto" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                   VerticalAlignment="Center" 
+                   Source="/Micasa;component/Resources/Micasa_Icon.png" />
+
+            <TextBox x:Name="tbSelectedPhotoCaption" Grid.Row="1" Grid.Column="0" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                        Margin="10,5,1,5" VerticalScrollBarVisibility="Disabled" MinHeight="22"
+                        Text="Type a caption." HorizontalScrollBarVisibility="Disabled" TextWrapping="Wrap" />
+            <Button x:Name="btnDeleteCaption" Grid.Row="1" Grid.Column="1" Width="22" Height="22"
+                    VerticalAlignment="Top" Margin="0,1,1,1" Background="{x:Null}"
+                    BorderBrush="{x:Null}" Foreground="{x:Null}" >
+                <Image Source="/Micasa;component/Resources/TrashCan.png" Stretch="Uniform" />
+            </Button>
+        </Grid>
         
         <!-- Margin="left,top,right,bottom"-->
         <TabControl x:Name="InfoTabs" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" HorizontalAlignment="Right" 
-                    Width="270" Margin="0,0,0,0" GotFocus="InfoTabs_GotFocus" >
+                    Width="280" Margin="0,0,0,0" GotFocus="InfoTabs_GotFocus" >
             <TabItem Header="People" x:Name="MWRtPeopleTab" >
             </TabItem>
             <TabItem Header="Details" x:Name="MWDetailsTab" VerticalAlignment="Bottom" >

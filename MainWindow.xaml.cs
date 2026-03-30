@@ -25,7 +25,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Windows.ApplicationModel.VoiceCommands;
+using Path = System.IO.Path;
 
 namespace Micasa
 {
@@ -46,10 +46,9 @@ namespace Micasa
         private static CancellationTokenSource FolderTabCancellationSource = new();
         private static CancellationToken FolderTabCancellationToken = FolderTabCancellationSource.Token;
         private TreeViewItem SelectedItem = null;
-        private string SelectedFolderSaved = null;
         private ILiteCollection<PhotosTbl> PhotoCol = null;
         private ILiteCollection<FoldersTbl> FolderCol = null;
-        private static readonly Regex rgxNumOnly = new Regex("[0-9]+");
+        // use with zoom // private static readonly Regex rgxNumOnly = new Regex("[0-9]+");
 
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -398,7 +397,7 @@ namespace Micasa
                     }
                     else
                     {
-                        //Debug.WriteLine("StartFolderTab: adding to TreeView: " + folderRow.Pathname);
+                        Debug.WriteLine("StartFolderTab: adding to TreeView: " + folderRow.Pathname);
 
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
@@ -409,9 +408,9 @@ namespace Micasa
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
                     ClearImageDetails();
-                    SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder);
                     SelectATab(Instance.NavigationTabs, Options.Instance.LastSelectedLeftTab);
                     SelectATab(Instance.InfoTabs, Options.Instance.LastSelectedRightTab);
+                    SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder);
                 });
             }
         }
@@ -431,7 +430,6 @@ namespace Micasa
             string path = (string)item.Tag;
 
             SelectedItem = item;
-            SelectedFolderSaved = path;
         }
 
         private void NavigationTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -441,18 +439,25 @@ namespace Micasa
                 // Load a folder icon into the imgHdrIcon Image widget.
                 imgHdrIcon.CacheMode = new BitmapCache();
                 imgHdrIcon.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/FolderClosed.png"));
+                // Post the selected folder's name to the header.
+                Instance.tbPhotosHeader.Text = Path.GetFileName(Options.Instance.LastSelectedFolder.TrimEnd(Path.DirectorySeparatorChar,
+                                                                            Path.AltDirectorySeparatorChar));
             }
             else if (MWAlbumsTab.IsSelected)
             {
                 // Load an album icon into the imgHdrIcon Image widget.
                 imgHdrIcon.CacheMode = new BitmapCache();
                 imgHdrIcon.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/Album.png"));
+                // Clear the name in the header (since the Albums functionality isn't yet coded.
+                Instance.tbPhotosHeader.Text = string.Empty;
             }
             else if (MWLtPeopleTab.IsSelected)
             {
                 // Load a people icon into the imgHdrIcon Image widget.
                 imgHdrIcon.CacheMode = new BitmapCache();
                 imgHdrIcon.Source = new BitmapImage(new Uri("pack://application:,,,/Resources/People.png"));
+                // Clear the name in the header (since the People functionality isn't yet coded.
+                Instance.tbPhotosHeader.Text = string.Empty;
             }
         }
 
@@ -508,6 +513,9 @@ namespace Micasa
                         // The Uri() method is used to transform the Windows fully qualified filename
                         // into a format that can be used by the ListBox ListItem.
                         Uri uri = new Uri(photoRow.FQFilename);
+                        // In the XAML for the Image widget contained in the ListBoxItem template:
+                        //  * we have included a BitmapCache for the Image's CacheMode property; and,
+                        //  * we have set the BitmapImage's CacheOption to OnLoad.
                         MainWindowPhotos.Items.Add(new BitmapImage(uri));
                     }
                 }
@@ -1297,8 +1305,51 @@ namespace Micasa
             }
         }
         #endregion UICode
+
+        /// <summary>
+        /// Called when the user double-clicks on a photo.  Open the photo so that it fills
+        /// the MainWindowPhotos panel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainWindowPhotos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Hide the MainWindowPhotos ListBox and expose the spSelectedPhoto StackPanel.
+            // I use .Hidden and not .Collapsed because I don't want the other widgets to
+            // move when the visibility is changed.
+            MainWindowPhotos.Visibility = Visibility.Hidden;
+            spNavTabHeader.Visibility = Visibility.Hidden;
+            grdSelectedPhoto.Visibility = Visibility.Visible;
+            btnReturnToLibrary.Visibility = Visibility.Visible;
+
+            // Determine what photo was double-clicked, and then load it into the imgSelectedPhoto
+            // Image widget.
+
+
+            // Load the photo's caption into the tbSelectedPhotoCaption TextBox.
+
+        }
+
+        /// <summary>
+        /// When the user presses the [Return to Library] button, we hide the grdSelectedPhoto
+        /// StackPanel and show the MainWindowPhotos ListBox again.  The button itself also needs
+        /// to be hidden again, and the spNavTabHeader shown again.
+        ///
+        /// TODO: we also need to deal with the tabs because they need to be inactive when t
+        /// the user is viewing a photo.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnReturnToLibrary_Click(object sender, RoutedEventArgs e)
+        {
+            grdSelectedPhoto.Visibility = Visibility.Hidden;
+            btnReturnToLibrary.Visibility = Visibility.Hidden;
+            MainWindowPhotos.Visibility = Visibility.Visible;
+            spNavTabHeader.Visibility = Visibility.Visible;
+        }
     }
 
+    #region Enums
     /// <summary>
     /// The global application mode:
     ///  * Legacy: only use Picasa sidecar files.
@@ -1315,6 +1366,7 @@ namespace Micasa
         Migrate,
         Native
     }
+#endregion Enums
 
     public static class Constants
     {
