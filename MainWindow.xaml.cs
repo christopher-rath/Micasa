@@ -502,12 +502,12 @@ namespace Micasa
                         .OrderBy(x => x.Picture)
                         .ToEnumerable();
 
-                    // Clear the MainWindowPhotos Listbox.
-                    MainWindowPhotos.Items.Clear();
+                    // Clear the lbMainWindowPhotos Listbox.
+                    lbMainWindowPhotos.Items.Clear();
 
                     foreach (var photoRow in query.ToList())
                     {
-                        // Add the photo to the MainWindowPhotos Listbox as a ListboxItem.
+                        // Add the photo to the lbMainWindowPhotos Listbox as a ListboxItem.
                         Debug.WriteLine($"DbFoldersItem_Selected: adding photo to PhotoList: {photoRow.Picture}");
 
                         // The Uri() method is used to transform the Windows fully qualified filename
@@ -516,7 +516,7 @@ namespace Micasa
                         // In the XAML for the Image widget contained in the ListBoxItem template:
                         //  * we have included a BitmapCache for the Image's CacheMode property; and,
                         //  * we have set the BitmapImage's CacheOption to OnLoad.
-                        MainWindowPhotos.Items.Add(new BitmapImage(uri));
+                        lbMainWindowPhotos.Items.Add(new BitmapImage(uri));
                     }
                 }
             }
@@ -529,18 +529,18 @@ namespace Micasa
         }
 
         /// <summary>
-        /// This method is invoked when the user clicks on a photo in the MainWindowPhotos Listbox.
+        /// This method is invoked when the user clicks on a photo in the lbMainWindowPhotos Listbox.
         /// It retrieves the file details and metadata for the selected photo and populates the
         /// fields in the Details tab.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainWindowPhotos_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void lbMainWindowPhotos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Get the selected image object
-            if (MainWindowPhotos.SelectedItem != null)
+            if (lbMainWindowPhotos.SelectedItem != null)
             {
-                var filename = MainWindowPhotos.SelectedItem.ToString().RmPrefix("file:///");
+                var filename = lbMainWindowPhotos.SelectedItem.ToString().RmPrefix("file:///");
 
                 // The ListItem string returns the Uri, which has slashes instead of
                 // backslashes as the path separator; so, before we can use the ListItem's
@@ -551,7 +551,7 @@ namespace Micasa
         }
 
         /// <summary>
-        /// This method is invoked when the user clicks on a photo in the MainWindowPhotos Listbox.
+        /// This method is invoked when the user clicks on a photo in the lbMainWindowPhotos Listbox.
         /// It retrieves the file details and metadata for the selected photo and populates the
         /// fields in the Details tab.
         /// </summary>
@@ -1066,10 +1066,10 @@ namespace Micasa
 
         private void PropertiesCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            // Determine if a photo is selected in the MainWindowPhotos Listbox.  If no photo
+            // Determine if a photo is selected in the lbMainWindowPhotos Listbox.  If no photo
             // is selected, then show in information message box and exit; otherwise, show the
             // file's properties in an information message box.
-            var selectedImage = MainWindowPhotos.SelectedItem;
+            var selectedImage = lbMainWindowPhotos.SelectedItem;
             if (selectedImage == null)
             {
                 MessageBox.Show("No photo selected.");
@@ -1299,11 +1299,11 @@ namespace Micasa
 
         /// <summary>
         /// Called when the user double-clicks on a photo.  Open the photo so that it fills
-        /// the MainWindowPhotos panel.
+        /// the lbMainWindowPhotos panel.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainWindowPhotos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void lbMainWindowPhotos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Determine what photo was double-clicked:
             // 1. Get the UI element that was the original source of the event;
@@ -1321,15 +1321,15 @@ namespace Micasa
                 ListBoxItem clickedItemContainer = (ListBoxItem)dep;
 
                 // 5. Use the ItemContainerGenerator to get the actual data item.
-                BitmapImage clickedItem = (BitmapImage)MainWindowPhotos.ItemContainerGenerator.ItemFromContainer(clickedItemContainer);
+                BitmapImage clickedItem = (BitmapImage)lbMainWindowPhotos.ItemContainerGenerator.ItemFromContainer(clickedItemContainer);
 
                 // Double-check that we got a valid data item.
                 if (clickedItem != null)
                 {
-                    // Hide the MainWindowPhotos ListBox and expose the spSelectedPhoto StackPanel.
+                    // Hide the lbMainWindowPhotos ListBox and expose the spSelectedPhoto StackPanel.
                     // I use .Hidden and not .Collapsed because I don't want the other widgets to
                     // move when the visibility is changed.
-                    MainWindowPhotos.Visibility = Visibility.Hidden;
+                    lbMainWindowPhotos.Visibility = Visibility.Hidden;
                     spNavTabHeader.Visibility = Visibility.Hidden;
                     grdSelectedPhoto.Visibility = Visibility.Visible;
                     btnReturnToLibrary.Visibility = Visibility.Visible;
@@ -1345,7 +1345,7 @@ namespace Micasa
 
         /// <summary>
         /// When the user presses the [Return to Library] button, we hide the grdSelectedPhoto
-        /// StackPanel and show the MainWindowPhotos ListBox again.  The button itself also needs
+        /// StackPanel and show the lbMainWindowPhotos ListBox again.  The button itself also needs
         /// to be hidden again, and the spNavTabHeader shown again.
         ///
         /// TODO: we also need to deal with the tabs because they need to be inactive when t
@@ -1357,7 +1357,7 @@ namespace Micasa
         {
             grdSelectedPhoto.Visibility = Visibility.Hidden;
             btnReturnToLibrary.Visibility = Visibility.Hidden;
-            MainWindowPhotos.Visibility = Visibility.Visible;
+            lbMainWindowPhotos.Visibility = Visibility.Visible;
             spNavTabHeader.Visibility = Visibility.Visible;
         }
     }

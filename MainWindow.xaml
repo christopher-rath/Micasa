@@ -346,9 +346,10 @@
             selected.  Also, when a photo is double-clicked then it will displayed in the
             middle panel. The widgets in this section hide and unhide using the
             Visibility="Hidden" property. -->
-        <ListBox x:Name="MainWindowPhotos" Grid.Row="2" Grid.Column="1" Width="Auto" Margin="0,0,0,0" 
+        <ListBox x:Name="lbMainWindowPhotos" Grid.Row="2" Grid.Column="1" Width="Auto" Margin="0,0,0,0" 
                  HorizontalAlignment="Left" BorderBrush="Transparent"  BorderThickness="0" 
-                 SelectionChanged="MainWindowPhotos_SelectionChanged" MouseDoubleClick="MainWindowPhotos_MouseDoubleClick" >
+                 SelectionChanged="lbMainWindowPhotos_SelectionChanged"
+                 MouseDoubleClick="lbMainWindowPhotos_MouseDoubleClick" >
             <ListBox.Resources>
                 <Style TargetType="{x:Type ListBox}">
                     <!-- Set the ItemTemplate of the ListBox to a DataTemplate 
