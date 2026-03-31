@@ -25,7 +25,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Windows.Perception.People;
 using Path = System.IO.Path;
 
 namespace Micasa
@@ -50,6 +49,7 @@ namespace Micasa
         private ILiteCollection<PhotosTbl> PhotoCol = null;
         private ILiteCollection<FoldersTbl> FolderCol = null;
         private string SelectedPhotoCaptionSaved = string.Empty;
+        private string SelectedPhotoPathSaved = string.Empty;
         private bool IsSelectedPhotoCaptionEdited = false;
         private bool IsSelectedPhotoCaptionEmpty = false;
         // use with zoom // private static readonly Regex rgxNumOnly = new Regex("[0-9]+");
@@ -1344,9 +1344,9 @@ namespace Micasa
 
                     // Save the caption for undo purposes, and also set the captionNotEdited
                     // flag to false to indicate that the caption has not yet been edited
-                    // since the caption was first loaded into the caption TextBox. 
-                    SelectedPhotoCaptionSaved
-                        = GetCaptionForPhoto(new Uri(clickedItem.ToString(CultureInfo.InvariantCulture)).LocalPath);
+                    // since the caption was first loaded into the caption TextBox.
+                    SelectedPhotoPathSaved = new Uri(clickedItem.ToString(CultureInfo.InvariantCulture)).LocalPath;
+                    SelectedPhotoCaptionSaved = GetCaptionForPhoto(SelectedPhotoPathSaved);
                     IsSelectedPhotoCaptionEdited = false;
                     // If no caption was found, then present a prompt with text in Gray.  In the
                     // tbSelectedPhotoCaption KeyDown handler, if there was no caption then we
@@ -1356,6 +1356,7 @@ namespace Micasa
                         IsSelectedPhotoCaptionEmpty = true;
                         tbSelectedPhotoCaption.Text = "Type a Caption!";
                         tbSelectedPhotoCaption.Foreground = Brushes.Gray;
+                        btnDeleteCaption.IsEnabled = false;
                     }
                     else
                     {
@@ -1366,6 +1367,7 @@ namespace Micasa
                         // photo may have had no caption and caused the font colour to be set
                         // to Gray.
                         tbSelectedPhotoCaption.Foreground = Brushes.Black;
+                        btnDeleteCaption.IsEnabled = true;
                     }
                     tbSelectedPhotoCaption.Focus();
                 }
@@ -1451,6 +1453,33 @@ namespace Micasa
             spNavTabHeader.Visibility = Visibility.Visible;
         }
 
+        private void tbSelectedPhotoCaption_KeyDown(object sender, KeyEventArgs e)
+        {
+        }
+
+        /// <summary>
+        /// This event handler is called when the user clicks on the [Delete Caption]
+        /// button.  The handler prompts the user to confirm the deletion, and then
+        /// if the user confirms, the caption is deleted from the database and any
+        /// .micasa/.picasa file(s).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDeleteCaption_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete the caption for this photo?",
+                    "Confirm Caption Deletion", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                //SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
+                tbSelectedPhotoCaption.Text = "Type a Caption!";
+                tbSelectedPhotoCaption.Foreground = Brushes.Gray;
+                IsSelectedPhotoCaptionEdited = false;
+                IsSelectedPhotoCaptionEmpty = true;
+                btnDeleteCaption.IsEnabled = false;
+            }
+            tbSelectedPhotoCaption.Focus();
+        }
+
         /// <summary>
         /// This event handler is called when the user presses any key whil the
         /// cursor is in the tbSelectedPhotoCaption TextBox.  If the user presses the
@@ -1460,7 +1489,7 @@ namespace Micasa
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tbSelectedPhotoCaption_KeyDown(object sender, KeyEventArgs e)
+        private void tbSelectedPhotoCaption_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             TextBox tb = (TextBox)sender;
 
@@ -1474,6 +1503,7 @@ namespace Micasa
                     if (!((e.Key == Key.Escape) && (Keyboard.Modifiers == ModifierKeys.None)))
                     {
                         IsSelectedPhotoCaptionEdited = true;
+                        btnDeleteCaption.IsEnabled = true;
                         if (IsSelectedPhotoCaptionEmpty)
                         {
                             tb.Text = string.Empty;
@@ -1488,10 +1518,9 @@ namespace Micasa
                 if ((e.Key == Key.Enter) && (Keyboard.Modifiers == ModifierKeys.None))
                 {
                     // Save the caption to the database and any .micasa/.picasa sidecar files.
-                    //SaveCaptionForPhoto(tb.Text);
-                    // Move the focus to the [Return to Library] button so that the user can
-                    // easily return to the library view by pressing Enter again.
-                    btnReturnToLibrary.Focus();
+                    //SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
+                    IsSelectedPhotoCaptionEdited = false;
+                    btnDeleteCaption.IsEnabled = false;
                 }
                 else if ((e.Key == Key.Escape) && (Keyboard.Modifiers == ModifierKeys.None))
                 {
@@ -1511,6 +1540,7 @@ namespace Micasa
                             tb.Text = SelectedPhotoCaptionSaved;
                         }
                         IsSelectedPhotoCaptionEdited = false;
+                        btnDeleteCaption.IsEnabled = false;
                     }
                     else
                     {
