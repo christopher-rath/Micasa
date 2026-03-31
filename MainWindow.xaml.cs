@@ -1521,6 +1521,7 @@ namespace Micasa
                     //SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
                     IsSelectedPhotoCaptionEdited = false;
                     btnDeleteCaption.IsEnabled = false;
+                    e.Handled = true;
                 }
                 else if ((e.Key == Key.Escape) && (Keyboard.Modifiers == ModifierKeys.None))
                 {
@@ -1546,6 +1547,7 @@ namespace Micasa
                     {
                         PerformReturnToLibrary();
                     }
+                    e.Handled = true;
                 }
             }
         }
