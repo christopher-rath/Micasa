@@ -1497,10 +1497,12 @@ namespace Micasa
             {
                 if (!IsSelectedPhotoCaptionEdited)
                 {
-                    // If no editing has yet been done, and the user presses the [Esc] key
-                    // then we don't want to set the IsSelectedPhotoCaptionEdited flag to true
-                    // (because we want the [Esc] key to be handled separately in the code below).
-                    if (!((e.Key == Key.Escape) && (Keyboard.Modifiers == ModifierKeys.None)))
+                    // If no editing has yet been done, and the user presses the [Esc] or
+                    // [Enter] keys then we don't want to set the IsSelectedPhotoCaptionEdited
+                    // flag to true (because we want the [Esc]/[Enter] key to be handled
+                    // separately in the code below).
+                    if (!(((e.Key == Key.Escape) || (e.Key == Key.Enter))
+                        && (Keyboard.Modifiers == ModifierKeys.None)))
                     {
                         IsSelectedPhotoCaptionEdited = true;
                         btnDeleteCaption.IsEnabled = true;
@@ -1517,10 +1519,12 @@ namespace Micasa
                 // because we only want to respond to a plain Enter key.
                 if ((e.Key == Key.Enter) && (Keyboard.Modifiers == ModifierKeys.None))
                 {
-                    // Save the caption to the database and any .micasa/.picasa sidecar files.
-                    //SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
-                    IsSelectedPhotoCaptionEdited = false;
-                    btnDeleteCaption.IsEnabled = false;
+                    if (IsSelectedPhotoCaptionEdited)
+                    {
+                        // Save the caption to the database and any .micasa/.picasa sidecar files.
+                        //SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
+                        IsSelectedPhotoCaptionEdited = false;
+                    }
                     e.Handled = true;
                 }
                 else if ((e.Key == Key.Escape) && (Keyboard.Modifiers == ModifierKeys.None))
@@ -1548,6 +1552,13 @@ namespace Micasa
                         PerformReturnToLibrary();
                     }
                     e.Handled = true;
+                }
+                else
+                {
+                    // Now that the user has typed something other than [Enter] or
+                    // [Esc] that means there is text in the caption field so need
+                    // to clear the IsSelectedPhotoCaptionEmpty flag.
+                    IsSelectedPhotoCaptionEmpty = false;
                 }
             }
         }
