@@ -1375,57 +1375,6 @@ namespace Micasa
         }
 
         /// <summary>
-        /// Retrive the photo's caption from the database.  If no record is found, or if an
-        /// error occurs, return an empty string.
-        ///
-        /// TODO: this method needs to be extended to also check in any .micasa (or .picasa)
-        /// sidecar files that may exist.
-        /// </summary>
-        /// <param name="filename">The full pathname of the photo.</param>
-        /// <returns></returns>
-        private static string GetCaptionForPhoto(string filename)
-        {
-            string theCaption = string.Empty;
-
-            try
-            {
-                var query = Instance.PhotoCol.Query()
-                    .Where(x => x.FQFilename.Equals(filename, StringComparison.Ordinal));
-
-                if (query == null || query.Count() == 0)
-                {
-                    Debug.WriteLine($"GetCaptionForPhoto: No database record found for selected photo: {filename}");
-                    MessageBox.Show($"No database record found for selected photo: {filename}");
-                }
-                else if (query.Count() > 1)
-                {
-                    Debug.WriteLine($"GetCaptionForPhoto: Multiple database records found for selected photo: {filename}");
-                    MessageBox.Show($"Multiple database records found for selected photo: {filename}");
-                }
-                else
-                {
-                    try
-                    {
-                        theCaption = query.FirstOrDefault().TitleCaption;
-                        if (theCaption == null)
-                        {
-                            theCaption = string.Empty;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"GetCaptionForPhoto: Error loading image caption: {ex.Message}");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"GetCaptionForPhoto: Error retrieving photo record from database: {ex.Message}");
-            }
-            return theCaption;
-        }
-
-        /// <summary>
         /// When the user presses the [Return to Library] button, we hide the grdSelectedPhoto
         /// StackPanel and show the lbMainWindowPhotos ListBox again.  The button itself also needs
         /// to be hidden again, and the spNavTabHeader shown again.
@@ -1438,19 +1387,6 @@ namespace Micasa
         private void btnReturnToLibrary_Click(object sender, RoutedEventArgs e)
         {
             PerformReturnToLibrary();
-        }
-
-        /// <summary>
-        /// This method the work required for the btnReturnToLibrary_Click event handler.
-        /// It is separated out here so that it can also be called from the
-        /// tbSelectedPhotoCaption_KeyDown event handler.
-        /// </summary>
-        private void PerformReturnToLibrary()
-        {
-            grdSelectedPhoto.Visibility = Visibility.Hidden;
-            btnReturnToLibrary.Visibility = Visibility.Hidden;
-            lbMainWindowPhotos.Visibility = Visibility.Visible;
-            spNavTabHeader.Visibility = Visibility.Visible;
         }
 
         private void tbSelectedPhotoCaption_KeyDown(object sender, KeyEventArgs e)
@@ -1561,6 +1497,70 @@ namespace Micasa
                     IsSelectedPhotoCaptionEmpty = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Retrive the photo's caption from the database.  If no record is found, or if an
+        /// error occurs, return an empty string.
+        ///
+        /// TODO: this method needs to be extended to also check in any .micasa (or .picasa)
+        /// sidecar files that may exist.
+        /// </summary>
+        /// <param name="filename">The full pathname of the photo.</param>
+        /// <returns></returns>
+        private static string GetCaptionForPhoto(string filename)
+        {
+            string theCaption = string.Empty;
+
+            try
+            {
+                var query = Instance.PhotoCol.Query()
+                    .Where(x => x.FQFilename.Equals(filename, StringComparison.Ordinal));
+
+                if (query == null || query.Count() == 0)
+                {
+                    Debug.WriteLine($"GetCaptionForPhoto: No database record found for selected photo: {filename}");
+                    MessageBox.Show($"No database record found for selected photo: {filename}");
+                }
+                else if (query.Count() > 1)
+                {
+                    Debug.WriteLine($"GetCaptionForPhoto: Multiple database records found for selected photo: {filename}");
+                    MessageBox.Show($"Multiple database records found for selected photo: {filename}");
+                }
+                else
+                {
+                    try
+                    {
+                        theCaption = query.FirstOrDefault().TitleCaption;
+                        if (theCaption == null)
+                        {
+                            theCaption = string.Empty;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"GetCaptionForPhoto: Error loading image caption: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"GetCaptionForPhoto: Error retrieving photo record from database: {ex.Message}");
+            }
+            return theCaption;
+        }
+
+        /// <summary>
+        /// This method the work required for the btnReturnToLibrary_Click event handler.
+        /// It is separated out here so that it can also be called from the
+        /// tbSelectedPhotoCaption_KeyDown event handler.
+        /// </summary>
+        private void PerformReturnToLibrary()
+        {
+            grdSelectedPhoto.Visibility = Visibility.Hidden;
+            btnReturnToLibrary.Visibility = Visibility.Hidden;
+            lbMainWindowPhotos.Visibility = Visibility.Visible;
+            spNavTabHeader.Visibility = Visibility.Visible;
         }
     }
 
