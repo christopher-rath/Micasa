@@ -1648,6 +1648,7 @@ namespace Micasa
         // Application Options
         public const string sMcOpAppMode = @"AppMode";
         public const string sMcUpdPhotoFiles = @"UpdatePhotoFiles";
+        public const string sMcUpdSidecarFiles = @"UpdateSidecarFiles";
 
         // .Micasa -- Entries for each folder
         public const string sMcScMicasa = @"Micasa";

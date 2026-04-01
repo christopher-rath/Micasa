@@ -40,7 +40,8 @@ namespace Micasa
         public static readonly string HomeFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         public static readonly string iniFileNm = HomeFolder + Path.DirectorySeparatorChar + Constants.sAppIniFileNm;
         private AppMode _MyAppMode = AppMode.Migrate;
-        private bool _UpdPhotoFiles = false;
+        private bool _UpdPhotoFiles = true;
+        private bool _UpdSidecarFiles = true;
         private string _LastSelectedLeftTab = string.Empty;
         private string _LastSelectedFolder = string.Empty;
         private string _LastSelectedRightTab = string.Empty;
@@ -79,6 +80,7 @@ namespace Micasa
                 _MyAppMode = DefaultAppMode;
             }
             _UpdPhotoFiles = iniFile.GetBool(Constants.sMcScMicasa, Constants.sMcUpdPhotoFiles, _UpdPhotoFiles);
+            _UpdSidecarFiles = iniFile.GetBool(Constants.sMcScMicasa, Constants.sMcUpdSidecarFiles, _UpdSidecarFiles);
             _LastSelectedLeftTab = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedLeftTab, _LastSelectedLeftTab);
             _LastSelectedFolder = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedFolder, _LastSelectedFolder);
             _LastSelectedRightTab = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedRightTab, _LastSelectedRightTab);
@@ -223,6 +225,16 @@ namespace Micasa
             {
                 _UpdPhotoFiles = value;
                 iniFile.SetBool(Constants.sMcScMicasa, Constants.sMcUpdPhotoFiles, _UpdPhotoFiles);
+            }
+        }
+
+        public bool UpdateSidecarFiles
+        {
+            get => _UpdSidecarFiles;
+            set
+            {
+                _UpdSidecarFiles = value;
+                iniFile.SetBool(Constants.sMcScMicasa, Constants.sMcUpdSidecarFiles, _UpdSidecarFiles);
             }
         }
 

@@ -34,18 +34,26 @@ namespace Micasa
                 case AppMode.Legacy:
                     rbAppModeLegacy.IsChecked = true;
                     cbUpdPhotoFiles.IsChecked = Options.Instance.UpdatePhotoFiles;
-                    // In Legacy mode, the UpdatePhotoFiles option cannot be changed.
-                    cbUpdPhotoFiles.IsEnabled = true;
+                    cbUpdSidecarFiles.IsChecked = Options.Instance.UpdateSidecarFiles;
+                    cbUpdSidecarFiles.IsChecked = Options.Instance.UpdateSidecarFiles;
+                    // In Legacy mode, the UpdatePhotoFiles & UpdateSidecar options cannot
+                    // be changed; so, we disable the checkboxes.
+                    cbUpdPhotoFiles.IsEnabled = false;
+                    cbUpdSidecarFiles.IsEnabled = false;
                     break;
                 case AppMode.Migrate:
                     rbAppModeMigrate.IsChecked = true;
                     cbUpdPhotoFiles.IsChecked = Options.Instance.UpdatePhotoFiles;
+                    cbUpdSidecarFiles.IsChecked = Options.Instance.UpdateSidecarFiles;
                     cbUpdPhotoFiles.IsEnabled = true;
+                    cbUpdSidecarFiles.IsChecked = true;
                     break;
                 case AppMode.Native:
                     rbAppModeNative.IsChecked = true;
                     cbUpdPhotoFiles.IsChecked = Options.Instance.UpdatePhotoFiles;
+                    cbUpdSidecarFiles.IsChecked = Options.Instance.UpdateSidecarFiles;
                     cbUpdPhotoFiles.IsEnabled = true;
+                    cbUpdSidecarFiles.IsChecked = true;
                     break;
             }
             // Info Tab
@@ -81,21 +89,25 @@ namespace Micasa
                 Options.Instance.MyAppMode = AppMode.Legacy;
                 // In legacy mode, data is always written to the photo files.
                 Options.Instance.UpdatePhotoFiles = true;
+                Options.Instance.UpdateSidecarFiles = true;
             }
             else if ((bool)rbAppModeMigrate.IsChecked)
             {
                 Options.Instance.MyAppMode = AppMode.Migrate;
                 Options.Instance.UpdatePhotoFiles = (bool)cbUpdPhotoFiles.IsChecked;
+                Options.Instance.UpdateSidecarFiles = (bool)cbUpdSidecarFiles.IsChecked;
             }
             else if ((bool)rbAppModeNative.IsChecked)
             {
                 Options.Instance.MyAppMode = AppMode.Native;
                 Options.Instance.UpdatePhotoFiles = (bool)cbUpdPhotoFiles.IsChecked;
+                Options.Instance.UpdateSidecarFiles = (bool)cbUpdSidecarFiles.IsChecked;
             }
             else
             {
                 Options.Instance.MyAppMode = Options.Instance.DefaultAppMode;
                 Options.Instance.UpdatePhotoFiles = (bool)cbUpdPhotoFiles.IsChecked;
+                Options.Instance.UpdateSidecarFiles = (bool)cbUpdSidecarFiles.IsChecked;
             }
             Options.Instance.FileTypeAvi = (bool)cbOpFileTypeAvi.IsChecked;
             Options.Instance.FileTypeBmp = (bool)cbOpFileTypeBmp.IsChecked;
@@ -138,21 +150,32 @@ namespace Micasa
 
         private void RbAppModeLegacy_Checked(object sender, RoutedEventArgs e)
         {
+            // In Legacy mode, the UpdatePhotoFiles & UpdateSidecar options
+            // cannot be changed; so, we set the checkboxes to true and disable them.
             cbUpdPhotoFiles.IsChecked = true;
             cbUpdPhotoFiles.IsEnabled = false;
             cbUpdPhotoFiles.Foreground = Brushes.Gray;
+            cbUpdSidecarFiles.IsChecked = true;
+            cbUpdSidecarFiles.IsEnabled = false;
+            cbUpdSidecarFiles.Foreground = Brushes.Gray;
         }
 
         private void RbAppModeMigrate_Checked(object sender, RoutedEventArgs e)
         {
+            // Ensure that the UpdatePhotoFiles & UpdateSidecar options are enabled.
             cbUpdPhotoFiles.IsEnabled = true;
             cbUpdPhotoFiles.Foreground = Brushes.Black;
+            cbUpdSidecarFiles.IsEnabled = true;
+            cbUpdSidecarFiles.Foreground = Brushes.Black;
         }
 
         private void RbAppModeNative_Checked(object sender, RoutedEventArgs e)
         {
+            // Ensure that the UpdatePhotoFiles & UpdateSidecar options are enabled.
             cbUpdPhotoFiles.IsEnabled = true;
             cbUpdPhotoFiles.Foreground = Brushes.Black;
+            cbUpdSidecarFiles.IsEnabled = true;
+            cbUpdSidecarFiles.Foreground = Brushes.Black;
         }
     }
 }
