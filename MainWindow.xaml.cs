@@ -1389,10 +1389,6 @@ namespace Micasa
             PerformReturnToLibrary();
         }
 
-        private void tbSelectedPhotoCaption_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
         /// <summary>
         /// This event handler is called when the user clicks on the [Delete Caption]
         /// button.  The handler prompts the user to confirm the deletion, and then
@@ -1458,7 +1454,7 @@ namespace Micasa
                     if (IsSelectedPhotoCaptionEdited)
                     {
                         // Save the caption to the database and any .micasa/.picasa sidecar files.
-                        //SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
+                        SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
                         IsSelectedPhotoCaptionEdited = false;
                     }
                     e.Handled = true;
@@ -1561,6 +1557,42 @@ namespace Micasa
             btnReturnToLibrary.Visibility = Visibility.Hidden;
             lbMainWindowPhotos.Visibility = Visibility.Visible;
             spNavTabHeader.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// This method saves a caption for a photo in the database and, depending upon the
+        /// settings on the Tools-->Options panel, the sidecar files and/or the photo itself.
+        /// </summary>
+        /// <param name="thePhotoPath">The full pathname to the photo.</param>
+        /// <param name="theCaption">The caption to write to the file.</param>
+        private static void SavePhotoCaption(string thePhotoPath, string theCaption)
+        {
+            try
+            {
+                var query = Instance.PhotoCol.Query()
+                    .Where(x => x.FQFilename.Equals(thePhotoPath, StringComparison.Ordinal));
+
+                if (query == null || query.Count() == 0)
+                {
+                    Debug.WriteLine($"SavePhotoCaption: No database record found for selected photo: {thePhotoPath}");
+                    MessageBox.Show($"No database record found for selected photo: {thePhotoPath}");
+                }
+                else if (query.Count() > 1)
+                {
+                    Debug.WriteLine($"SavePhotoCaption: Multiple database records found for selected photo: {thePhotoPath}");
+                    MessageBox.Show($"Multiple database records found for selected photo: {thePhotoPath}");
+                }
+                else
+                {
+                    var photoRecord = query.FirstOrDefault();
+                    photoRecord.TitleCaption = theCaption;
+                    Instance.PhotoCol.Update(photoRecord);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"SavePhotoCaption: Error saving photo caption to database: {ex.Message}");
+            }
         }
     }
 
