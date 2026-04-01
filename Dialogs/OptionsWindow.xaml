@@ -45,9 +45,9 @@
 				   Text="Application Mode" FontWeight="Bold" />
                         <RadioButton GroupName="AppMode" Name="rbAppModeLegacy" Content="Legacy: only use .picasa sidecar files." 
                                      Margin="25,0,0,5" Checked="RbAppModeLegacy_Checked" />
-                        <RadioButton GroupName="AppMode" Name="rbAppModeMigrate" Content="Migrate: migrate .picasa entries to .Micasa file." 
+                        <RadioButton GroupName="AppMode" Name="rbAppModeMigrate" Content="Migrate: migrate .picasa entries to .micasa file." 
                                      Margin="25,0,0,5" Checked="RbAppModeMigrate_Checked" />
-                        <RadioButton GroupName="AppMode" Name="rbAppModeNative" Content="Native: only use .Micasa sidecar files." 
+                        <RadioButton GroupName="AppMode" Name="rbAppModeNative" Content="Native: only use .micasa sidecar files." 
                                      Margin="25,0,0,5" Checked="RbAppModeNative_Checked" />
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,10,5">
