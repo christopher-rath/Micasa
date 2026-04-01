@@ -35,7 +35,7 @@ namespace Micasa
                     rbAppModeLegacy.IsChecked = true;
                     cbUpdPhotoFiles.IsChecked = Options.Instance.UpdatePhotoFiles;
                     // In Legacy mode, the UpdatePhotoFiles option cannot be changed.
-                    cbUpdPhotoFiles.IsEnabled = false;
+                    cbUpdPhotoFiles.IsEnabled = true;
                     break;
                 case AppMode.Migrate:
                     rbAppModeMigrate.IsChecked = true;
@@ -80,7 +80,7 @@ namespace Micasa
             {
                 Options.Instance.MyAppMode = AppMode.Legacy;
                 // In legacy mode, data is always written to the photo files.
-                Options.Instance.UpdatePhotoFiles = true ;
+                Options.Instance.UpdatePhotoFiles = true;
             }
             else if ((bool)rbAppModeMigrate.IsChecked)
             {
@@ -138,6 +138,7 @@ namespace Micasa
 
         private void RbAppModeLegacy_Checked(object sender, RoutedEventArgs e)
         {
+            cbUpdPhotoFiles.IsChecked = true;
             cbUpdPhotoFiles.IsEnabled = false;
             cbUpdPhotoFiles.Foreground = Brushes.Gray;
         }
