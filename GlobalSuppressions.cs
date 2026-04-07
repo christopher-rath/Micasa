@@ -69,3 +69,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Personal coding style.", Scope = "member", Target = "~M:Micasa.MainWindow.tbSelectedPhotoCaption_KeyDown(System.Object,System.Windows.Input.KeyEventArgs)")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Personal coding style.", Scope = "member", Target = "~M:Micasa.MainWindow.btnDeleteCaption_Click(System.Object,System.Windows.RoutedEventArgs)")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Personal coding style.", Scope = "member", Target = "~M:Micasa.MainWindow.tbSelectedPhotoCaption_PreviewKeyDown(System.Object,System.Windows.Input.KeyEventArgs)")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Personal coding style.", Scope = "member", Target = "~M:Micasa.MainWindow.widget_RightClick(System.Object,System.Windows.RoutedEventArgs)")]
