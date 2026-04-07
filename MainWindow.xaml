@@ -353,7 +353,10 @@
             <ListBox.Resources>
                 <Style TargetType="{x:Type ListBox}">
                     <!-- Set the ItemTemplate of the ListBox to a DataTemplate 
-                        which explains how to display an object of type BitmapImage. -->
+                        which specifies how to display an object of type BitmapImage.
+                        We also direct the Image widget to cache the photo when it's loaded;
+                        the CacheOption of "OnLoad" ensures that the file is closed once the
+                        photo is loaded. -->
                     <Setter Property="ItemTemplate">
                         <Setter.Value>
                             <DataTemplate>
