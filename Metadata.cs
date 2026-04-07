@@ -33,194 +33,11 @@ namespace Micasa
     internal class Metadata
     {
         private static string _imgFl;
-        private static FileStream _imgFs;
-        private static BitmapSource _img;
-        private static BitmapMetadata _mdProp;
-        private static FileStream _mdFs;
-        private static BitmapDecoder _mdBmDc;
-        private static BitmapMetadata _mdBmMd;
 
         public Metadata(string imgFl)
         {
             // Initialize the image file path.
             _imgFl = imgFl;
-
-            // Initialize the metadata access variables.
-            try
-            {
-                _imgFs = File.OpenRead(imgFl);
-                _img = BitmapFrame.Create(_imgFs);
-                _mdProp = (BitmapMetadata)_img.Metadata;
-                _mdFs = new FileStream(_imgFl, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                _mdBmDc = BitmapDecoder.Create(_mdFs, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-                _mdBmMd = (BitmapMetadata)_mdBmDc.Frames[0].Metadata;
-            }
-            catch
-            {
-                MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "Metadata: Error opening image file: {0}", imgFl),
-                    "Micasa Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                _mdProp = null;
-            }
-        }
-
-        public static string DecodeExposureBias(string exposureBiasValue)
-        {
-            // The exposure bias is stored as a signed rational number.  The EXIFLibrary
-            // returns it as a string in the form "numerator/denominator".
-            if (string.IsNullOrEmpty(exposureBiasValue))
-            {
-                return "0";
-            }
-            else if (!exposureBiasValue.Contains('/'))
-            {
-                // If the value is not in the expected format, return it as-is.
-                return exposureBiasValue;
-            }
-            else
-            {
-                string[] parts = exposureBiasValue.Split('/');
-                if (parts.Length != 2 || !int.TryParse(parts[0], out int numerator) || !int.TryParse(parts[1], out int denominator) || denominator == 0)
-                {
-                    return "0";
-                }
-                else
-                {
-                    double exposureBias = (double)numerator / denominator;
-                    return exposureBias.ToString("F1", CultureInfo.InvariantCulture);
-                }
-            }
-        }
-
-        public static string DecodeExposureProgram(string exposureProgramValue)
-        {
-            ushort exposureProgram = (ushort)int.Parse(exposureProgramValue, CultureInfo.InvariantCulture);
-
-            return exposureProgram switch
-            {
-                0 => "Not defined",
-                1 => "Manual",
-                2 => "Normal program",
-                3 => "Aperture priority",
-                4 => "Shutter priority",
-                5 => "Creative program (biased towards depth of field)",
-                6 => "Action program (biased towards fast shutter speed)",
-                7 => "Portrait mode (for closeup photos with the background out of focus)",
-                8 => "Landscape mode (for landscape photos with the background in focus)",
-                _ => $"Unknown ({exposureProgramValue})"
-            };
-        }
-
-        public static string DecodeFlashBits(string flashValue)
-        {
-            ushort flashBits = (ushort)int.Parse(flashValue, CultureInfo.InvariantCulture);
-
-            var descriptions = new List<string>();
-
-            if ((flashBits & 0x1) != 0)
-            {
-                descriptions.Add("Flash fired");
-            }
-            else
-            {
-                descriptions.Add("Flash did not fire");
-            }
-
-            if ((flashBits & 0x4) != 0)
-            {
-                descriptions.Add("Return light detected");
-            }
-            else if ((flashBits & 0x2) != 0)
-            {
-                descriptions.Add("Return light not detected");
-            }
-
-            if ((flashBits & 0x10) != 0)
-            {
-                descriptions.Add("Compulsory flash");
-            }
-            else if ((flashBits & 0x18) == 0x18)
-            {
-                descriptions.Add("Auto flash");
-            }
-
-            if ((flashBits & 0x20) != 0)
-            {
-                descriptions.Add("No flash function");
-            }
-
-            if ((flashBits & 0x40) != 0)
-            {
-                descriptions.Add("Red-eye reduction");
-            }
-
-            return string.Join(", ", descriptions);
-
-        }
-
-        public static string DecodeMeteringMode(string meteringModeValue)
-        {
-            ushort meteringMode = (ushort)int.Parse(meteringModeValue, CultureInfo.InvariantCulture);
-
-            return meteringMode switch
-            {
-                0 => "Unknown",
-                1 => "Average",
-                2 => "Center Weighted Average",
-                3 => "Spot",
-                4 => "MultiSpot",
-                5 => "Pattern",
-                6 => "Partial",
-                255 => "Other",
-                _ => $"Undefined ({meteringModeValue})"
-            };
-        }
-
-        public static string DecodeWhiteBalance(string whiteBalanceValue)
-        {
-            ushort whiteBalance = (ushort)int.Parse(whiteBalanceValue, CultureInfo.InvariantCulture);
-
-            return whiteBalance switch
-            {
-                0 => "Auto",
-                1 => "Manual",
-                _ => $"Unknown ({whiteBalanceValue})"
-            };
-        }
-
-        public static string FormatDimensions(string xDimension, string yDimension, string units)
-        {
-            if (string.IsNullOrEmpty(xDimension) && string.IsNullOrEmpty(yDimension))
-            {
-                return string.Empty;
-            }
-            else
-            {
-                return $"{xDimension} x {yDimension} {units}";
-            }
-        }
-
-        public static string FormatEXIFVersion(byte[] exifVersion)
-        {
-            if (exifVersion == null || exifVersion.Length != 4)
-            {
-                return "Unknown";
-            }
-            else
-            {
-                return $"{(char)exifVersion[0]}.{(char)exifVersion[1]}.{(char)exifVersion[2]}.{(char)exifVersion[3]}";
-            }
-        }
-
-        public static string FormatGPSVersionID(byte[] gpsVersionID)
-        {
-            if (gpsVersionID == null || gpsVersionID.Length != 4)
-            {
-                return "Unknown";
-            }
-            else
-            {
-                return string.Join(".", gpsVersionID);
-            }
         }
 
         /// <summary>
@@ -241,21 +58,38 @@ namespace Micasa
 
             if (MiMdSupportedImg(_imgFl))
             {
+                FileStream _imgFs;
+                BitmapSource _img;
+                BitmapMetadata _mdProp;
+
+                // Initialize the metadata access variables.
+                try
+                {
+                    _imgFs = File.OpenRead(_imgFl);
+                    _img = BitmapFrame.Create(_imgFs);
+                    _mdProp = (BitmapMetadata)_img.Metadata;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "GetCaptionFromImage: {0}", ex.Message),
+                        "Micasa Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _mdProp = null;
+                }
+
                 try
                 {
                     if (_mdProp != null)
                     {
                         caption = _mdProp.Title;
-                        caption ??= ""; // ??= means if 'caption' is null then do the assignment.
                     }
                 }
                 catch
                 {
                     Debug.WriteLine(string.Format(CultureInfo.InvariantCulture,
-                            "GetCaptionFromImage ({0}): Unknown exception; returning empty string.", _imgFl));
+                            "GetCaptionFromImage ({0}): Unknown exception; returning empty string if null.", _imgFl));
                 }
             }
-            return caption;
+            return caption ??= string.Empty;
         }
 
         /// <summary>
@@ -291,6 +125,24 @@ namespace Micasa
             }
             else
             {
+                FileStream _mdFs;
+                BitmapDecoder _mdBmDc;
+                BitmapMetadata _mdBmMd;
+
+                // Initialize the metadata access variables.
+                try
+                {
+                    _mdFs = new FileStream(_imgFl, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    _mdBmDc = BitmapDecoder.Create(_mdFs, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                    _mdBmMd = (BitmapMetadata)_mdBmDc.Frames[0].Metadata;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "Metadata: {0}", ex.Message),
+                        "Micasa Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return string.Empty;
+                }
+
                 try
                 {
                     // Initialize the EXIF file environment variable.
@@ -1032,6 +884,101 @@ namespace Micasa
             }
         }
 
+        /// <summary>
+        /// Sets the value of a metadata tag with the specified name.  Only a subset of metadata tags
+        /// are supported for setting.  If the tag name is not recognized or not supported for writing,
+        /// this method throws an error (we throw an error because this method is only used by Micasa
+        /// and if this code attempts to set another tag it is a programming error that should be fixed,
+        /// not silently ignored).
+        ///
+        /// At this time, the only tag supported is CaptionTagNm.
+        /// </summary>
+        /// <param name="tagName">The name of the metadata tag to set. Cannot be null or empty.</param>
+        /// <param name="tagValue">The value to assign to the metadata tag. May be null or
+        ///     empty to clear the tag value.</param>
+        /// <returns>True if the metadata value was successfully set; false if an error occurred.</returns>
+#pragma warning disable CA1822 // Mark members as static
+        public bool SetMetadataValue(string tagName, string tagValue)
+#pragma warning restore CA1822 // Mark members as static
+        {
+            FileStream _imgFs;
+            BitmapSource _img;
+            BitmapMetadata _mdProp;
+
+            // Initialize the metadata access variables.
+            try
+            {
+                _imgFs = File.OpenRead(_imgFl);
+                _img = BitmapFrame.Create(_imgFs);
+                _mdProp = (BitmapMetadata)_img.Metadata;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "SetMetadataValue: {0}", ex.Message),
+                    "Micasa Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            try
+            {
+                if (string.IsNullOrEmpty(tagName))
+                {
+                    throw new ArgumentException("SetMetadataValue: Tag name cannot be null or empty.",
+                        nameof(tagName));
+                }
+                else if (!MiMdSupportedImg(_imgFl))
+                {
+                    Debug.WriteLine($"SetMetadataTag: [tag {tagName}] '{_imgFl}' is not a supported"
+                        + " image type for metadata writing.");
+                }
+                else
+                {
+                    // If _mdProp is frozen, clone it so that we can modify the metadata.
+                    // NOTE: Keep the list of tags we test for here synchronised with the list
+                    // tested for in the switch() statement that follows this if() statement.
+                    if (_mdProp.IsFrozen && (tagName == Tagnames.CaptionTagNm))
+                    {
+                        var clone = _mdProp.Clone();
+                        if (clone != null)
+                        {
+                            // Discard the frozen _mdProp; replace is it with the clone.
+                            _mdProp = clone;
+                        }
+                    }
+#pragma warning disable IDE0066 // Convert switch statement to expression
+                    // Validate that the tagName is one we handle, and normalise TagValue 
+                    // to an empty string if it is null.
+                    switch (tagName)
+                    {
+                        case Tagnames.CaptionTagNm:
+                            _mdProp.Title = tagValue ?? string.Empty;
+                            break;
+                        default:
+                            throw new ArgumentException($"SetMetadataValue: Tag name '{tagName}' is not"
+                                + " recognized or not supported for writing.", nameof(tagName));
+                    }
+#pragma warning restore IDE0066 // Convert switch statement to expression
+                    // Now write the metadata to the file.
+                    
+                }
+            }
+            // Catch an ArgumentException.
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show($"Invalid input: {ex.Message}", "Input Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"SetMetadataValue: Error setting metadata value: {ex.Message}", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            return true;
+        }
+
+#region Utility Methods
         public static string GetSensitivityTypeDescription(ushort sensitivityType)
         {
             return sensitivityType switch
@@ -1085,6 +1032,167 @@ namespace Micasa
                 return _supportedImg;
             }
         }
+
+        public static string DecodeExposureBias(string exposureBiasValue)
+        {
+            // The exposure bias is stored as a signed rational number.  The EXIFLibrary
+            // returns it as a string in the form "numerator/denominator".
+            if (string.IsNullOrEmpty(exposureBiasValue))
+            {
+                return "0";
+            }
+            else if (!exposureBiasValue.Contains('/'))
+            {
+                // If the value is not in the expected format, return it as-is.
+                return exposureBiasValue;
+            }
+            else
+            {
+                string[] parts = exposureBiasValue.Split('/');
+                if (parts.Length != 2 || !int.TryParse(parts[0], out int numerator) || !int.TryParse(parts[1], out int denominator) || denominator == 0)
+                {
+                    return "0";
+                }
+                else
+                {
+                    double exposureBias = (double)numerator / denominator;
+                    return exposureBias.ToString("F1", CultureInfo.InvariantCulture);
+                }
+            }
+        }
+
+        public static string DecodeExposureProgram(string exposureProgramValue)
+        {
+            ushort exposureProgram = (ushort)int.Parse(exposureProgramValue, CultureInfo.InvariantCulture);
+
+            return exposureProgram switch
+            {
+                0 => "Not defined",
+                1 => "Manual",
+                2 => "Normal program",
+                3 => "Aperture priority",
+                4 => "Shutter priority",
+                5 => "Creative program (biased towards depth of field)",
+                6 => "Action program (biased towards fast shutter speed)",
+                7 => "Portrait mode (for closeup photos with the background out of focus)",
+                8 => "Landscape mode (for landscape photos with the background in focus)",
+                _ => $"Unknown ({exposureProgramValue})"
+            };
+        }
+
+        public static string DecodeFlashBits(string flashValue)
+        {
+            ushort flashBits = (ushort)int.Parse(flashValue, CultureInfo.InvariantCulture);
+
+            var descriptions = new List<string>();
+
+            if ((flashBits & 0x1) != 0)
+            {
+                descriptions.Add("Flash fired");
+            }
+            else
+            {
+                descriptions.Add("Flash did not fire");
+            }
+
+            if ((flashBits & 0x4) != 0)
+            {
+                descriptions.Add("Return light detected");
+            }
+            else if ((flashBits & 0x2) != 0)
+            {
+                descriptions.Add("Return light not detected");
+            }
+
+            if ((flashBits & 0x10) != 0)
+            {
+                descriptions.Add("Compulsory flash");
+            }
+            else if ((flashBits & 0x18) == 0x18)
+            {
+                descriptions.Add("Auto flash");
+            }
+
+            if ((flashBits & 0x20) != 0)
+            {
+                descriptions.Add("No flash function");
+            }
+
+            if ((flashBits & 0x40) != 0)
+            {
+                descriptions.Add("Red-eye reduction");
+            }
+
+            return string.Join(", ", descriptions);
+
+        }
+
+        public static string DecodeMeteringMode(string meteringModeValue)
+        {
+            ushort meteringMode = (ushort)int.Parse(meteringModeValue, CultureInfo.InvariantCulture);
+
+            return meteringMode switch
+            {
+                0 => "Unknown",
+                1 => "Average",
+                2 => "Center Weighted Average",
+                3 => "Spot",
+                4 => "MultiSpot",
+                5 => "Pattern",
+                6 => "Partial",
+                255 => "Other",
+                _ => $"Undefined ({meteringModeValue})"
+            };
+        }
+
+        public static string DecodeWhiteBalance(string whiteBalanceValue)
+        {
+            ushort whiteBalance = (ushort)int.Parse(whiteBalanceValue, CultureInfo.InvariantCulture);
+
+            return whiteBalance switch
+            {
+                0 => "Auto",
+                1 => "Manual",
+                _ => $"Unknown ({whiteBalanceValue})"
+            };
+        }
+
+        public static string FormatDimensions(string xDimension, string yDimension, string units)
+        {
+            if (string.IsNullOrEmpty(xDimension) && string.IsNullOrEmpty(yDimension))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return $"{xDimension} x {yDimension} {units}";
+            }
+        }
+
+        public static string FormatEXIFVersion(byte[] exifVersion)
+        {
+            if (exifVersion == null || exifVersion.Length != 4)
+            {
+                return "Unknown";
+            }
+            else
+            {
+                return $"{(char)exifVersion[0]}.{(char)exifVersion[1]}.{(char)exifVersion[2]}.{(char)exifVersion[3]}";
+            }
+        }
+
+        public static string FormatGPSVersionID(byte[] gpsVersionID)
+        {
+            if (gpsVersionID == null || gpsVersionID.Length != 4)
+            {
+                return "Unknown";
+            }
+            else
+            {
+                return string.Join(".", gpsVersionID);
+            }
+        }
+#endregion Utility Methods
 
         public static class Tagnames
         {
