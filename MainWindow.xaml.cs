@@ -25,6 +25,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static Micasa.Metadata;
 using Path = System.IO.Path;
 
 namespace Micasa
@@ -1402,7 +1403,8 @@ namespace Micasa
             if (MessageBox.Show("Are you sure you want to delete the caption for this photo?",
                     "Confirm Caption Deletion", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                //SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
+                SavePhotoCaption(SelectedPhotoPathSaved, string.Empty);
+                Instance.tbTitleCaption.Text = string.Empty;
                 tbSelectedPhotoCaption.Text = "Type a Caption!";
                 tbSelectedPhotoCaption.Foreground = Brushes.Gray;
                 IsSelectedPhotoCaptionEdited = false;
@@ -1415,9 +1417,9 @@ namespace Micasa
         /// <summary>
         /// This event handler is called when the user presses any key whil the
         /// cursor is in the tbSelectedPhotoCaption TextBox.  If the user presses the
-        /// Enter key, then we save the caption in the database and in any
-        /// .micasa/.picasa sidecar files; and, then, we move the focus to the
-        /// [Return to Library] button.
+        /// Enter key, then we save the caption in the database, the photo, and in any
+        /// .micasa/.picasa sidecar files (all depending upon the applicable Options
+        /// settings.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1453,8 +1455,10 @@ namespace Micasa
                 {
                     if (IsSelectedPhotoCaptionEdited)
                     {
-                        // Save the caption to the database and any .micasa/.picasa sidecar files.
+                        // Save the caption to the database, the photo, and any .micasa/.picasa
+                        // sidecar files.
                         SavePhotoCaption(SelectedPhotoPathSaved, tb.Text);
+                        Instance.tbTitleCaption.Text = tb.Text;
                         IsSelectedPhotoCaptionEdited = false;
                     }
                     e.Handled = true;
@@ -1500,7 +1504,10 @@ namespace Micasa
         /// error occurs, return an empty string.
         ///
         /// TODO: this method needs to be extended to also check in any .micasa (or .picasa)
-        /// sidecar files that may exist.
+        /// sidecar files that may exist as well as an embedded caption in the photo.  The
+        /// last-updated date for each of those sources also needs to be checked.  Also, the
+        /// Options settings also guide which source to return.  All this logic needs to be in
+        /// a standalone utility method, not in this UI code.
         /// </summary>
         /// <param name="filename">The full pathname of the photo.</param>
         /// <returns></returns>
@@ -1567,6 +1574,7 @@ namespace Micasa
         /// <param name="theCaption">The caption to write to the file.</param>
         private static void SavePhotoCaption(string thePhotoPath, string theCaption)
         {
+            // Save the caption to the database.
             try
             {
                 var query = Instance.PhotoCol.Query()
@@ -1592,6 +1600,50 @@ namespace Micasa
             catch (Exception ex)
             {
                 Debug.WriteLine($"SavePhotoCaption: Error saving photo caption to database: {ex.Message}");
+                MessageBox.Show($"SavePhotoCaption: Error saving photo caption to database: {ex.Message}");
+            }
+            // If UpdatePhotoFiles is true then save the caption to the photo.  Where the
+            // photo file doesn't support embedded, captions then do nothing.
+            if (Options.Instance.UpdatePhotoFiles)
+            {
+                try
+                {
+                    Metadata metadata = new(thePhotoPath);
+                    metadata.SetMetadataValue(Tagnames.CaptionTagNm, theCaption);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"SavePhotoCaption: Error saving photo caption to photo: {ex.Message}");
+                    MessageBox.Show($"SavePhotoCaption: Error saving photo caption to photo: {ex.Message}");
+                }
+            }    
+        }
+
+        /// <summary>
+        /// Copy the widget's Text value to the clipboard.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void widget_RightClick(object sender, RoutedEventArgs e)
+        {
+            // Get the menu item that was clicked
+            if (sender is MenuItem menuItem)
+            {
+                // Get the context menu itself
+                if (menuItem.Parent is ContextMenu contextMenu)
+                {
+                    // Get the control (e.g., TextBlock) that opened the menu
+                    if (contextMenu.PlacementTarget is TextBlock clickedTextBlock)
+                    {
+                        // Action on the clicked control
+                        Clipboard.SetText(clickedTextBlock.Text);
+                    }
+                    else if (contextMenu.PlacementTarget is TextBox clickedTextBox)
+                    {
+                        // Action on the clicked control
+                        Clipboard.SetText(clickedTextBox.Text);
+                    }
+                }
             }
         }
     }
