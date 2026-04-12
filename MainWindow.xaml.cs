@@ -1308,9 +1308,23 @@ namespace Micasa
                 grdSelectedPhoto.Visibility = Visibility.Visible;
                 btnReturnToLibrary.Visibility = Visibility.Visible;
 
-                // Load the photo into the imgSelectedPhoto Image widget.
-                // Note: the ListBoxItem's string is the URI of the photo.
-                imgSelectedPhoto.Source = new BitmapImage(sourceURI);
+                // Load the photo into the imgSelectedPhoto Image widget by creating a new
+                // bitmapimage and loading it into the widget; closing the stream immediately
+                // after creating the bitmapimage.
+                BitmapImage bi = new BitmapImage();
+                using (var fstream = new FileStream(filename, FileMode.Open, FileAccess.Read,
+                    FileShare.Read))
+                {
+                    bi.BeginInit();
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.StreamSource = fstream;
+                    bi.StreamSource.Flush();
+                    bi.EndInit();
+                    bi.Freeze();
+
+                    bi.StreamSource.Dispose();
+                }
+                imgSelectedPhoto.Source = bi;
 
                 // Save the caption for undo purposes, and also set the captionNotEdited
                 // flag to false to indicate that the caption has not yet been edited
