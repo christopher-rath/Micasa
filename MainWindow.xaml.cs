@@ -1310,7 +1310,11 @@ namespace Micasa
 
                 // Load the photo into the imgSelectedPhoto Image widget by creating a new
                 // bitmapimage and loading it into the widget; closing the stream immediately
-                // after creating the bitmapimage.
+                // after creating the bitmapimage.  Note that according to Microsoft's documentation,
+                // we should only have to set the CacheProperty to BitmapCacheOption.OnLoad and then
+                // .NET will close the stream immediately after loading the image; but, my emperical
+                // testing demonstrated that .NET is not closing the file stream -- so, this extra
+                // code is needed.
                 BitmapImage bi = new BitmapImage();
                 using (var fstream = new FileStream(filename, FileMode.Open, FileAccess.Read,
                     FileShare.Read))
