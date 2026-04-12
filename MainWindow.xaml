@@ -362,15 +362,8 @@
                             <DataTemplate>
                                 <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5"
                                         Margin="6" >
-                                    <Image Height="100" >
-                                        <Image.CacheMode>
-                                            <BitmapCache RenderAtScale="1"/>
-                                        </Image.CacheMode>
-                                        <Image.Source>
-                                            <BitmapImage UriSource="{Binding Path=UriSource}"
-                                                         CacheOption="OnLoad"/>
-                                        </Image.Source>
-                                    </Image>
+                                    <Image Height="100" Source="{Binding
+                                        Converter={x:Static local:LocalFileImageConverter.Instance}}" />
                                 </Border>
                             </DataTemplate>
                         </Setter.Value>

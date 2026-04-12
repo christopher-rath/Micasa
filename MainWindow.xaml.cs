@@ -514,14 +514,7 @@ namespace Micasa
                     {
                         // Add the photo to the lbMainWindowPhotos Listbox as a ListboxItem.
                         Debug.WriteLine($"DbFoldersItem_Selected: adding photo to PhotoList: {photoRow.Picture}");
-
-                        // The Uri() method is used to transform the Windows fully qualified filename
-                        // into a format that can be used by the ListBox ListItem.
-                        Uri uri = new Uri(photoRow.FQFilename);
-                        // In the XAML for the Image widget contained in the ListBoxItem template:
-                        //  * we have included a BitmapCache for the Image's CacheMode property; and,
-                        //  * we have set the BitmapImage's CacheOption to OnLoad.
-                        lbMainWindowPhotos.Items.Add(new BitmapImage(uri));
+                        lbMainWindowPhotos.Items.Add(photoRow.FQFilename);
                     }
                 }
             }
@@ -545,12 +538,7 @@ namespace Micasa
             // Get the selected image object
             if (lbMainWindowPhotos.SelectedItem != null)
             {
-                var filename = lbMainWindowPhotos.SelectedItem.ToString().RmPrefix("file:///");
-
-                // The ListItem string returns the Uri, which has slashes instead of
-                // backslashes as the path separator; so, before we can use the ListItem's
-                // string we have to swap the path separator back into Windows' form.
-                filename = filename.Replace('/', Path.DirectorySeparatorChar);
+                var filename = new Uri(lbMainWindowPhotos.SelectedItem.ToString()).LocalPath;
                 LoadImageDetails(filename);
             }
         }
@@ -1075,19 +1063,16 @@ namespace Micasa
             // is selected, then show in information message box and exit; otherwise, show the
             // file's properties in an information message box.
             var selectedImage = lbMainWindowPhotos.SelectedItem;
+
             if (selectedImage == null)
             {
                 MessageBox.Show("No photo selected.");
             }
             else
             {
-                var filename = selectedImage.ToString().RmPrefix("file:///");
-                // The ListItem string returns the Uri, which has slashes instead of
-                // backslashes as the path separator; so, before we can use the ListItem's
-                // string we have to swap the path separator back into Windows' form.
-                filename = filename.Replace('/', Path.DirectorySeparatorChar);
-
+                var filename = new Uri(selectedImage.ToString()).LocalPath;
                 ViewProperties ViewPropertiesWindow = new();
+
                 ViewPropertiesWindow.Show(filename);
             }
         }
@@ -1310,68 +1295,51 @@ namespace Micasa
         /// <param name="e"></param>
         private void lbMainWindowPhotos_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // Determine what photo was double-clicked:
-            // 1. Get the UI element that was the original source of the event;
-            DependencyObject dep = (DependencyObject)e.OriginalSource;
-            // 2. Walk up the visual tree until a ListBoxItem is found;
-            while ((dep != null) && (dep is not ListBoxItem))
+            if (lbMainWindowPhotos.SelectedItem != null)
             {
-                dep = VisualTreeHelper.GetParent(dep);
-            }
-            // 3. If no ListBoxItem was found, the double click happened on empty space or
-            //    scrollbar, so only take action if a ListBoxItem was found;
-            if (dep != null)
-            {
-                // 4. Cast the found DependencyObject to a ListBoxItem; and, lastly,
-                ListBoxItem clickedItemContainer = (ListBoxItem)dep;
+                var filename = new Uri(lbMainWindowPhotos.SelectedItem.ToString()).LocalPath;
+                var sourceURI = new Uri(lbMainWindowPhotos.SelectedItem.ToString());
 
-                // 5. Use the ItemContainerGenerator to get the actual data item.
-                BitmapImage clickedItem = (BitmapImage)lbMainWindowPhotos.ItemContainerGenerator.ItemFromContainer(clickedItemContainer);
+                // Hide the lbMainWindowPhotos ListBox and expose the spSelectedPhoto StackPanel.
+                // I use .Hidden and not .Collapsed because I don't want the other widgets to
+                // move when the visibility is changed.
+                lbMainWindowPhotos.Visibility = Visibility.Hidden;
+                spNavTabHeader.Visibility = Visibility.Hidden;
+                grdSelectedPhoto.Visibility = Visibility.Visible;
+                btnReturnToLibrary.Visibility = Visibility.Visible;
 
-                // Double-check that we got a valid data item.
-                if (clickedItem != null)
+                // Load the photo into the imgSelectedPhoto Image widget.
+                // Note: the ListBoxItem's string is the URI of the photo.
+                imgSelectedPhoto.Source = new BitmapImage(sourceURI);
+
+                // Save the caption for undo purposes, and also set the captionNotEdited
+                // flag to false to indicate that the caption has not yet been edited
+                // since the caption was first loaded into the caption TextBox.
+                SelectedPhotoPathSaved = filename;
+                SelectedPhotoCaptionSaved = GetCaptionForPhoto(SelectedPhotoPathSaved);
+                IsSelectedPhotoCaptionEdited = false;
+                // If no caption was found, then present a prompt with text in Gray.  In the
+                // tbSelectedPhotoCaption KeyDown handler, if there was no caption then we
+                // have to clear the prompt and restore the tex t colour.
+                if (SelectedPhotoCaptionSaved == string.Empty)
                 {
-                    // Hide the lbMainWindowPhotos ListBox and expose the spSelectedPhoto StackPanel.
-                    // I use .Hidden and not .Collapsed because I don't want the other widgets to
-                    // move when the visibility is changed.
-                    lbMainWindowPhotos.Visibility = Visibility.Hidden;
-                    spNavTabHeader.Visibility = Visibility.Hidden;
-                    grdSelectedPhoto.Visibility = Visibility.Visible;
-                    btnReturnToLibrary.Visibility = Visibility.Visible;
-
-                    // Load the photo into the imgSelectedPhoto Image widget.
-                    // Note: the ListBoxItem's string is the URI of the photo.
-                    imgSelectedPhoto.Source = new BitmapImage(new Uri(clickedItem.ToString(CultureInfo.InvariantCulture)));
-
-                    // Save the caption for undo purposes, and also set the captionNotEdited
-                    // flag to false to indicate that the caption has not yet been edited
-                    // since the caption was first loaded into the caption TextBox.
-                    SelectedPhotoPathSaved = new Uri(clickedItem.ToString(CultureInfo.InvariantCulture)).LocalPath;
-                    SelectedPhotoCaptionSaved = GetCaptionForPhoto(SelectedPhotoPathSaved);
-                    IsSelectedPhotoCaptionEdited = false;
-                    // If no caption was found, then present a prompt with text in Gray.  In the
-                    // tbSelectedPhotoCaption KeyDown handler, if there was no caption then we
-                    // have to clear the prompt and restore the tex t colour.
-                    if (SelectedPhotoCaptionSaved == string.Empty)
-                    {
-                        IsSelectedPhotoCaptionEmpty = true;
-                        tbSelectedPhotoCaption.Text = "Type a Caption!";
-                        tbSelectedPhotoCaption.Foreground = Brushes.Gray;
-                        btnDeleteCaption.IsEnabled = false;
-                    }
-                    else
-                    {
-                        IsSelectedPhotoCaptionEmpty = false;
-                        // Load the photo's caption into the tbSelectedPhotoCaption TextBox.
-                        tbSelectedPhotoCaption.Text = SelectedPhotoCaptionSaved;
-                        // We must always reset the font colour to Black because a previous
-                        // photo may have had no caption and caused the font colour to be set
-                        // to Gray.
-                        tbSelectedPhotoCaption.Foreground = Brushes.Black;
-                        btnDeleteCaption.IsEnabled = true;
-                    }
-                    tbSelectedPhotoCaption.Focus();
+                    IsSelectedPhotoCaptionEmpty = true;
+                    tbSelectedPhotoCaption.Text = "Type a Caption!";
+                    tbSelectedPhotoCaption.Foreground = Brushes.Gray;
+                    btnDeleteCaption.IsEnabled = false;
                 }
+                else
+                {
+                    IsSelectedPhotoCaptionEmpty = false;
+                    // Load the photo's caption into the tbSelectedPhotoCaption TextBox.
+                    tbSelectedPhotoCaption.Text = SelectedPhotoCaptionSaved;
+                    // We must always reset the font colour to Black because a previous
+                    // photo may have had no caption and caused the font colour to be set
+                    // to Gray.
+                    tbSelectedPhotoCaption.Foreground = Brushes.Black;
+                    btnDeleteCaption.IsEnabled = true;
+                }
+                tbSelectedPhotoCaption.Focus();
             }
         }
 
