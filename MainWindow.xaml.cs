@@ -53,7 +53,7 @@ namespace Micasa
         private string SelectedPhotoPathSaved = string.Empty;
         private bool IsSelectedPhotoCaptionEdited = false;
         private bool IsSelectedPhotoCaptionEmpty = false;
-        // use with zoom // private static readonly Regex rgxNumOnly = new Regex("[0-9]+");
+        private static readonly Regex rgxNumOnly = new Regex("[0-9]+");
 
         #region MenuRoutedCommands
 #pragma warning disable CA2211 // Non-constant fields should not be visible
@@ -1305,6 +1305,7 @@ namespace Micasa
                 // move when the visibility is changed.
                 lbMainWindowPhotos.Visibility = Visibility.Hidden;
                 spNavTabHeader.Visibility = Visibility.Hidden;
+                spMWPhotoZoomCtrl.Visibility = Visibility.Hidden;
                 grdSelectedPhoto.Visibility = Visibility.Visible;
                 btnReturnToLibrary.Visibility = Visibility.Visible;
 
@@ -1486,6 +1487,101 @@ namespace Micasa
         }
 
         /// <summary>
+        /// When the user types into the Zoom TextBox, only allow numbers (that is,
+        /// an integer) to be entered.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbZoom_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !rgxNumOnly.IsMatch(e.Text);
+        }
+
+        /// <summary>
+        /// When the user pastes text into the Zoom TextBox, only allow numbers (that is,
+        /// an integer) to be entered.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbZoom_TextBoxPasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(typeof(String)))
+            {
+                String text = (String)e.DataObject.GetData(typeof(String));
+                if (!rgxNumOnly.IsMatch(text))
+                {
+                    e.CancelCommand();
+                }
+            }
+            else
+            {
+                e.CancelCommand();
+            }
+        }
+
+        /// <summary>
+        /// When the value of the Zoom TextBox changes, first constrain its value to
+        /// the range of 10 to 999; then, recurse through the MainWindowPhotos ListBox
+        /// and set the height of each ListBoxItem to the Zoom value.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbZoom_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int zoomValue = 100;
+            bool isParsable = int.TryParse(tbZoom.Text, out zoomValue);
+
+            if (!isParsable)
+            {
+                zoomValue = 100;
+            }
+
+            if (zoomValue < 10)
+            {
+                zoomValue = 10;
+                tbZoom.Text = zoomValue.ToString(CultureInfo.InvariantCulture);
+            }
+            else if (zoomValue > 999)
+            {
+                zoomValue = 999;
+                tbZoom.Text = zoomValue.ToString(CultureInfo.InvariantCulture);
+            }
+
+            // We test for null in case the value changes when no photos are being displayed.
+            if (lbMainWindowPhotos != null)
+            {
+                foreach (var item in lbMainWindowPhotos.Items)
+                {
+                    if (lbMainWindowPhotos.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem listBoxItem)
+                    {
+                        var image = FindVisualChild<Image>(listBoxItem);
+                        if (image != null)
+                        {
+                            image.Height= zoomValue;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Retrive the photo's caption from the database.  If no record is found, or if an
         /// error occurs, return an empty string.
         ///
@@ -1550,6 +1646,7 @@ namespace Micasa
             btnReturnToLibrary.Visibility = Visibility.Hidden;
             lbMainWindowPhotos.Visibility = Visibility.Visible;
             spNavTabHeader.Visibility = Visibility.Visible;
+            spMWPhotoZoomCtrl.Visibility = Visibility.Visible;
         }
 
         /// <summary>

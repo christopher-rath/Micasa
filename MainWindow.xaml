@@ -325,13 +325,23 @@
         </TabControl>
 
         <!-- Margin="left,top,right,bottom"-->
-        <StackPanel x:Name="spNavTabHeader" Orientation="Horizontal" Grid.Row="1" Grid.Column="1"
+        <DockPanel x:Name="spNavTabHeader" Grid.Row="1" Grid.Column="1"
                     VerticalAlignment="Top" >
-            <Image x:Name="imgHdrIcon" Height="20" Width="20" Margin="5,0,0,0" />
+            <Image x:Name="imgHdrIcon" Height="20" Width="20" Margin="5,0,0,0"
+                   Source="/Resources/Micasa_Icon.ico" />
             <TextBlock x:Name="tbPhotosHeader" Height="22" TextWrapping="NoWrap" Text="Header" 
                        Margin="5,5,0,0" FontWeight="Bold" 
                        TextTrimming="CharacterEllipsis" IsEnabled="False" />
-        </StackPanel>
+            <StackPanel x:Name="spMWPhotoZoomCtrl" Orientation="Horizontal" HorizontalAlignment="Right"
+                        Margin="0,0,5,0">
+                <Label Content="Zoom:" FontSize="11" Margin="0,-2,5,0" Height="22"
+                       HorizontalAlignment="Right" HorizontalContentAlignment="Right" OpacityMask="White" />
+                <TextBox x:Name="tbZoom" Text="100" FontSize="12" Width="30"
+                         Margin="0,3,3,3" MaxLength="3" HorizontalAlignment="Right"
+                         MaxLines="1" HorizontalContentAlignment="Right" TextChanged="tbZoom_TextChanged"
+                         PreviewTextInput="tbZoom_PreviewTextInput" DataObject.Pasting="tbZoom_TextBoxPasting" />
+            </StackPanel>
+        </DockPanel>
 
         <Button x:Name="btnReturnToLibrary" Grid.Row="1" Grid.Column="1" Height="20"
                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="1,0,0,1"
