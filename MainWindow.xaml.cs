@@ -1487,6 +1487,23 @@ namespace Micasa
         }
 
         /// <summary>
+        /// When the user presses [Enter] in the tbZoom Textbox, we want to trigger
+        /// the tbZoom TextBox's UpdateSource event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbZoom_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.Key == Key.Enter) && (Keyboard.Modifiers == ModifierKeys.None))
+            {
+                // Trigger the tbZoom TextBox's UpdateSource event.
+                var binding = tbZoom.GetBindingExpression(TextBox.TextProperty);
+                binding?.UpdateSource();
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
         /// When the user types into the Zoom TextBox, only allow numbers (that is,
         /// an integer) to be entered.
         /// </summary>
@@ -1494,9 +1511,17 @@ namespace Micasa
         /// <param name="e"></param>
         private void tbZoom_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !rgxNumOnly.IsMatch(e.Text);
+            // If [Enter] was pressed allow the event to be handled by the KeyDown event handler.
+            if (e.Text == "\r")
+            {
+                e.Handled = false;
+            }
+            else
+            {
+                e.Handled = !rgxNumOnly.IsMatch(e.Text);
+            }
         }
-
+        
         /// <summary>
         /// When the user pastes text into the Zoom TextBox, only allow numbers (that is,
         /// an integer) to be entered.
@@ -1517,68 +1542,6 @@ namespace Micasa
             {
                 e.CancelCommand();
             }
-        }
-
-        /// <summary>
-        /// When the value of the Zoom TextBox changes, first constrain its value to
-        /// the range of 10 to 999; then, recurse through the MainWindowPhotos ListBox
-        /// and set the height of each ListBoxItem to the Zoom value.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tbZoom_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int zoomValue = 100;
-            bool isParsable = int.TryParse(tbZoom.Text, out zoomValue);
-
-            if (!isParsable)
-            {
-                zoomValue = 100;
-            }
-
-            if (zoomValue < 10)
-            {
-                zoomValue = 10;
-                tbZoom.Text = zoomValue.ToString(CultureInfo.InvariantCulture);
-            }
-            else if (zoomValue > 999)
-            {
-                zoomValue = 999;
-                tbZoom.Text = zoomValue.ToString(CultureInfo.InvariantCulture);
-            }
-
-            // We test for null in case the value changes when no photos are being displayed.
-            if (lbMainWindowPhotos != null)
-            {
-                foreach (var item in lbMainWindowPhotos.Items)
-                {
-                    if (lbMainWindowPhotos.ItemContainerGenerator.ContainerFromItem(item) is ListBoxItem listBoxItem)
-                    {
-                        var image = FindVisualChild<Image>(listBoxItem);
-                        if (image != null)
-                        {
-                            image.Height= zoomValue;
-                        }
-                    }
-                }
-            }
-        }
-
-        public static childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is childItem)
-                    return (childItem)child;
-                else
-                {
-                    childItem childOfChild = FindVisualChild<childItem>(child);
-                    if (childOfChild != null)
-                        return childOfChild;
-                }
-            }
-            return null;
         }
 
         /// <summary>

@@ -327,19 +327,21 @@
         <!-- Margin="left,top,right,bottom"-->
         <DockPanel x:Name="spNavTabHeader" Grid.Row="1" Grid.Column="1"
                     VerticalAlignment="Top" >
-            <Image x:Name="imgHdrIcon" Height="20" Width="20" Margin="5,0,0,0"
+            <Image x:Name="imgHdrIcon" Height="20" Width="20" Margin="10,0,0,0"
                    Source="/Resources/Micasa_Icon.ico" />
             <TextBlock x:Name="tbPhotosHeader" Height="22" TextWrapping="NoWrap" Text="Header" 
                        Margin="5,5,0,0" FontWeight="Bold" 
                        TextTrimming="CharacterEllipsis" IsEnabled="False" />
             <StackPanel x:Name="spMWPhotoZoomCtrl" Orientation="Horizontal" HorizontalAlignment="Right"
                         Margin="0,0,5,0">
-                <Label Content="Zoom:" FontSize="11" Margin="0,-2,5,0" Height="22"
+                <Label Content="Zoom:" FontSize="11" Margin="0,0,-2,0" 
                        HorizontalAlignment="Right" HorizontalContentAlignment="Right" OpacityMask="White" />
-                <TextBox x:Name="tbZoom" Text="100" FontSize="12" Width="30"
-                         Margin="0,3,3,3" MaxLength="3" HorizontalAlignment="Right"
-                         MaxLines="1" HorizontalContentAlignment="Right" TextChanged="tbZoom_TextChanged"
-                         PreviewTextInput="tbZoom_PreviewTextInput" DataObject.Pasting="tbZoom_TextBoxPasting" />
+                <Slider x:Name="slMWPhotoZoom" Width="100" Height="20" Minimum="10" Maximum="1000" Value="100" TickFrequency="10" 
+                        IsSnapToTickEnabled="True" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,0,0" />
+                <TextBox x:Name="tbZoom" Text="{Binding ElementName=slMWPhotoZoom,Path=Value}"
+                         FontSize="12" Width="30" Margin="0,3,0,3" MaxLength="4" HorizontalAlignment="Right"
+                         MaxLines="1" HorizontalContentAlignment="Right" 
+                         PreviewTextInput="tbZoom_PreviewTextInput" DataObject.Pasting="tbZoom_TextBoxPasting" KeyDown="tbZoom_KeyDown" />
             </StackPanel>
         </DockPanel>
 
@@ -372,7 +374,8 @@
                             <DataTemplate>
                                 <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5"
                                         Margin="6" >
-                                    <Image Height="100" Source="{Binding
+                                    <Image Height="{Binding ElementName=slMWPhotoZoom,Path=Value}"
+                                           Source="{Binding
                                         Converter={x:Static local:LocalFileImageConverter.Instance}}" />
                                 </Border>
                             </DataTemplate>
