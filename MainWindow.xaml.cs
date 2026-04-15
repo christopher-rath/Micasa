@@ -9,7 +9,6 @@
 #endregion
 using LiteDB;
 using Micasa.Dialogs;
-using StringExtensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -300,6 +299,10 @@ namespace Micasa
         /// <param name="e"></param>
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            // Save application state (options) before shutting down.  If this section of code
+            // starts to become long, we'll move the code to a separate method.
+            Options.Instance.LastUsedZoomValue = (int)Instance.slMWPhotoZoom.Value;
+            // Safely stop the scanners and watchers.
             Stopscanners();
             _ActiveWatchers.StopWatchers();
             StopNavigationTabs();
@@ -416,6 +419,7 @@ namespace Micasa
                     SelectATab(Instance.NavigationTabs, Options.Instance.LastSelectedLeftTab);
                     SelectATab(Instance.InfoTabs, Options.Instance.LastSelectedRightTab);
                     SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder);
+                    Instance.slMWPhotoZoom.Value = Options.Instance.LastUsedZoomValue;
                 });
             }
         }
@@ -1742,6 +1746,7 @@ namespace Micasa
         public const string sMcLastSelectedRightTab = "LastSelectedRightTab";
         public const string sMcLastSelectedFolder = "LastSelectedFolder";
         public const string sMcLastSelectedRightFolder = "LastSelectedRightFolder";
+        public const string sMcLastUsedZoomValue = "LastUsedZoomValue";
 
         // Application Options
         public const string sMcOpAppMode = @"AppMode";
