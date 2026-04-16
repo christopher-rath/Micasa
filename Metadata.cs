@@ -13,10 +13,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Threading.Channels;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Windows.Storage.Streams;
 
 namespace Micasa
 {
