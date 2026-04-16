@@ -416,8 +416,15 @@
             </Grid.ColumnDefinitions>
 
             <Image x:Name="imgSelectedPhoto" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                    VerticalAlignment="Center" Margin="10,0,0,0"
-                    Source="/Micasa;component/Resources/Micasa_Icon.png" />
+                    VerticalAlignment="Center" Margin="10,0,0,0" 
+                    Source="/Micasa;component/Resources/Micasa_Icon.png" >
+                <Image.ContextMenu>
+                    <ContextMenu>
+                    <MenuItem Header="P_roperties"
+                                          Command="{x:Static local:MainWindow.PropertiesCmd}"/>
+                    </ContextMenu>
+                </Image.ContextMenu>
+            </Image>
 
             <TextBox x:Name="tbSelectedPhotoCaption" Grid.Row="1" Grid.Column="0" 
                     HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
