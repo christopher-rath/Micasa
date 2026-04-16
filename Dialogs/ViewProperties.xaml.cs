@@ -38,7 +38,9 @@ namespace Micasa.Dialogs
         {
             var file = ImageFile.FromFile(filename);
             var propList = new List<PropertyItem>();
-            
+
+            this.Title = this.Title + ": " + System.IO.Path.GetFileName(filename);
+            this.tbFilename.Text = System.IO.Path.GetFileName(filename);
             foreach (var property in file.Properties)
             {
                 propList.Add(new PropertyItem(property.Name, property.Value.ToString()));
