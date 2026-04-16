@@ -301,7 +301,7 @@ namespace Micasa
         {
             // Save application state (options) before shutting down.  If this section of code
             // starts to become long, we'll move the code to a separate method.
-            Options.Instance.LastUsedZoomValue = (int)Instance.slMWPhotoZoom.Value;
+            Options.Instance.LastMWPhotoZoomValue = (int)Instance.slMWPhotoZoom.Value;
             // Safely stop the scanners and watchers.
             Stopscanners();
             _ActiveWatchers.StopWatchers();
@@ -419,7 +419,7 @@ namespace Micasa
                     SelectATab(Instance.NavigationTabs, Options.Instance.LastSelectedLeftTab);
                     SelectATab(Instance.InfoTabs, Options.Instance.LastSelectedRightTab);
                     SelectAFolder(Instance.dbFoldersItem, Options.Instance.LastSelectedFolder);
-                    Instance.slMWPhotoZoom.Value = Options.Instance.LastUsedZoomValue;
+                    Instance.slMWPhotoZoom.Value = Options.Instance.LastMWPhotoZoomValue;
                 });
             }
         }
@@ -1491,29 +1491,29 @@ namespace Micasa
         }
 
         /// <summary>
-        /// When the user presses [Enter] in the tbZoom Textbox, we want to trigger
-        /// the tbZoom TextBox's UpdateSource event.
+        /// When the user presses [Enter] in the tbMWPhotoZoom Textbox, we want to trigger
+        /// the tbMWPhotoZoom TextBox's UpdateSource event.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tbZoom_KeyDown(object sender, KeyEventArgs e)
+        private void tbMWPhotoZoom_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.Key == Key.Enter) && (Keyboard.Modifiers == ModifierKeys.None))
             {
-                // Trigger the tbZoom TextBox's UpdateSource event.
-                var binding = tbZoom.GetBindingExpression(TextBox.TextProperty);
+                // Trigger the tbMWPhotoZoom TextBox's UpdateSource event.
+                var binding = tbMWPhotoZoom.GetBindingExpression(TextBox.TextProperty);
                 binding?.UpdateSource();
                 e.Handled = true;
             }
         }
 
         /// <summary>
-        /// When the user types into the Zoom TextBox, only allow numbers (that is,
+        /// When the user types into the tbMWPhotoZoom TextBox, only allow numbers (that is,
         /// an integer) to be entered.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tbZoom_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void tbMWPhotoZoom_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // If [Enter] was pressed allow the event to be handled by the KeyDown event handler.
             if (e.Text == "\r")
@@ -1527,12 +1527,12 @@ namespace Micasa
         }
         
         /// <summary>
-        /// When the user pastes text into the Zoom TextBox, only allow numbers (that is,
+        /// When the user pastes text into the tbMWPhotoZoom TextBox, only allow numbers (that is,
         /// an integer) to be entered.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void tbZoom_TextBoxPasting(object sender, DataObjectPastingEventArgs e)
+        private void tbMWPhotoZoom_TextBoxPasting(object sender, DataObjectPastingEventArgs e)
         {
             if (e.DataObject.GetDataPresent(typeof(String)))
             {
@@ -1746,8 +1746,8 @@ namespace Micasa
         public const string sMcLastSelectedRightTab = "LastSelectedRightTab";
         public const string sMcLastSelectedFolder = "LastSelectedFolder";
         public const string sMcLastSelectedRightFolder = "LastSelectedRightFolder";
-        public const string sMcLastUsedZoomValue = "LastUsedZoomValue";
-
+        public const string sMcLastMWPhotoZoomValue = "LastMWPhotoZoomValue";
+        
         // Application Options
         public const string sMcOpAppMode = @"AppMode";
         public const string sMcUpdPhotoFiles = @"UpdatePhotoFiles";

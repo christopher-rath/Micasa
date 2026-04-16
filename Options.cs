@@ -45,7 +45,7 @@ namespace Micasa
         private string _LastSelectedLeftTab = string.Empty;
         private string _LastSelectedFolder = string.Empty;
         private string _LastSelectedRightTab = string.Empty;
-        private int _LastUsedZoomValue = 100; // 100 is the default setting.
+        private int _LastMWPhotoZoomValue = 100; // 100 is the default setting.
         private readonly IniFile iniFile = new(iniFileNm);
         private readonly AppMode defaultAppMode = AppMode.Migrate;
 #pragma warning disable CA2211
@@ -85,7 +85,7 @@ namespace Micasa
             _LastSelectedLeftTab = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedLeftTab, _LastSelectedLeftTab);
             _LastSelectedFolder = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedFolder, _LastSelectedFolder);
             _LastSelectedRightTab = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedRightTab, _LastSelectedRightTab);
-            _LastUsedZoomValue = iniFile.GetInteger(Constants.sMcScMicasa, Constants.sMcLastUsedZoomValue, _LastUsedZoomValue);
+            _LastMWPhotoZoomValue = iniFile.GetInteger(Constants.sMcScMicasa, Constants.sMcLastMWPhotoZoomValue, _LastMWPhotoZoomValue);
         }
 
         #region GetterSetters
@@ -270,17 +270,15 @@ namespace Micasa
             }
         }
 
-        public int LastUsedZoomValue
+        public int LastMWPhotoZoomValue
         {
-            get => _LastUsedZoomValue;
+            get => _LastMWPhotoZoomValue;
             set
             {
-                _LastUsedZoomValue = value;
-                iniFile.SetInteger(Constants.sMcScMicasa, Constants.sMcLastUsedZoomValue, _LastUsedZoomValue);
+                _LastMWPhotoZoomValue = value;
+                iniFile.SetInteger(Constants.sMcScMicasa, Constants.sMcLastMWPhotoZoomValue, _LastMWPhotoZoomValue);
             }
         }
-
-        //_LastUsedZoomValue
         #endregion GetterSetters
 
         /// <summary>

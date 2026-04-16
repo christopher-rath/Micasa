@@ -338,10 +338,10 @@
                        HorizontalAlignment="Right" HorizontalContentAlignment="Right" OpacityMask="White" />
                 <Slider x:Name="slMWPhotoZoom" Width="100" Height="20" Minimum="10" Maximum="1000" Value="100" TickFrequency="10" 
                         IsSnapToTickEnabled="True" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,0,0" />
-                <TextBox x:Name="tbZoom" Text="{Binding ElementName=slMWPhotoZoom,Path=Value}"
+                <TextBox x:Name="tbMWPhotoZoom" Text="{Binding ElementName=slMWPhotoZoom,Path=Value}"
                          FontSize="12" Width="30" Margin="0,3,0,3" MaxLength="4" HorizontalAlignment="Right"
                          MaxLines="1" HorizontalContentAlignment="Right" 
-                         PreviewTextInput="tbZoom_PreviewTextInput" DataObject.Pasting="tbZoom_TextBoxPasting" KeyDown="tbZoom_KeyDown" />
+                         PreviewTextInput="tbMWPhotoZoom_PreviewTextInput" DataObject.Pasting="tbMWPhotoZoom_TextBoxPasting" KeyDown="tbMWPhotoZoom_KeyDown" />
             </StackPanel>
         </DockPanel>
 
@@ -364,11 +364,6 @@
                  MouseDoubleClick="lbMainWindowPhotos_MouseDoubleClick" >
             <ListBox.Resources>
                 <Style TargetType="{x:Type ListBox}">
-                    <!-- Set the ItemTemplate of the ListBox to a DataTemplate 
-                        which specifies how to display an object of type BitmapImage.
-                        We also direct the Image widget to cache the photo when it's loaded;
-                        the CacheOption of "OnLoad" ensures that the file is closed once the
-                        photo is loaded. -->
                     <Setter Property="ItemTemplate">
                         <Setter.Value>
                             <DataTemplate>
