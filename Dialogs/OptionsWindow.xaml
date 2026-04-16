@@ -53,7 +53,7 @@
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,0,10,5">
                         <TextBlock Text="Update Options" FontWeight="Bold" Margin="10,10,0,5"  />
                         <CheckBox x:Name="cbUpdPhotoFiles" Content="Write metadata to _photo files."
-                                  Margin="25,0,0,5" />
+                                  Margin="25,0,0,5" IsEnabled="False" />
                         <CheckBox x:Name="cbUpdSidecarFiles" Margin="25,0,0,5"
 				                  Content="Write metadata to _sidecare files (per the Application Mode)." />
                         <StackPanel Orientation="Horizontal" Margin="25,0,0,5">

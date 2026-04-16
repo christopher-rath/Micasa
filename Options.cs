@@ -40,7 +40,7 @@ namespace Micasa
         public static readonly string HomeFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         public static readonly string iniFileNm = HomeFolder + Path.DirectorySeparatorChar + Constants.sAppIniFileNm;
         private AppMode _MyAppMode = AppMode.Migrate;
-        private bool _UpdPhotoFiles = true;
+        private bool _UpdPhotoFiles = false; // TODO: set this to true when the UpdatePhotoFiles option is implemented in the UI.
         private bool _UpdSidecarFiles = true;
         private string _LastSelectedLeftTab = string.Empty;
         private string _LastSelectedFolder = string.Empty;
@@ -80,7 +80,7 @@ namespace Micasa
             {
                 _MyAppMode = DefaultAppMode;
             }
-            _UpdPhotoFiles = iniFile.GetBool(Constants.sMcScMicasa, Constants.sMcUpdPhotoFiles, _UpdPhotoFiles);
+            // TODO: _UpdPhotoFiles = iniFile.GetBool(Constants.sMcScMicasa, Constants.sMcUpdPhotoFiles, _UpdPhotoFiles);
             _UpdSidecarFiles = iniFile.GetBool(Constants.sMcScMicasa, Constants.sMcUpdSidecarFiles, _UpdSidecarFiles);
             _LastSelectedLeftTab = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedLeftTab, _LastSelectedLeftTab);
             _LastSelectedFolder = iniFile.GetString(Constants.sMcScMicasa, Constants.sMcLastSelectedFolder, _LastSelectedFolder);

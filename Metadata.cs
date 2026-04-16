@@ -7,14 +7,16 @@
 //     (see the About–→Terms menu item for the license text).
 // Warranty: None, see the license.
 #endregion
+using ExifLibrary;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Threading.Channels;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using ExifLibrary;
+using Windows.Storage.Streams;
 
 namespace Micasa
 {
@@ -34,6 +36,10 @@ namespace Micasa
     {
         private static string _imgFl;
 
+        /// <summary>
+        /// Constructor for the Metadata class.
+        /// </summary>
+        /// <param name="imgFl">Fully-qualified filename.</param>
         public Metadata(string imgFl)
         {
             // Initialize the image file path.
@@ -50,7 +56,6 @@ namespace Micasa
         /// TO DO: get the caption from the .micasa file & reconcile the two sources based on timestamps; 
         /// then return the most current caption.
         /// </summary>
-        /// <param name="imgFl">Fully-qualified filename.</param>
         /// <returns>A string.</returns>
         private static string GetCaptionFromImage()
         {
@@ -893,6 +898,34 @@ namespace Micasa
         ///
         /// At this time, the only tag supported is CaptionTagNm.
         /// </summary>
+        /// <Remarks>
+        /// Microsoft's official documentation says that the way to update metadata in-place, without
+        /// triggering a re-encoding of the image, is to copy the BitmapMetadata from a BitmapDecoder
+        /// to a BitmapEncoder, and then update the metadata in the encoder's copy and write it out
+        /// to the existing file.  Testing of this approach determined that it cannot be written to the
+        /// existing file; instead, a neww file must be created.
+        ///
+        /// Further testing encountered two additional problems:
+        ///  1. If the new metadata value(s) don't fit within the existing metadata space in the file,
+        ///     then Windows will return an error: "Error setting metadata value: Commit unsuccessful 
+        ///     because too much metadata changed." 
+        ///  2. WPF will insist upon re-encoding the image unless some very specific conditions are met
+        ///     (conditions that are difficult to meet in practice):
+        ///      * The metadata is unchanged, OR
+        ///      * The metadata changes fit inside the original APP1/APP13 segment sizes, AND
+        ///      * The metadata structure does not require adding or removing segments, AND
+        ///      * The metadata writer can commit in-place (that is, TrySave() succeeds).
+        ///
+        /// MS Co-pilot claims that the Windows Imaging Component (WIC) COM API is able to update
+        /// metadata in-place without re-encoding the image.  The other approach is to use a third-
+        /// party library such as https://github.com/dlemstra/Magick.NET/ or
+        /// https://sixlabors.com/products/imagesharp/.
+        ///
+        /// For the momemnt (as of 15 April 2026), I've stopped work on updating metadata in the
+        /// photo file itself and will implement .micasa.ini capture of updated metadata.  It's
+        /// important to note that the only metadata tag the the Micasa product roadmap plans to
+        /// edit is the Caption (aka Title) tag.
+        /// </Remarks>  
         /// <param name="tagName">The name of the metadata tag to set. Cannot be null or empty.</param>
         /// <param name="tagValue">The value to assign to the metadata tag. May be null or
         ///     empty to clear the tag value.</param>
@@ -901,24 +934,6 @@ namespace Micasa
         public bool SetMetadataValue(string tagName, string tagValue)
 #pragma warning restore CA1822 // Mark members as static
         {
-            FileStream _imgFs;
-            BitmapSource _img;
-            BitmapMetadata _mdProp;
-
-            // Initialize the metadata access variables.
-            try
-            {
-                _imgFs = File.OpenRead(_imgFl);
-                _img = BitmapFrame.Create(_imgFs);
-                _mdProp = (BitmapMetadata)_img.Metadata;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "SetMetadataValue: {0}", ex.Message),
-                    "Micasa Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-
             try
             {
                 if (string.IsNullOrEmpty(tagName))
@@ -933,33 +948,51 @@ namespace Micasa
                 }
                 else
                 {
-                    // If _mdProp is frozen, clone it so that we can modify the metadata.
-                    // NOTE: Keep the list of tags we test for here synchronised with the list
-                    // tested for in the switch() statement that follows this if() statement.
-                    if (_mdProp.IsFrozen && (tagName == Tagnames.CaptionTagNm))
-                    {
-                        var clone = _mdProp.Clone();
-                        if (clone != null)
-                        {
-                            // Discard the frozen _mdProp; replace is it with the clone.
-                            _mdProp = clone;
-                        }
-                    }
 #pragma warning disable IDE0066 // Convert switch statement to expression
                     // Validate that the tagName is one we handle, and normalise TagValue 
                     // to an empty string if it is null.
                     switch (tagName)
                     {
                         case Tagnames.CaptionTagNm:
-                            _mdProp.Title = tagValue ?? string.Empty;
+                            if (_imgFl.EndsWith(Constants.sMcFT_Jpg, StringComparison.OrdinalIgnoreCase)
+                                || _imgFl.EndsWith(Constants.sMcFT_JpgA, StringComparison.OrdinalIgnoreCase))
+                            {
+                                #region WorksSometimes
+                                // See the Remarks section of this method for details about the problems encountered with this approach.
+                                //using (FileStream imageStreamRd = File.Open(_imgFl, FileMode.Open, FileAccess.ReadWrite))
+                                //{
+                                //    var decoder = new JpegBitmapDecoder(imageStreamRd, BitmapCreateOptions.PreservePixelFormat,
+                                //        BitmapCacheOption.Default);
+                                //    var encoder = JpegGetEncoderFromDecoder(decoder);
+                                //    var writer = encoder.Frames[0].CreateInPlaceBitmapMetadataWriter();
+
+                                //    if (writer.TrySave())
+                                //    {
+                                //        // We'll write the image to a new file and it that's successful 
+                                //        // then we'll delete the old file and rename the one file.
+                                //        string tmpFl = _imgFl + ".tmp";
+                                //        //writer.Title = tagValue ?? string.Empty; // This doesn't work; see next line.
+                                //        writer.SetQuery("/app1/ifd/{uint=270}", tagValue ?? string.Empty);
+                                //        using (FileStream imageStreamWr = File.Open(tmpFl, FileMode.Create, FileAccess.ReadWrite))
+                                //        {
+                                //            encoder.Save(imageStreamWr);
+                                //            imageStreamWr.Close();
+                                //        }
+                                //    }
+                                //    imageStreamRd.Close();
+                                //}
+                                //File.Delete(_imgFl);
+                                //File.Move(tmpFl, _imgFl);
+                                #endregion WorksSometimes
+                            }
+                            MessageBox.Show("SetMetadataValue: Writing metadata to the photo file is not currently supported.",
+                                "Unexpected Method Call Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             break;
                         default:
                             throw new ArgumentException($"SetMetadataValue: Tag name '{tagName}' is not"
                                 + " recognized or not supported for writing.", nameof(tagName));
                     }
 #pragma warning restore IDE0066 // Convert switch statement to expression
-                    // Now write the metadata to the file.
-                    
                 }
             }
             // Catch an ArgumentException.
@@ -991,46 +1024,6 @@ namespace Micasa
                 5 => "ISO Speed Latitude (Scene)",
                 _ => "Undefined"
             };
-        }
-
-        /// <summary>
-        /// Examine the image filename to determine if it is an image type supported by the
-        /// this Metadata class.  
-        /// 
-        /// As of August 2025, the WPF BitmapMetadata class has codecs for the following 
-        /// image types; however, at this time this Metadata class only supports a subset 
-        /// of them (those that support EXIF):
-        ///  * JPEG (.jpg) – Supports EXIF, IPTC, and XMP metadata.
-        ///  * TIFF (.tif) – Supports IFD, EXIF, IPTC, and XMP metadata.
-        ///  * PNG (.png) – Supports tEXt(PNG textual data) and XMP metadata.
-        ///  * GIF (.gif) – Limited metadata support, but some metadata can be accessed.
-        ///  * BMP (.bmp) – Minimal metadata support; not commonly used for metadata.
-        ///  * Windows Media Photo (.wdp) – Supports XMP metadata.
-        ///  * ICO (.ico) – Typically does not support metadata querying.
-        ///  
-        /// TO DO: add the .wdp and .ico image types to the list of types supported by Micasa
-        ///        (i.e., update the list in the Options panel).
-        /// </summary>
-        /// <param name="imgFilename">The filename of the image to be checked.</param>
-        /// <returns></returns>        
-        private static bool MiMdSupportedImg(string imgFilename)
-        {
-            if (string.IsNullOrEmpty(imgFilename))
-            {
-                return false;
-            }
-            else
-            {
-                bool _supportedImg
-                    = Path.GetExtension(imgFilename).ToLower(CultureInfo.InvariantCulture) switch
-                    {
-                        // Test for the image types that the GetMetadataValue method has been coded to handle.
-                        Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Tif
-                            or Constants.sMcFT_TifA => true,
-                        _ => false,
-                    };
-                return _supportedImg;
-            }
         }
 
         public static string DecodeExposureBias(string exposureBiasValue)
@@ -1192,7 +1185,70 @@ namespace Micasa
                 return string.Join(".", gpsVersionID);
             }
         }
-#endregion Utility Methods
+
+        /// <summary>
+        /// Clone the BitmapDecoder into a BitmapEncoder, and return it.
+        /// </summary>
+        /// <param name="decoder">The BitmapDecoder to clone.</param>
+        /// <returns>A JpegBitmapEncoder containing the cloned JPEG image.</returns>
+        private static JpegBitmapEncoder JpegGetEncoderFromDecoder(JpegBitmapDecoder decoder)
+        {
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            try
+            {
+                foreach (var frame in decoder.Frames)
+                {
+                    encoder.Frames.Add(frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"JpegGetEncoderFromDecoder: {ex.Message}");
+            }
+            return encoder;
+        }
+
+        /// <summary>
+        /// Examine the image filename to determine if it is an image type supported by the
+        /// this Metadata class.  
+        /// 
+        /// As of August 2025, the WPF BitmapMetadata class has codecs for the following 
+        /// image types; however, at this time this Metadata class only supports a subset 
+        /// of them (those that support EXIF):
+        ///  * JPEG (.jpg) – Supports EXIF, IPTC, and XMP metadata.
+        ///  * TIFF (.tif) – Supports IFD, EXIF, IPTC, and XMP metadata.
+        ///  * PNG (.png) – Supports tEXt(PNG textual data) and XMP metadata.
+        ///  * GIF (.gif) – Limited metadata support, but some metadata can be accessed.
+        ///  * BMP (.bmp) – Minimal metadata support; not commonly used for metadata.
+        ///  * Windows Media Photo (.wdp) – Supports XMP metadata.
+        ///  * ICO (.ico) – Typically does not support metadata querying.
+        ///  
+        /// TO DO: add the .wdp and .ico image types to the list of types supported by Micasa
+        ///        (i.e., update the list in the Options panel).
+        /// </summary>
+        /// <param name="imgFilename">The filename of the image to be checked.</param>
+        /// <returns></returns>        
+        private static bool MiMdSupportedImg(string imgFilename)
+        {
+            if (string.IsNullOrEmpty(imgFilename))
+            {
+                return false;
+            }
+            else
+            {
+                bool _supportedImg
+                    = Path.GetExtension(imgFilename).ToLower(CultureInfo.InvariantCulture) switch
+                    {
+                        // Test for the image types that the GetMetadataValue method has been coded to handle.
+                        Constants.sMcFT_Jpg or Constants.sMcFT_JpgA or Constants.sMcFT_Tif
+                            or Constants.sMcFT_TifA => true,
+                        _ => false,
+                    };
+                return _supportedImg;
+            }
+        }
+
+        #endregion Utility Methods
 
         public static class Tagnames
         {
