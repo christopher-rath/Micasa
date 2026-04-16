@@ -16,7 +16,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <TextBlock x:Name="tbFilename" Text="Filename" FontWeight="Bold" />
+        <TextBlock x:Name="tbFilename" Margin="10,0,0,0" VerticalAlignment="Center" Text="Filename" FontWeight="Bold" />
 
         <DataGrid x:Name="dgProperties" Grid.Row="1" MinWidth="300" AutoGenerateColumns="True"
                   Margin="0,0,0,0" GridLinesVisibility="None" Background="{x:Null}" />
